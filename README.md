@@ -1,4 +1,4 @@
-# Projeto ERP — Clube Social e Esportivo União (CSEU)
+# Projeto ERP — Clube Social e Esportivo
 
 **Modelagem Conceitual de Banco de Dados**
 
