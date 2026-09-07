@@ -815,9 +815,8 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 
 ## 15. DER — Diagrama Entidade-Relacionamento
 
-![DER do Clube Social e Esportivo União](caminho/para/o/arquivo/DER_Clube_Uniao.png)
 
-> **Nota:** Substitua `caminho/para/o/arquivo/` pelo caminho real da imagem no repositório. Exemplo: `images/DER_Clube_Uniao.png`
+`modelagem_DER.pdf`
 
 ---
 
@@ -879,13 +878,4 @@ Este documento apresenta a modelagem conceitual completa do **Clube Social e Esp
 | Processos documentados | 5 |
 | Justificativas técnicas | 6 |
 
-### Próximos Passos
-
-1. Transformar o modelo conceitual em **modelo lógico**
-2. Aplicar as regras de **normalização**
-3. Definir tipos de dados **físicos**
-4. Implementar o **banco de dados**
-
----
-
-**Fim do Documento**
+___
