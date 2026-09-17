@@ -429,6 +429,20 @@ text
 | **RN13** | Funcionário pode também ser sócio | PESSOA pode ter vínculo com SÓCIO e FUNCIONÁRIO |
 | **RN14** | Atleta externo pode ser convidado sem ser sócio | ATLETA pode existir sem vínculo com SÓCIO |
 | **RN15** | Reservas com mínimo 24h e máximo 30 dias de antecedência | Regra de validação na entidade RESERVA |
+| **RN16** | Um sócio pode cadastrar vários dependentes | Relacionamento SÓCIO (0,N) — POSSUI — DEPENDENTE (1,1) |
+| **RN17** | Um dependente pertence a apenas um sócio	|Chave estrangeira id_socio_titular na entidade DEPENDENTE |
+| **RN18** | Dependente perde o vínculo ao atingir a idade limite da categoria do plano.	| Regra de validação de idade e atualização de situacao_dependente |
+| **RN19** | Um sócio pode participar de várias atividades | Relacionamento SÓCIO × ATIVIDADE com cardinalidade N	 |
+| **RN20** | Um professor pode ministrar várias atividades | Relacionamento PROFESSOR/FUNCIONÁRIO × ATIVIDADE	 |
+| **RN21** | Uma mensalidade pode possuir vários pagamentos parciais até sua quitação | Relacionamento MENSALIDADE (0,N) — RECEBE — PAGAMENTO (1,1) |
+| **RN22** | Não é permitida a reserva de uma dependência já reservada no mesmo horário | Validação de conflito de data e horário na entidade RESERVA |
+| **RN23** | Toda reserva deve estar vinculada a um sócio responsável | Toda reserva deve estar vinculada a um sócio responsável |
+| **RN24** | A reserva é automaticamente cancelada se a mensalidade do sócio responsável não for paga | Regra automática de atualização de situacao_reserva |
+| **RN25** | A categoria do plano define quais dependências o sócio pode reservar | Relacionamento/regra de permissão entre CATEGORIA_SOCIO e DEPENDENCIA_FISICA |
+
+
+
+
 
 ### Tabela de Categorias de Sócio (RN03)
 
@@ -874,7 +888,7 @@ Este documento apresenta a modelagem conceitual completa do **Clube Social e Esp
 | Atributos documentados | ~120 |
 | Requisitos funcionais | 14 |
 | Requisitos não funcionais | 7 |
-| Regras de negócio | 15 |
+| Regras de negócio | 25 |
 | Processos documentados | 5 |
 | Justificativas técnicas | 6 |
 
