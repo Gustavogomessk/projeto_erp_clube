@@ -8,10 +8,10 @@
 
 | Nome | Função | Responsabilidade |
 |---|---|---|
-| Guilherme Oroshi | Coordenador | Gestão do projeto e documentação |
-| Juan, Pedro e Paola | Analista de Requisitos | Levantamento de requisitos e regras de Negócio |
+| Guilherme Hiroshi | Coordenador | Gestão do projeto e documentação |
+| Juan, Pedro Elias e Paola | Analista de Requisitos | Levantamento de requisitos e regras de Negócio |
 | Vitor, Gustavo Gomes e Danilo | Modelador de Dados | DER e dicionário de dados |
-| Lucas e João | Revisor Técnico | Validação e consistência |
+| Lucas e João Victor | Revisor Técnico | Validação e consistência |
 
 ---
 
