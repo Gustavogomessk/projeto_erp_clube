@@ -8,37 +8,10 @@
 
 | Nome | Função | Responsabilidade |
 |---|---|---|
-| [Nome do integrante 1] | Coordenador | Gestão do projeto e documentação |
-| [Nome do integrante 2] | Analista de Requisitos | Levantamento de requisitos e regras |
-| [Nome do integrante 3] | Modelador de Dados | DER e dicionário de dados |
-| [Nome do integrante 4] | Revisor Técnico | Validação e consistência |
-
----
-
-## 2. Caracterização da Empresa
-
-### 2.1 Descrição do Clube
-
-| Campo | Descrição |
-|---|---|
-| **Nome fictício** | Clube Social e Esportivo União (CSEU) |
-| **Tipo** | Clube social e esportivo de médio porte |
-| **Localização** | [Cidade/Estado] |
-| **Fundação** | [Ano] |
-| **Público-alvo** | Famílias, atletas amadores e profissionais locais |
-| **Sócios titulares** | ~1.200 |
-| **Funcionários** | 45 |
-
-### 2.2 Estrutura Física
-
-- 2 piscinas (adulto e infantil)
-- 3 quadras poliesportivas
-- 2 quadras de tênis
-- 1 campo de futebol society
-- 1 salão de festas
-- 1 academia
-- 1 área de convivência com churrasqueiras
-- 1 prédio administrativo
+| Guilherme Oroshi | Coordenador | Gestão do projeto e documentação |
+| Juan, Pedro e Paola | Analista de Requisitos | Levantamento de requisitos e regras de Negócio |
+| Vitor, Gustavo Gomes e Danilo | Modelador de Dados | DER e dicionário de dados |
+| Lucas e João | Revisor Técnico | Validação e consistência |
 
 ---
 
