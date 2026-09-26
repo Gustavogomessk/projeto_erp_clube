@@ -630,15 +630,15 @@ Quando houver alteração na diretoria:
 | 18 | **FUNCAO_DIRETORIA** | Funções/cargos da diretoria | RF14 |
 | 19 | **ATLETA_MODALIDADE** | Entidade associativa (ATLETA × MODALIDADE) | RN05 |
 | 20 | **TURMA_PROFESSOR** | Entidade associativa (FUNCIONÁRIO × TURMA) | RF07 |
-| 21 | **ENDEREÇO** | Armazena um ou mais endereços vinculados às pessoas cadastradas | RN32 |
-| 22 | **REGISTRO_ACESSO** | Registra os acessos das pessoas ao clube, incluindo data e horário | RN33, RN34|
-| 23 | **VENDA** | Registra as compras realizadas por pessoas e o funcionário responsável | RN40, RN41 |
-| 24 | **PRODUTO** | Armazena os produtos comercializados pelo clube | RN43, RN44 |
-| 25 | **ITEM_VENDA** | Registra os produtos e quantidades que compõem cada venda | RN42, RN43 | 
-| 26 | **ESTOQUE**  | Controla a quantidade disponível dos produtos | RN44, RN45 | 
-| 27 | **EXAME_MEDICO** | Registra exames médicos realizados pelas pessoas do clube | RN38, RN39 | 
-| 28 | **CONVITE_VISITANTE** | Registra convites emitidos por sócios para visitantes | RN35, RN36, RN37|
-| 29 | **OCORRENCIA** | Registra ocorrências, envolvidos e o funcionário responsável pelo relato | RN46, RN47, RN48 | 
+| 21 | **ENDEREÇO** | Armazena um ou mais endereços vinculados às pessoas cadastradas | RN26 |
+| 22 | **REGISTRO_ACESSO** | Registra os acessos das pessoas ao clube, incluindo data e horário | RN27, RN38|
+| 23 | **VENDA** | Registra as compras realizadas por pessoas e o funcionário responsável | RN31, RN31 |
+| 24 | **PRODUTO** | Armazena os produtos comercializados pelo clube | RN34, RN41 |
+| 25 | **ITEM_VENDA** | Registra os produtos e quantidades que compõem cada venda | RN33, RN34 | 
+| 26 | **ESTOQUE**  | Controla a quantidade disponível dos produtos | RN35, RN41, RN42 | 
+| 27 | **EXAME_MEDICO** | Registra exames médicos realizados pelas pessoas do clube | RN30, RN40 | 
+| 28 | **CONVITE_VISITANTE** | Registra convites emitidos por sócios para visitantes | RN28, RN29, RN39 |
+| 29 | **OCORRENCIA** | Registra ocorrências, envolvidos e o funcionário responsável pelo relato | RN36, RN37, RN43 | 
 
 > *Entidades associativas para resolver relacionamentos N:N
 
@@ -892,6 +892,29 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | ordem_hierarquica | Inteiro | Não | Não | Valor > 0 |
 | situacao_funcao | Texto(10) | Sim | Não | Ativa, Inativa |
 
+
+##10.19 ATLETA_MODALIDADE##
+| Atributo |	Tipo |	Obrigatório |	Único |	Descrição |
+|---|---|---|---|---|
+| id_atleta_modalidade |	Identificador| Sim |	Sim |	Identificador único do vínculo |
+| id_atleta |	Referência |	Sim| 	Não |	FK para ATLETA |
+|id_modalidade	|Referência	|Sim	|Não	|FK para MODALIDADE|
+|data_inicio|	Data|	Sim|	Não|	Data de início na modalidade|
+|data_fim	|Data	|Não	|Não	|Data de encerramento do vínculo|
+|situacao_vinculo|	Texto(15)|	Sim|	Não|	Ativo, Inativo, Suspenso|
+|observacao	|Texto(500)	|Não	|Não|	Observações gerais|
+
+
+##10.20 TURMA_PROFESSOR##
+
+| Atributo |	Tipo |	Obrigatório |	Único |	Descrição |
+id_turma_professor	Identificador	Sim	Sim	Identificador único do vínculo
+id_turma	Referência	Sim	Não	FK para TURMA
+id_funcionario	Referência	Sim	Não	FK para FUNCIONÁRIO
+data_inicio	Data	Sim	Não	Data de início do professor na turma
+data_fim	Data	Não	Não	Data de encerramento do vínculo
+situacao_vinculo	Texto(15)	Sim	Não	Ativo, Inativo
+observacao	Texto(500)	Não	Não	Observações gerais
 ---
 
 ## 11. Relacionamentos
