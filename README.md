@@ -51,26 +51,45 @@ Escolhemos um clube social e esportivo porque apresenta:
 ### Processo 1: Cadastro de Sócio
 
 1- A pessoa procura o clube.
+
 2- Ela preenche o formulário de cadastro.
+
 3- O funcionário verifica o CPF informado.
 
 Se o CPF já estiver cadastrado:
+
 -Verifica se a pessoa já é sócia.
+
 Se já for sócia:
+
 -Os dados são atualizados, se necessário.
+
 -O processo é encerrado.
+
 Se não for sócia:
+
 -É criada uma nova matrícula.
+
 -A categoria do sócio é definida.
+
 -A data de associação é registrada.
+
 -É emitido o boleto da primeira mensalidade.
+
 -O processo é encerrado.
+
 Se o CPF não estiver cadastrado:
+
 -A nova pessoa é cadastrada no sistema.
+
 -Em seguida, é criada uma nova matrícula.
+
 -A categoria do sócio é definida.
+
 -A data de associação é registrada.
+
 -É emitido o boleto da primeira mensalidade.
+
 -O processo é encerrado.
 
 
