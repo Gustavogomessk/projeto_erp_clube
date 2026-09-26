@@ -233,6 +233,35 @@ Se as vagas forem preenchidas:
 -O processo é encerrado.
 
 
+
+### Processo 6: Cadastro de Dependente
+
+1- O sócio solicita o cadastro de um dependente.
+
+2- O funcionário verifica os dados do dependente.
+
+3- O sistema verifica se a pessoa já possui cadastro.
+
+Se a pessoa já estiver cadastrada:
+
+-O cadastro existente é localizado.
+
+-O dependente é vinculado ao sócio responsável.
+
+Se a pessoa não estiver cadastrada:
+
+-Os dados pessoais são cadastrados.
+
+-O dependente é vinculado ao sócio responsável.
+
+Após o vínculo:
+
+-É verificada a categoria do plano do sócio.
+
+-A validade do vínculo do dependente é registrada.
+
+-O processo é encerrado
+
 ---
 
 ## 6. Requisitos Funcionais
