@@ -15,7 +15,7 @@
 
 ---
 
-## 3. Justificativa da Escolha
+## 2. Justificativa da Escolha
 
 Escolhemos um clube social e esportivo porque apresenta:
 
@@ -31,7 +31,7 @@ Escolhemos um clube social e esportivo porque apresenta:
 
 ---
 
-## 4. Problemas Identificados
+## 3. Problemas Identificados
 
 | # | Problema | Impacto | Solução Proposta |
 |---|---|---|---|
@@ -46,7 +46,7 @@ Escolhemos um clube social e esportivo porque apresenta:
 
 ---
 
-## 5. Processos de Negócio
+## 4. Processos de Negócio
 
 ### Processo 1: Cadastro de Sócio
 
@@ -388,7 +388,7 @@ Quando houver alteração na diretoria:
 
 ---
 
-## 6. Requisitos Funcionais
+## 5. Requisitos Funcionais
 
 ### RF01 — Cadastro de Pessoas
 
@@ -533,7 +533,7 @@ Quando houver alteração na diretoria:
 
 ---
 
-## 7. Requisitos Não Funcionais
+## 6. Requisitos Não Funcionais
 
 ### RNF01 — Segurança
 - O sistema deve exigir autenticação para acesso
@@ -573,7 +573,7 @@ Quando houver alteração na diretoria:
 
 ---
 
-## 8. Regras de Negócio
+## 7. Regras de Negócio
 
 | # | Regra | Impacto no Modelo |
 |---|---|---|
@@ -620,7 +620,7 @@ Quando houver alteração na diretoria:
 
 ---
 
-## 9. Restrições e Políticas Organizacionais
+## 8. Restrições e Políticas Organizacionais
 
 ### 9.1 Restrições Legais
 - Dados pessoais devem seguir a LGPD (Lei Geral de Proteção de Dados)
@@ -641,7 +641,7 @@ Quando houver alteração na diretoria:
 
 ---
 
-## 10. Entidades Identificadas
+## 9. Entidades Identificadas
 
 | # | Entidade | Justificativa | Origem |
 |---|---|---|---|
@@ -678,9 +678,9 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 
 ---
 
-## 11. Atributos
+## 10. Atributos
 
-### 11.1 PESSOA
+### 10.1 PESSOA
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -700,7 +700,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | status_pessoa | Texto(10) | Sim | Não | Ativa, Inativa, Bloqueada |
 | data_cadastro | Data/Hora | Sim | Não | Data de cadastro no sistema |
 
-### 11.2 SÓCIO
+### 10.2 SÓCIO
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -713,7 +713,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | situacao_socio | Texto(15) | Sim | Não | Ativo, Inadimplente, Suspenso, Inativo |
 | observacao | Texto(500) | Não | Não | Observações gerais |
 
-### 11.3 DEPENDENTE
+### 10.3 DEPENDENTE
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -726,7 +726,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | situacao_dependente | Texto(10) | Sim | Não | Ativo, Inativo |
 | observacao | Texto(500) | Não | Não | Observações gerais |
 
-### 11.4 FUNCIONÁRIO
+### 10.4 FUNCIONÁRIO
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -743,7 +743,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | ctps_numero | Texto(20) | Não | Não | Obrigatório para CLT |
 | situacao_funcionario | Texto(15) | Sim | Não | Ativo, Afastado, Desligado |
 
-### 11.5 ATLETA
+### 10.5 ATLETA
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -756,7 +756,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | situacao_atleta | Texto(15) | Sim | Não | Ativo, Afastado, Lesionado, Inativo |
 | observacao | Texto(500) | Não | Não | Observações gerais |
 
-### 11.6 MODALIDADE
+### 10.6 MODALIDADE
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -768,7 +768,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | idade_maxima | Inteiro | Não | Não | Idade máxima para participação |
 | situacao_modalidade | Texto(10) | Sim | Não | Ativa, Inativa |
 
-### 11.7 CATEGORIA_SOCIO
+### 10.7 CATEGORIA_SOCIO
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -778,7 +778,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | descricao_beneficios | Texto(500) | Não | Não | Descrição dos benefícios |
 | situacao_categoria | Texto(10) | Sim | Não | Ativa, Inativa |
 
-### 11.8 DEPARTAMENTO
+### 10.8 DEPARTAMENTO
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -788,7 +788,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | id_responsavel | Referência | Não | Não | FK para FUNCIONÁRIO |
 | situacao_departamento | Texto(10) | Sim | Não | Ativo, Inativo |
 
-### 11.9 DEPENDENCIA_FISICA
+### 10.9 DEPENDENCIA_FISICA
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -799,7 +799,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | situacao_dependencia | Texto(15) | Sim | Não | Disponivel, Manutencao, Desativada |
 | observacao | Texto(500) | Não | Não | Observações gerais |
 
-### 11.10 RESERVA
+### 10.10 RESERVA
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -813,7 +813,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | data_solicitacao | Data/Hora | Sim | Não | Gerada automaticamente |
 | observacao | Texto(500) | Não | Não | Observações gerais |
 
-### 11.11 EVENTO
+### 10.11 EVENTO
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -830,7 +830,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | situacao_evento | Texto(20) | Sim | Não | Planejado, Inscricoes_Abertas, Encerrado, Cancelado, Realizado |
 | observacao | Texto(500) | Não | Não | Observações gerais |
 
-### 11.12 INSCRIÇÃO
+### 10.12 INSCRIÇÃO
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -842,7 +842,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | pagamento_confirmado | Booleano | Não | Não | Sim/Não |
 | observacao | Texto(500) | Não | Não | Observações gerais |
 
-### 11.13 MENSALIDADE
+### 10.13 MENSALIDADE
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -858,7 +858,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | data_geracao | Data/Hora | Sim | Não | Gerada automaticamente |
 | observacao | Texto(500) | Não | Não | Observações gerais |
 
-### 11.14 PAGAMENTO
+### 10.14 PAGAMENTO
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -870,7 +870,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | numero_recibo | Texto(20) | Sim | Sim | Gerado automaticamente |
 | observacao | Texto(500) | Não | Não | Observações gerais |
 
-### 11.15 TURMA
+### 10.15 TURMA
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -885,7 +885,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | situacao_turma | Texto(10) | Sim | Não | Ativa, Inativa |
 | observacao | Texto(500) | Não | Não | Observações gerais |
 
-### 11.16 MATRÍCULA
+### 10.16 MATRÍCULA
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -896,7 +896,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | situacao_matricula | Texto(15) | Sim | Não | Ativa, Cancelada, Concluida |
 | observacao | Texto(500) | Não | Não | Observações gerais |
 
-### 11.17 DIRETORIA
+### 10.17 DIRETORIA
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -908,7 +908,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | situacao_mandato | Texto(15) | Sim | Não | Em_Andamento, Concluido, Renunciado |
 | observacao | Texto(500) | Não | Não | Observações gerais |
 
-### 11.18 FUNCAO_DIRETORIA
+### 10.18 FUNCAO_DIRETORIA
 
 | Atributo | Tipo | Obrigatório | Único | Descrição |
 |---|---|---|---|---|
@@ -920,7 +920,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 
 ---
 
-## 12. Relacionamentos
+## 11. Relacionamentos
 
 | # | Entidade A | Cardinalidade | Verbo | Cardinalidade | Entidade B | Tipo |
 |---|---|---|---|---|---|---|
@@ -955,7 +955,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 
 ---
 
-## 13. Cardinalidades
+## 12. Cardinalidades
 
 ### Representações Textuais
 
@@ -984,20 +984,20 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 
 ---
 
-## 14. Dicionário de Dados Conceitual
+## 13. Dicionário de Dados Conceitual
 
 > O dicionário de dados completo está documentado na seção 11 (Atributos) com todos os detalhes de tipo, tamanho, obrigatoriedade e regras de cada atributo.
 
 ---
 
-## 15. DER — Diagrama Entidade-Relacionamento
+## 14. DER — Diagrama Entidade-Relacionamento
 
 
 `modelagem_DER.pdf`
 
 ---
 
-## 16. Justificativas Técnicas
+## 15. Justificativas Técnicas
 
 ### Justificativa 1: Substituição de "Político" por "Diretoria"
 
@@ -1037,7 +1037,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 
 ---
 
-## 17. Conclusão
+## 16. Conclusão
 
 Este documento apresenta a modelagem conceitual completa do **Clube Social e Esportivo União (CSEU)**, seguindo rigorosamente as 18 etapas do método proposto.
 
