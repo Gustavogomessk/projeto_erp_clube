@@ -262,6 +262,130 @@ Após o vínculo:
 
 -O processo é encerrado
 
+
+## Processo 7: Geração e Pagamento de Mensalidade
+
+
+1- O sistema identifica os sócios com mensalidade a gerar.
+
+2- O valor da mensalidade é definido conforme a categoria do sócio.
+
+3- A mensalidade é registrada no sistema.
+
+4- É definida a data de vencimento.
+
+5- O boleto -ou cobrança é disponibilizado ao sócio.
+
+Quando o pagamento é realizado:
+
+-O funcionário ou sistema registra o pagamento.
+
+-O valor pago é conferido.
+
+Se o pagamento for parcial:
+
+-O valor pago é registrado.
+
+-O saldo restante permanece pendente.
+
+-A mensalidade continua em aberto até a quitação.
+
+Se o pagamento quitar a mensalidade:
+
+-A mensalidade é marcada como paga.
+
+-O recibo é gerado.
+
+-O processo é encerrado.
+
+
+
+## Processo 8: Criação e Gestão de Turma
+
+
+1- O funcionário seleciona uma modalidade esportiva.
+
+2- Uma nova turma é cadastrada no sistema.
+
+3- Não definidos os horários da turma.
+
+4- A faixa etária é definida.
+
+5- A capacidade máxima de alunos é registrada.
+
+6- Um ou mais professores são vinculados à turma.
+
+Após a criação:
+
+-A turma fica disponível para novas matrículas.
+
+-O número de participantes é acompanhado pelo sistema.
+
+Se a capacidade máxima for atingida:
+
+-Novas matrículas são bloqueadas ou direcionadas para uma lista de espera.
+
+Se ainda houver vagas:
+
+-Novas matrículas continuam sendo permitidas.
+
+-O processo de gestão da turma permanece ativo.
+
+
+## Processo 9: Cadastro e Vinculação de Atleta
+
+1- A pessoa solicita participação como atleta do clube.
+
+2- O funcionário verifica se a pessoa já possui cadastro.
+
+Se a pessoa não estiver cadastrada:
+
+-Os dados pessoais são cadastrados no sistema.
+
+Se a pessoa já estiver cadastrada:
+
+-O cadastro existente é utilizado.
+
+Em seguida:
+
+
+-A pessoa é vinculada como atleta.
+
+-O funcionário seleciona uma ou mais modalidades.
+
+-O atleta é vinculado às modalidades escolhidas.
+
+-A data de início é registrada.
+
+-O processo é encerrado.
+
+
+## Processo 10: Gestão de Diretoria e Mandatos
+
+1- O clube define os membros que farão parte da diretoria.
+
+2- O funcionário verifica se cada membro possui cadastro no sistema.
+
+3- Os membros são vinculados à diretoria.
+
+4- O cargo de cada integrante é definido.
+
+5- A data de início do mandato é registrada.
+
+6- A data prevista para o término do mandato é definida.
+
+Quando houver alteração na diretoria:
+
+-O mandato anterior é encerrado.
+
+-O novo responsável é vinculado ao cargo.
+
+-Um novo período de mandato é registrado.
+
+-O processo é encerrado.
+
+
+
 ---
 
 ## 6. Requisitos Funcionais
