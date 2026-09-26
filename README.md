@@ -50,62 +50,54 @@ Escolhemos um clube social e esportivo porque apresenta:
 
 ### Processo 1: Cadastro de Sócio
 
-INÍCIO
-↓
-[Pessoa procura o clube]
-↓
-[Preenche formulário de cadastro]
-↓
-[Funcionário verifica CPF]
-↓
-CPF já cadastrado?
-├── SIM → [Verifica se já é sócio]
-│ ├── SIM → [Atualiza dados se necessário] → FIM
-│ └── NÃO → [Cria nova matrícula] → [Define categoria]
-│ ↓
-│ [Registra data de associação]
-│ ↓
-│ [Emite boleto primeira mensalidade] → FIM
-│
-└── NÃO → [Cadastra nova pessoa]
-↓
-[Cria nova matrícula]
-↓
-[Define categoria]
-↓
-[Registra data de associação]
-↓
-[Emite boleto primeira mensalidade] → FIM
+1- A pessoa procura o clube.
+2- Ela preenche o formulário de cadastro.
+3- O funcionário verifica o CPF informado.
+
+Se o CPF já estiver cadastrado:
+-Verifica se a pessoa já é sócia.
+Se já for sócia:
+-Os dados são atualizados, se necessário.
+-O processo é encerrado.
+Se não for sócia:
+-É criada uma nova matrícula.
+-A categoria do sócio é definida.
+-A data de associação é registrada.
+-É emitido o boleto da primeira mensalidade.
+-O processo é encerrado.
+Se o CPF não estiver cadastrado:
+-A nova pessoa é cadastrada no sistema.
+-Em seguida, é criada uma nova matrícula.
+-A categoria do sócio é definida.
+-A data de associação é registrada.
+-É emitido o boleto da primeira mensalidade.
+-O processo é encerrado.
 
 
 ### Processo 2: Matrícula em Modalidade Esportiva
 
 
-svgsvg
+Processo de Matrícula em Modalidade
+1- O sócio ou dependente deseja praticar uma modalidade.
+2- O funcionário verifica a categoria do sócio.
+3- O sistema verifica se o sócio está ativo.
+Se o sócio não estiver ativo:
+-As pendências são informadas.
+-O processo é encerrado.
+Se o sócio estiver ativo:
+-O funcionário verifica se existem vagas disponíveis na modalidade.
+Se não houver vaga:
+-O sócio ou dependente é colocado na lista de espera.
+-O processo é encerrado.
+Se houver vaga:
+-A matrícula é registrada.
+-O participante é vinculado a uma turma.
+-O nível é definido como iniciante, intermediário ou avançado.
+-A data de início é registrada.
+-Caso exista alguma taxa adicional, a cobrança é gerada.
+-O processo é encerrado.
 
-INÍCIO
-↓
-[Sócio/Dependente deseja praticar modalidade]
-↓
-[Funcionário verifica categoria do sócio]
-↓
-[Sócio ativo?]
-├── NÃO → [Informa pendências] → FIM
-└── SIM → [Verifica vagas na modalidade]
-↓
-[Existe vaga?]
-├── NÃO → [Lista de espera] → FIM
-└── SIM → [Registra matrícula]
-↓
-[Vincula à turma]
-↓
-[Define nível (iniciante, intermediário, avançado)]
-↓
-[Registra data de início]
-↓
-[Gera cobrança de taxa adicional se houver] → FIM
 
-text
 
 ### Processo 3: Reserva de Dependência Física
 
