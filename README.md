@@ -379,9 +379,7 @@ Quando houver alteração na diretoria:
 -O mandato anterior é encerrado.
 
 -O novo responsável é vinculado ao cargo.
-
 -Um novo período de mandato é registrado.
-
 -O processo é encerrado.
 
 
