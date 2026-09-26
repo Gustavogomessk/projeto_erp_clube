@@ -893,7 +893,7 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | situacao_funcao | Texto(10) | Sim | Não | Ativa, Inativa |
 
 
-##10.19 ATLETA_MODALIDADE##
+## 10.19 ATLETA_MODALIDADE ###
 | Atributo |	Tipo |	Obrigatório |	Único |	Descrição |
 |---|---|---|---|---|
 | id_atleta_modalidade |	Identificador| Sim |	Sim |	Identificador único do vínculo |
@@ -906,15 +906,14 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 
 
 ##10.20 TURMA_PROFESSOR##
-
 | Atributo |	Tipo |	Obrigatório |	Único |	Descrição |
-id_turma_professor	Identificador	Sim	Sim	Identificador único do vínculo
-id_turma	Referência	Sim	Não	FK para TURMA
-id_funcionario	Referência	Sim	Não	FK para FUNCIONÁRIO
-data_inicio	Data	Sim	Não	Data de início do professor na turma
-data_fim	Data	Não	Não	Data de encerramento do vínculo
-situacao_vinculo	Texto(15)	Sim	Não	Ativo, Inativo
-observacao	Texto(500)	Não	Não	Observações gerais
+| id_turma_professor|	Identificador|Sim|	Sim|	Identificador único do vínculo|
+|id_turma	|Referência	|Sim	|Não	|FK para TURMA|
+|id_funcionario|	Referência|	Sim|	Não|	FK para FUNCIONÁRIO|
+|data_inicio	|Data	|Sim|	Não	|Data de início do professor na turma|
+|data_fim|	Data|	Não|	Não	|Data de encerramento do vínculo|
+|situacao_vinculo|	Texto(15)	|Sim	|Não	|Ativo, Inativo|
+|observacao|	Texto(500)|	Não|	Não|	Observações gerais|
 ---
 
 ## 11. Relacionamentos
