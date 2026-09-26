@@ -95,25 +95,40 @@ Se o CPF não estiver cadastrado:
 
 ### Processo 2: Matrícula em Modalidade Esportiva
 
-
-Processo de Matrícula em Modalidade
 1- O sócio ou dependente deseja praticar uma modalidade.
+
 2- O funcionário verifica a categoria do sócio.
+
 3- O sistema verifica se o sócio está ativo.
+
 Se o sócio não estiver ativo:
+
 -As pendências são informadas.
+
 -O processo é encerrado.
+
 Se o sócio estiver ativo:
+
 -O funcionário verifica se existem vagas disponíveis na modalidade.
+
 Se não houver vaga:
+
 -O sócio ou dependente é colocado na lista de espera.
+
 -O processo é encerrado.
+
 Se houver vaga:
+
 -A matrícula é registrada.
+
 -O participante é vinculado a uma turma.
+
 -O nível é definido como iniciante, intermediário ou avançado.
+
 -A data de início é registrada.
+
 -Caso exista alguma taxa adicional, a cobrança é gerada.
+
 -O processo é encerrado.
 
 
@@ -121,87 +136,102 @@ Se houver vaga:
 ### Processo 3: Reserva de Dependência Física
 
 
-svgsvg
+1- O sócio solicita a reserva de uma dependência do clube.
 
-INÍCIO
-↓
-[Sócio solicita reserva]
-↓
-[Funcionário verifica disponibilidade]
-↓
-[Dependência disponível na data/hora?]
-├── NÃO → [Informa horários disponíveis] → FIM
-└── SIM → [Verifica situação do sócio]
-↓
-[Mensalidade em dia?]
-├── NÃO → [Bloqueia reserva] → FIM
-└── SIM → [Registra reserva]
-↓
-[Confirma com sócio]
-↓
-[Registra responsável pela reserva] → FIM
+2- O funcionário verifica a disponibilidade para a data e o horário desejados.
 
-text
+Se a dependência não estiver disponível:
+
+-O funcionário informa os horários disponíveis.
+
+-O processo é encerrado.
+
+Se a dependência estiver disponível:
+
+-O funcionário verifica a situação do sócio.
+
+-É conferido se a mensalidade está em dia.
+
+Se a mensalidade estiver atrasada:
+
+-A reserva é bloqueada.
+
+-O processo é encerrado.
+
+Se a mensalidade estiver em dia:
+
+-A reserva é registrada.
+
+-A confirmação é enviada ao sócio.
+
+-O responsável pela reserva é registrado.
+
+-O processo é encerrado.
+
+
 
 ### Processo 4: Contratação de Funcionário
 
 
-svgsvg
+1- O departamento solicita a contratação de um novo funcionário.
 
-INÍCIO
-↓
-[Departamento solicita contratação]
-↓
-[Diretoria aprova vaga]
-↓
-[RH recebe candidatos]
-↓
-[Seleciona candidato]
-↓
-[Cadastra dados pessoais (PESSOA)]
-↓
-[Vincula como FUNCIONÁRIO]
-↓
-[Define cargo e departamento]
-↓
-[Registra data de admissão]
-↓
-[Define salário e jornada]
-↓
-[Gera matrícula funcional] → FIM
+2- A diretoria analisa e aprova a abertura da vaga.
 
-text
+3- O RH recebe os candidatos.
+
+4- Um candidato é selecionado.
+
+Após a seleção:
+
+-Os dados pessoais do candidato são cadastrados na entidade PESSOA.
+
+-O cadastro é vinculado à entidade FUNCIONÁRIO.
+
+-O cargo e o departamento são definidos.
+
+-A data de admissão é registrada.
+
+-O salário e a jornada de trabalho são definidos.
+
+-A matrícula funcional é gerada.
+
+-O processo é encerrado.
+
 
 ### Processo 5: Organização de Evento
 
+1- A diretoria aprova a realização do evento.
 
-svgsvg
+2- São definidos a data, o local e o público-alvo.
 
-INÍCIO
-↓
-[Diretoria aprova evento]
-↓
-[Define data, local e público-alvo]
-↓
-[Funcionário cadastra evento]
-↓
-[Define capacidade máxima]
-↓
-[Define valor da inscrição (se houver)]
-↓
-[Abre inscrições para sócios]
-↓
-[Sócios se inscrevem]
-↓
-[Vagas preenchidas?]
-├── NÃO → [Aguarda mais inscrições]
-└── SIM → [Encerra inscrições]
-↓
-[Registra participantes]
-↓
-[Realiza evento] → FIM
+3- O funcionário cadastra o evento no sistema.
 
-text
+4- A capacidade máxima de participantes é definida.
+
+5- O valor da inscrição é definido, caso exista cobrança.
+
+6- As inscrições são abertas para os sócios.
+
+Durante o período de inscrições:
+
+-Os sócios realizam suas inscrições.
+
+-O sistema verifica se todas as vagas foram preenchidas.
+
+Se ainda houver vagas:
+
+-O sistema continua aguardando novas inscrições.
+
+Se as vagas forem preenchidas:
+
+-As inscrições são encerradas.
+
+-Os participantes são registrados.
+
+-O evento é realizado.
+
+-O processo é encerrado.
+
 
 ---
 
