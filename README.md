@@ -50,9 +50,6 @@ Escolhemos um clube social e esportivo porque apresenta:
 
 ### Processo 1: Cadastro de Sócio
 
-
-svgsvg
-
 INÍCIO
 ↓
 [Pessoa procura o clube]
@@ -80,7 +77,6 @@ CPF já cadastrado?
 ↓
 [Emite boleto primeira mensalidade] → FIM
 
-text
 
 ### Processo 2: Matrícula em Modalidade Esportiva
 
