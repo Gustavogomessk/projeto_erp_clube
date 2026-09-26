@@ -905,8 +905,9 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 |observacao	|Texto(500)	|Não	|Não|	Observações gerais|
 
 
-##10.20 TURMA_PROFESSOR##
+## 10.20 TURMA_PROFESSOR ##
 | Atributo |	Tipo |	Obrigatório |	Único |	Descrição |
+|---|---|---|---|---|
 | id_turma_professor|	Identificador|Sim|	Sim|	Identificador único do vínculo|
 |id_turma	|Referência	|Sim	|Não	|FK para TURMA|
 |id_funcionario|	Referência|	Sim|	Não|	FK para FUNCIONÁRIO|
