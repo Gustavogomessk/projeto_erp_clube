@@ -58,39 +58,29 @@ Escolhemos um clube social e esportivo porque apresenta:
 
 Se o CPF já estiver cadastrado:
 
--Verifica se a pessoa já é sócia.
+- Verifica se a pessoa já é sócia.
 
 Se já for sócia:
 
--Os dados são atualizados, se necessário.
-
--O processo é encerrado.
+- Os dados são atualizados, se necessário.
+- O processo é encerrado.
 
 Se não for sócia:
 
--É criada uma nova matrícula.
-
--A categoria do sócio é definida.
-
--A data de associação é registrada.
-
--É emitido o boleto da primeira mensalidade.
-
--O processo é encerrado.
+- É criada uma nova matrícula.
+- A categoria do sócio é definida.
+- A data de associação é registrada.
+- É emitido o boleto da primeira mensalidade.
+- O processo é encerrado.
 
 Se o CPF não estiver cadastrado:
 
--A nova pessoa é cadastrada no sistema.
-
--Em seguida, é criada uma nova matrícula.
-
--A categoria do sócio é definida.
-
--A data de associação é registrada.
-
--É emitido o boleto da primeira mensalidade.
-
--O processo é encerrado.
+- A nova pessoa é cadastrada no sistema.
+- Em seguida, é criada uma nova matrícula.
+- A categoria do sócio é definida.
+- A data de associação é registrada.
+- É emitido o boleto da primeira mensalidade.
+- O processo é encerrado.
 
 
 ### Processo 2: Matrícula em Modalidade Esportiva
@@ -103,33 +93,26 @@ Se o CPF não estiver cadastrado:
 
 Se o sócio não estiver ativo:
 
--As pendências são informadas.
-
--O processo é encerrado.
+- As pendências são informadas.
+- O processo é encerrado.
 
 Se o sócio estiver ativo:
 
--O funcionário verifica se existem vagas disponíveis na modalidade.
+- O funcionário verifica se existem vagas disponíveis na modalidade.
 
 Se não houver vaga:
 
--O sócio ou dependente é colocado na lista de espera.
-
--O processo é encerrado.
+- O sócio ou dependente é colocado na lista de espera.
+- O processo é encerrado.
 
 Se houver vaga:
 
--A matrícula é registrada.
-
--O participante é vinculado a uma turma.
-
--O nível é definido como iniciante, intermediário ou avançado.
-
--A data de início é registrada.
-
--Caso exista alguma taxa adicional, a cobrança é gerada.
-
--O processo é encerrado.
+- A matrícula é registrada.
+- O participante é vinculado a uma turma.
+- O nível é definido como iniciante, intermediário ou avançado.
+- A data de início é registrada.
+- Caso exista alguma taxa adicional, a cobrança é gerada.
+- O processo é encerrado.
 
 
 
@@ -142,31 +125,25 @@ Se houver vaga:
 
 Se a dependência não estiver disponível:
 
--O funcionário informa os horários disponíveis.
-
--O processo é encerrado.
+- O funcionário informa os horários disponíveis.
+- O processo é encerrado.
 
 Se a dependência estiver disponível:
 
--O funcionário verifica a situação do sócio.
-
--É conferido se a mensalidade está em dia.
+- O funcionário verifica a situação do sócio.
+- É conferido se a mensalidade está em dia.
 
 Se a mensalidade estiver atrasada:
 
--A reserva é bloqueada.
-
--O processo é encerrado.
+- A reserva é bloqueada.
+- O processo é encerrado.
 
 Se a mensalidade estiver em dia:
 
--A reserva é registrada.
-
--A confirmação é enviada ao sócio.
-
--O responsável pela reserva é registrado.
-
--O processo é encerrado.
+- A reserva é registrada.
+- A confirmação é enviada ao sócio.
+- O responsável pela reserva é registrado.
+- O processo é encerrado.
 
 
 
@@ -183,19 +160,13 @@ Se a mensalidade estiver em dia:
 
 Após a seleção:
 
--Os dados pessoais do candidato são cadastrados na entidade PESSOA.
-
--O cadastro é vinculado à entidade FUNCIONÁRIO.
-
--O cargo e o departamento são definidos.
-
--A data de admissão é registrada.
-
--O salário e a jornada de trabalho são definidos.
-
--A matrícula funcional é gerada.
-
--O processo é encerrado.
+- Os dados pessoais do candidato são cadastrados na entidade PESSOA.
+- O cadastro é vinculado à entidade FUNCIONÁRIO.
+- O cargo e o departamento são definidos.
+- A data de admissão é registrada.
+- O salário e a jornada de trabalho são definidos.
+- A matrícula funcional é gerada.
+- O processo é encerrado.
 
 
 ### Processo 5: Organização de Evento
@@ -214,9 +185,8 @@ Após a seleção:
 
 Durante o período de inscrições:
 
--Os sócios realizam suas inscrições.
-
--O sistema verifica se todas as vagas foram preenchidas.
+- Os sócios realizam suas inscrições.
+- O sistema verifica se todas as vagas foram preenchidas.
 
 Se ainda houver vagas:
 
@@ -224,13 +194,10 @@ Se ainda houver vagas:
 
 Se as vagas forem preenchidas:
 
--As inscrições são encerradas.
-
--Os participantes são registrados.
-
--O evento é realizado.
-
--O processo é encerrado.
+- As inscrições são encerradas.
+- Os participantes são registrados.
+- O evento é realizado.
+- O processo é encerrado.
 
 
 
@@ -244,23 +211,19 @@ Se as vagas forem preenchidas:
 
 Se a pessoa já estiver cadastrada:
 
--O cadastro existente é localizado.
-
--O dependente é vinculado ao sócio responsável.
+- O cadastro existente é localizado.
+- O dependente é vinculado ao sócio responsável.
 
 Se a pessoa não estiver cadastrada:
 
--Os dados pessoais são cadastrados.
-
--O dependente é vinculado ao sócio responsável.
+- Os dados pessoais são cadastrados.
+- O dependente é vinculado ao sócio responsável.
 
 Após o vínculo:
 
--É verificada a categoria do plano do sócio.
-
--A validade do vínculo do dependente é registrada.
-
--O processo é encerrado
+- É verificada a categoria do plano do sócio.
+- A validade do vínculo do dependente é registrada.
+- O processo é encerrado
 
 
 ## Processo 7: Geração e Pagamento de Mensalidade
@@ -278,25 +241,20 @@ Após o vínculo:
 
 Quando o pagamento é realizado:
 
--O funcionário ou sistema registra o pagamento.
-
--O valor pago é conferido.
+- O funcionário ou sistema registra o pagamento.
+- O valor pago é conferido.
 
 Se o pagamento for parcial:
 
--O valor pago é registrado.
-
--O saldo restante permanece pendente.
-
--A mensalidade continua em aberto até a quitação.
+- O valor pago é registrado.
+- O saldo restante permanece pendente.
+- A mensalidade continua em aberto até a quitação.
 
 Se o pagamento quitar a mensalidade:
 
--A mensalidade é marcada como paga.
-
--O recibo é gerado.
-
--O processo é encerrado.
+- A mensalidade é marcada como paga.
+- O recibo é gerado.
+- O processo é encerrado.
 
 
 
@@ -317,19 +275,17 @@ Se o pagamento quitar a mensalidade:
 
 Após a criação:
 
--A turma fica disponível para novas matrículas.
-
--O número de participantes é acompanhado pelo sistema.
+- A turma fica disponível para novas matrículas.
+- O número de participantes é acompanhado pelo sistema.
 
 Se a capacidade máxima for atingida:
 
--Novas matrículas são bloqueadas ou direcionadas para uma lista de espera.
+- Novas matrículas são bloqueadas ou direcionadas para uma lista de espera.
 
 Se ainda houver vagas:
 
--Novas matrículas continuam sendo permitidas.
-
--O processo de gestão da turma permanece ativo.
+- Novas matrículas continuam sendo permitidas.
+- O processo de gestão da turma permanece ativo.
 
 
 ## Processo 9: Cadastro e Vinculação de Atleta
@@ -349,15 +305,11 @@ Se a pessoa já estiver cadastrada:
 Em seguida:
 
 
--A pessoa é vinculada como atleta.
-
--O funcionário seleciona uma ou mais modalidades.
-
--O atleta é vinculado às modalidades escolhidas.
-
--A data de início é registrada.
-
--O processo é encerrado.
+- A pessoa é vinculada como atleta.
+- O funcionário seleciona uma ou mais modalidades.
+- O atleta é vinculado às modalidades escolhidas.
+- A data de início é registrada.
+- O processo é encerrado.
 
 
 ## Processo 10: Gestão de Diretoria e Mandatos
@@ -378,10 +330,8 @@ Quando houver alteração na diretoria:
 
 - O mandato anterior é encerrado.
 - O novo responsável é vinculado ao cargo.
-
--Um novo período de mandato é registrado.
-
--O processo é encerrado.
+- Um novo período de mandato é registrado.
+- O processo é encerrado.
 
 
 
@@ -590,17 +540,29 @@ Quando houver alteração na diretoria:
 | **RN12** | Eventos podem ser restritos a sócios ou abertos ao público | Atributo tipo_evento na entidade EVENTO |
 | **RN13** | Funcionário pode também ser sócio | PESSOA pode ter vínculo com SÓCIO e FUNCIONÁRIO |
 | **RN14** | Atleta externo pode ser convidado sem ser sócio | ATLETA pode existir sem vínculo com SÓCIO |
-| **RN15** | Reservas com mínimo 24h e máximo 30 dias de antecedência | Regra de validação na entidade RESERVA |
+| **RN15** | Reservas com mínimo 24h e máximo 30 dias de antecedencia | Regra de validação na entidade RESERVA |
 | **RN16** | Um sócio pode cadastrar vários dependentes | Relacionamento SÓCIO (0,N) — POSSUI — DEPENDENTE (1,1) |
 | **RN17** | Um dependente pertence a apenas um sócio	|Chave estrangeira id_socio_titular na entidade DEPENDENTE |
 | **RN18** | Dependente perde o vínculo ao atingir a idade limite da categoria do plano.	| Regra de validação de idade e atualização de situacao_dependente |
-| **RN19** | Um sócio pode participar de várias atividades | Relacionamento SÓCIO × ATIVIDADE com cardinalidade N	 |
-| **RN20** | Um professor pode ministrar várias atividades | Relacionamento PROFESSOR/FUNCIONÁRIO × ATIVIDADE	 |
+| **RN19** | Um sócio pode participar de varias atividades | Relacionamento SÓCIO × MODALIDADE com cardinalidade N	 |
+| **RN20** | Um professor pode ministrar várias atividades | Relacionamento PROFESSOR/FUNCIONÁRIO × MODALILDADE	 |
 | **RN21** | Uma mensalidade pode possuir vários pagamentos parciais até sua quitação | Relacionamento MENSALIDADE (0,N) — RECEBE — PAGAMENTO (1,1) |
-| **RN22** | Não é permitida a reserva de uma dependência já reservada no mesmo horário | Validação de conflito de data e horário na entidade RESERVA |
-| **RN23** | Toda reserva deve estar vinculada a um sócio responsável | Toda reserva deve estar vinculada a um sócio responsável |
-| **RN24** | A reserva é automaticamente cancelada se a mensalidade do sócio responsável não for paga | Regra automática de atualização de situacao_reserva |
+| **RN22** | Não é permitida a reserva de uma dependência já reservada no mesmo horário | Validação de conflito de data e horario na entidade RESERVA |
+| **RN23** | Toda reserva deve estar vinculada a um sócio responsável | Um sócio responsável pode estar vinculado a várias reservas. |
+| **RN24** | A reserva é automaticamente cancelada se a mensalidade do sócio responsável não for paga | Regra automatica de atualização de situacao_reserva |
 | **RN25** | A categoria do plano define quais dependências o sócio pode reservar | Relacionamento/regra de permissão entre CATEGORIA_SOCIO e DEPENDENCIA_FISICA |
+| **RN26** | Uma pessoa pode possuir vários endereços | Cada endereço pertence a apenas uma pessoa |
+| **RN27** | Uma pessoa pode possuir vários registros de acesso | Cada registro de acesso pertence a apenas uma pessoa. |
+| **RN28** | Um sócio pode emitir vários convites para visitantes | Cada convite é emitido por apenas um sócio. |
+|**RN29** | Uma pessoa pode estar vinculada a vários convites como visitante | Cada convite pertence a apenas uma pessoa visitante | 
+| **RN30** | Uma pessoa pode possuir varios exames médicos | Cada exame médico pertence a apenas uma pessoa. | 
+| **RN31** | Uma pessoa pode realizar várias compras | Cada venda pertence a apenas uma pessoa compradora. |
+| **RN32** | Um funcionário pode registrar várias vendas | Cada venda é registrada por apenas um funcionário. |
+| **RN33** | Uma venda pode possuir vários itens | Cada item de venda pertence a apenas uma venda. |
+| **RN34** | Um produto pode aparecer em vários itens de venda | Cada item de venda está vinculado a apenas um produto |
+| **RN35** | Um produto pode possuir vários registros de estoque | Cada registro de estoque pertence a apenas um produto |
+| **RN36** | Uma pessoa pode estar envolvida em várias ocorrências | Cada ocorrência deve estar vinculada a uma pessoa envolvida | 
+| **RN37** | Um funcionário pode registrar varias ocorrências | Cada ocorrência é registrada por apenas um funcionario |
 
 
 
@@ -621,18 +583,18 @@ Quando houver alteração na diretoria:
 
 ## 8. Restrições e Políticas Organizacionais
 
-### 9.1 Restrições Legais
+### 8.1 Restrições Legais
 - Dados pessoais devem seguir a LGPD (Lei Geral de Proteção de Dados)
 - CPF não pode ser exibido publicamente
 - Menores de idade precisam de responsável legal cadastrado
 
-### 9.2 Restrições Operacionais
+### 8.2 Restrições Operacionais
 - Reservas só podem ser feitas no horário de funcionamento (6h às 22h)
 - O clube fecha às segundas-feiras para manutenção
 - Eventos com mais de 100 pessoas precisam de autorização da diretoria
 - Uso da churrasqueira requer reserva com mínimo de 48 horas de antecedência
 
-### 9.3 Políticas Organizacionais
+### 8.3 Políticas Organizacionais
 - Dependentes de sócios titulares têm prioridade em vagas de modalidades
 - Funcionários têm desconto de 50% na mensalidade de sócio
 - Sócios com mais de 10 anos de associação recebem desconto de 10%
@@ -662,8 +624,17 @@ Quando houver alteração na diretoria:
 | 16 | **MATRÍCULA** | Matrícula de atletas em turmas | RF05 |
 | 17 | **DIRETORIA** | Cargos diretivos ocupados por sócios | RF14 |
 | 18 | **FUNCAO_DIRETORIA** | Funções/cargos da diretoria | RF14 |
-| 19* | **ATLETA_MODALIDADE** | Entidade associativa (ATLETA × MODALIDADE) | RN05 |
-| 20* | **TURMA_PROFESSOR** | Entidade associativa (FUNCIONÁRIO × TURMA) | RF07 |
+| 19 | **ATLETA_MODALIDADE** | Entidade associativa (ATLETA × MODALIDADE) | RN05 |
+| 20 | **TURMA_PROFESSOR** | Entidade associativa (FUNCIONÁRIO × TURMA) | RF07 |
+| 21 | **ENDEREÇO** | Armazena um ou mais endereços vinculados às pessoas cadastradas | RN32 |
+| 22 | **REGISTRO_ACESSO** | Registra os acessos das pessoas ao clube, incluindo data e horário | RN33, RN34|
+| 23 | **VENDA** | Registra as compras realizadas por pessoas e o funcionário responsável | RN40, RN41 |
+| 24 | **PRODUTO** | Armazena os produtos comercializados pelo clube | RN43, RN44 |
+| 25 | **ITEM_VENDA** | Registra os produtos e quantidades que compõem cada venda | RN42, RN43 | 
+| 26 | **ESTOQUE**  | Controla a quantidade disponível dos produtos | RN44, RN45 | 
+| 27 | **EXAME_MEDICO** | Registra exames médicos realizados pelas pessoas do clube | RN38, RN39 | 
+| 28 | **CONVITE_VISITANTE** | Registra convites emitidos por sócios para visitantes | RN35, RN36, RN37|
+| 29 | **OCORRENCIA** | Registra ocorrências, envolvidos e o funcionário responsável pelo relato | RN46, RN47, RN48 | 
 
 > *Entidades associativas para resolver relacionamentos N:N
 
@@ -943,6 +914,19 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | 18 | PESSOA | (0,N) | REALIZA | (1,1) | INSCRIÇÃO | 1:N |
 | 19 | SÓCIO | (0,N) | OCUPA | (1,1) | DIRETORIA | 1:N |
 | 20 | DIRETORIA | (1,1) | REFERENTE A | (0,N) | FUNCAO_DIRETORIA | N:1 |
+| 21 | PESSOA | (1,1) | POSSUI | (0,N) | ENDEREÇO | 1:N |
+| 22 | PESSOA | (1,1) | REGISTRA | (0,N) |REGISTRO_ACESSO | 1:N |
+| 23 | SÓCIO | (1,1) | EMITE | (0,N) | CONVITE_VISITANTE | 1:N |
+| 24 | PESSOA | (1,1) | VISITA | (0,n) | CONVITE_VISITANTE | 1;N |
+| 25 | PESSOA | (1,1) | REALIZA | (0,N) | EXAME_MEDICO | 1:N | 
+| 26 | PESSOA | (1,1) |COMPRA | (0,N) | VENDA  | 1:N |
+| 27 | FUNCIONÁRIO | (1,1) | REGISTRA | (0,N) | VENDA | 1:N |
+| 28 | VENDA | (1,1) | CONTEM | (0,N) | ITEM_VENDA | 1:N |
+| 29 | ITEM_VENDA | (1,1) | INDICA | (0,N) | PRODUTO | 1:N |
+| 30 | PRODUTO | (1,1) | MANTEM | (0,N) |  ESTOQUE | 1:N |
+| 31 | PESSOA | (1,1) | ENVOLVE | (0,N) |  OCORRENCIA | 1:N |
+| 32 | FUNCIONÁRIO | (1,1) | RELATA | (0,N) |  OCORRENCIA | 1:N | 
+
 
 ### Entidades Associativas (para N:N)
 
