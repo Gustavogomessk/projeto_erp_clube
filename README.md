@@ -563,8 +563,12 @@ Quando houver alteração na diretoria:
 | **RN35** | Um produto pode possuir vários registros de estoque | Cada registro de estoque pertence a apenas um produto |
 | **RN36** | Uma pessoa pode estar envolvida em várias ocorrências | Cada ocorrência deve estar vinculada a uma pessoa envolvida | 
 | **RN37** | Um funcionário pode registrar varias ocorrências | Cada ocorrência é registrada por apenas um funcionario |
-
-
+| **RN38** | Todo registro de acesso deve possuir data, horário e tipo de movimentação |
+| **RN39** | Convites só podem ser utilizados dentro do período de validade |
+|**RN40** | Algumas modalidades podem exigir exame médico válido | 
+|**RN41** | A quantidade vendida não pode ultrapassar o estoque disponível|
+| **RN42** | Toda venda deve atualizar a quantidade disponível no estoque|
+| **RN43** | Toda ocorrência deve possuir data e descrição. | 
 
 
 
@@ -964,6 +968,24 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | PESSOA — REALIZA — INSCRIÇÃO | `PESSOA (0,N) ——— REALIZA —— INSCRIÇÃO (1,1)` | — |
 | SÓCIO — OCUPA — DIRETORIA | `SÓCIO (0,N) ——— OCUPA —— DIRETORIA (1,1)` | RN08 |
 | DIRETORIA — REFERENTE A — FUNÇÃO | `DIRETORIA (1,1) ——— REFERENTE A —— FUNCAO_DIRETORIA (0,N)` | RN08 |
+| PESSOA — REPRESENTA — DEPENDENTE | `PESSOA (0,1) ——— É —— DEPENDENTE (1,1)`| RN02 |
+| PESSOA — POSSUI — ENDEREÇO | `PESSOA (1,1) ——— POSSUI —— ENDEREÇO (0,N)` | RN26  |
+| PESSOA — REGISTRA — REGISTRO_ACESSO | `PESSOA (1,1) ——— REGISTRA —— REGISTRO_ACESSO (0,N)`| RN27|
+| SÓCIO — EMITE — CONVITE_VISITANTE | `SÓCIO (1,1) ——— EMITE —— CONVITE_VISITANTE (0,N)`| RN28 |
+| PESSOA — VISITA — CONVITE_VISITANTE | `PESSOA (1,1) ——— VISITA COMO —— CONVITE_VISITANTE (0,N)` | RN29 |
+| PESSOA — REALIZA — EXAME_MEDICO | `PESSOA (1,1) ——— REALIZA —— EXAME_MEDICO (0,N)` | RN30 |
+| PESSOA — COMPRA EM — VENDA | `PESSOA (1,1) ——— COMPRA EM —— VENDA (0,N)` | RN31 |
+| FUNCIONÁRIO — REGISTRA — VENDA | `FUNCIONÁRIO (1,1) ——— REGISTRA —— VENDA (0,N)` | RN32 |
+| VENDA — CONTÉM — ITEM_VENDA | `VENDA (1,1) ——— CONTÉM —— ITEM_VENDA (1,N)`| RN33 |
+| ITEM_VENDA — REFERE-SE A — PRODUTO | `ITEM_VENDA (0,N) ——— REFERE-SE A —— PRODUTO (1,1)` | RN34 | 
+| PRODUTO — MANTÉM — ESTOQUE | `PRODUTO (1,1) ——— MANTÉM —— ESTOQUE (0,N)`| RN35 |
+| PESSOA — ENVOLVE-SE — OCORRENCIA | `PESSOA (1,1) ——— ENVOLVE-SE —— OCORRENCIA (0,N)` | RN36 |
+| FUNCIONÁRIO — RELATA — OCORRENCIA | `FUNCIONÁRIO (1,1) ——— RELATA —— OCORRENCIA (0,N)`| RN37 |
+| DEPENDENCIA_FISICA — SEDIA — EVENTO | `DEPENDENCIA_FISICA (1,1) ——— SEDIA —— EVENTO (0,N)` |
+| ATLETA — PRATICA — ATLETA_MODALIDADE | `ATLETA (1,1) ——— PRATICA —— ATLETA_MODALIDADE (0,N)`| RN05 | 
+| ATLETA_MODALIDADE — COMPÕE — TURMA| `ATLETA_MODALIDADE (1,1) ——— COMPÕE —— TURMA (0,N)` |
+| FUNCIONÁRIO — LECIONA EM — TURMA_PROFESSOR | `FUNCIONÁRIO (1,1) ——— LECIONA EM —— TURMA_PROFESSOR (0,N)`| RN20 |
+| TURMA_PROFESSOR — ALOCA — TURMA | `TURMA_PROFESSOR (1,1) ——— ALOCA —— TURMA (0,N)`| RN20 |
 
 ---
 
@@ -1028,14 +1050,14 @@ Este documento apresenta a modelagem conceitual completa do **Clube Social e Esp
 
 | Elemento | Quantidade |
 |---|---|
-| Entidades principais | 18 |
+| Entidades principais | 26 |
 | Entidades associativas | 3 |
-| Relacionamentos | 20 |
-| Atributos documentados | ~120 |
+| Relacionamentos | 37 |
+| Atributos documentados | ~150 |
 | Requisitos funcionais | 14 |
 | Requisitos não funcionais | 7 |
-| Regras de negócio | 25 |
-| Processos documentados | 5 |
+| Regras de negócio | 43 |
+| Processos documentados | 10 |
 | Justificativas técnicas | 6 |
 
 ___
