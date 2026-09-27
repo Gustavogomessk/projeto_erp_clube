@@ -915,6 +915,116 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 |data_fim|	Data|	Não|	Não	|Data de encerramento do vínculo|
 |situacao_vinculo|	Texto(15)	|Sim	|Não	|Ativo, Inativo|
 |observacao|	Texto(500)|	Não|	Não|	Observações gerais|
+
+## 10.21 ENDEREÇO ##
+|Atributo|	Tipo|	Obrigatório|	Único|	Descrição|
+|---|---|---|---|---|
+|id_endereco	|Identificador	|Sim|	Sim|	Identificador único do endereço|
+|id_pessoa	Referência	|Sim|	Não	|FK para PESSOA|
+|logradouro|	Texto(100)|	Sim	|Não|	Rua, avenida ou outro logradouro|
+|numero	|Texto(10)	|Sim	|Não	|Número do imóvel|
+|complemento|	Texto(50)|	Não|	Não|	Complemento do endereço|
+|bairro	|Texto(50)	|Sim	|Não	|Bairro|
+|cidade	|Texto(50)|	Sim	|Não|	Cidade|
+|estado	|Texto(2)	|Sim	|Não|	UF|
+|cep|	Texto(8)|	Sim|	Não|	CEP|
+|tipo_endereco|	Texto(15)|	Sim	|Não|	Residencial, Comercial, Outro|
+|endereco_principal	|Booleano	|Sim	|Não	|Indica se é o endereço principal|
+
+## 10.22 REGISTRO_ACESSO ##
+|Atributo|	Tipo|	Obrigatório	|Único	|Descrição|
+|---|---|---|---|---|
+|id_registro_acesso	|Identificador|	Sim|	Sim	|Identificador único do registro|
+|id_pessoa	|Referência	|Sim	|Não	|FK para PESSOA|
+|data_acesso|	Data	|Sim|	Não|	Data do acesso|
+|hora_acesso	|Hora	|Sim	|Não	|Horário do acesso|
+|tipo_acesso|	Texto(10)	|Sim	|Não|	Entrada ou Saída|
+|meio_acesso	|Texto(20)	|Não	|Não	|Carteirinha, QR Code, Biometria|
+|observacao	|Texto(500)	|Não|	Não|	Observações sobre o acesso|
+
+## 10.23 VENDA ##
+|Atributo	|Tipo|	Obrigatório	|Único|	Descrição|
+|---|---|---|---|---|
+|id_venda	|Identificador|	Sim	|Sim	|Identificador único da venda|
+|id_pessoa	Referência	|Sim|	Não	|FK para PESSOA compradora|
+|id_funcionario|	Referência|	Sim	|Não|	FK para FUNCIONÁRIO responsável|
+|data_venda|	Data/Hora	|Sim|	Não	|Data e horário da venda|
+|valor_total	|Decimal(10,2)|	Sim	|Não	|Valor total da venda|
+|forma_pagamento|	Texto(15)|	Sim	|Não	|PIX, Dinheiro, Cartão|
+|situacao_venda	|Texto(15)|	Sim	|Não	|Concluída, Cancelada|
+|observacao	|Texto(500)	|Não	|Não	|Observações gerais|
+
+## 10.24 PRODUTO ##
+|Atributo	|Tipo|	Obrigatório|	Único|	Descrição|
+|---|---|---|---|---|
+|id_produto	|Identificador|	Sim	|Sim	|Identificador único do produto|
+|nome_produto	|Texto(100)|	Sim	|Não	|Nome do produto|
+|descricao	|Texto(500)|	Não|	Não|	Descrição do produto|
+|categoria_produto	|Texto(50)	|Não|	Não	|Categoria do produto|
+|valor_unitario	|Decimal(10,2)|	Sim|	Não|	Preço unitário de venda|
+|codigo_produto	|Texto(30)|	Sim	|Sim	|Código único do produto|
+|situacao_produto	|texto(15)|	Sim	|Não	|Ativo, Inativo|
+|observacao	|Texto(500)|	Não	|Não	|Observações gerais|
+
+## 10.25 ITEM_VENDA ##
+|Atributo|	Tipo|	Obrigatório	|Único|	Descrição|
+|---|---|---|---|---|
+|id_item_venda	|Identificador	|Sim	|Sim|	Identificador único do item|
+|id_venda	|Referência	|Sim	|Não|	FK para VENDA|
+|id_produto|	Referência|	Sim	|Não	|FK para PRODUTO|
+|quantidade|	Inteiro|	Sim	|Não	|Quantidade adquirida|
+|valor_unitario|	Decimal(10,2)|	Sim	|Não	|Valor do produto no momento da venda|
+|subtotal	|Decimal(10,2)|	Sim	|Não	|Quantidade × valor unitário|
+|observacao	|Texto(500)	|Não	|Não|	Observações sobre o item|
+
+## 10.26 ESTOQUE ##
+|Atributo	|Tipo|	Obrigatório|	Único	|Descrição|
+|---|---|---|---|---|
+|id_estoque	|Identificador	|Sim	|Sim	|Identificador único do registro|
+|id_produto|	Referência|	Sim	|Não	|FK para PRODUTO|
+|quantidade_disponivel	|Inteiro	|Sim	|Não	|Quantidade atual disponível|
+|quantidade_minima	|Inteiro|	Sim	|Não|	Quantidade mínima recomendada|
+|data_atualizacao	|Data/Hora	|Sim|	Não|	Última atualização do estoque|
+|situacao_estoque|	Texto(15)	|Sim|	Não	|Disponível, Baixo, Esgotado|
+|observacao	|Texto(500)|	Não	|Não	|Observações gerais|
+
+## 10.27 EXAME_MEDICO ##
+|Atributo	|Tipo|	Obrigatório	|Único	|Descrição|
+|---|---|---|---|---|
+|id_exame_medico|	Identificador	|Sim|	Sim|	Identificador único do exame|
+|id_pessoa	|Referência	|Sim|	Não|	FK para PESSOA|
+|data_exame	|Data	|Sim	|Não	|Data de realização do exame|
+|data_validade	|Data|	Sim	|Não	|Data de validade do exame|
+|resultado	|Texto(15)	|Sim	|Não	|Apto, Inapto, Com restrição|
+|nome_medico	|Texto(100)|	Sim	|Não|	Médico responsável|
+|crm_medico	|Texto(20)	|Sim	|Não	|Registro profissional do médico|
+|observacao	|Texto(500)	|Não|	Não	|Observações ou restrições|
+
+## 10.28 CONVITE_VISITANTE ## 
+|Atributo	|Tipo|	Obrigatório	|Único	|Descrição|
+|---|---|---|---|---|
+|id_convite	|Identificador	|Sim|	Sim	|Identificador único do convite|
+|id_socio|	Referência	|Sim|	Não	|FK para SÓCIO responsável|
+|id_pessoa_visitante|	Referência|	Sim	|Não	|FK para PESSOA visitante|
+|codigo_convite|	Texto(20)	|Sim	|Sim	|Código único do convite|
+|data_emissao	|Data/Hora	|Sim|	Não	|Data de emissão|
+|data_validade|	Data	|Sim|	Não	|Data limite para utilização|
+|situacao_convite|	Texto(15)|	Sim	|Não	|Ativo, Utilizado, Expirado, Cancelado|
+|observacao	|Texto(500)	|Não|	Não|	Observações gerais|
+
+## 10.29 OCORRENCIA ##
+|Atributo	|Tipo	|Obrigatório	|Único	|Descrição|
+|---|---|---|---|---|
+|id_ocorrencia	|Identificador	|Sim|	Sim	|Identificador único da ocorrência|
+|id_pessoa	Referência|	Sim	|Não	|FK para PESSOA envolvida|
+|id_funcionario|	Referência|	Sim	|Não	|FK para FUNCIONÁRIO que registrou|
+|data_ocorrencia	|Data|	Sim	|Não	|Data da ocorrência|
+|hora_ocorrencia	|Hora|	Sim	|Não	|Horário da ocorrência|
+|tipo_ocorrencia|	Texto(30)|	Sim|	Não	|Acidente, Advertência, Dano, Outro|
+|descricao	|Texto(500)|	Sim	|Não | Descrição detalhada da ocorrência|
+|gravidade|	Texto(15)	|Não|	Não	|Baixa, Média, Alta|
+|situacao_ocorrencia	|Texto(20)|	Sim|	Não	|Aberta, Em análise, Resolvida|
+|providencia_tomada|	Texto(500)	|Não	|Não|	Medidas adotadas após a ocorrência|
 ---
 
 ## 11. Relacionamentos
