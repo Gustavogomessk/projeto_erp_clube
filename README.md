@@ -615,7 +615,6 @@ A alteração foi feita porque:
 | --------------- | ------------- | ----------- | ----- | --------------------------- |
 | CPF       | Identificador | Sim         | Sim   | Identificador da pessoa     |
 | nome_completo   | Texto(100)    | Sim         | Não   | Nome completo               |
-| cpf             | Texto(11)     | Sim         | Sim   | Cadastro de Pessoa Física   |
 | data_nascimento | Data          | Sim         | Não   | Data de nascimento          |
 | telefone        | Texto(15)     | Não         | Não   | Telefone de contato         |
 | email           | Texto(100)    | Não         | Não   | E-mail                      |
