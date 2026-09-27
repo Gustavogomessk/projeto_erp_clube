@@ -17,7 +17,7 @@
 
 ## 2. Justificativa da Escolha
 
-Escolhemos um clube social e esportivo porque apresenta:
+Escolhemos um clube social e esportivo porque ele reúne vários processos diferentes dentro de um mesmo ambiente. Além de lidar com pessoas, o clube também precisa organizar pagamentos, reservas, eventos, atividades esportivas e setores administrativos.
 
 | Critério | Justificativa |
 |---|---|
@@ -50,124 +50,113 @@ Escolhemos um clube social e esportivo porque apresenta:
 
 ### Processo 1: Cadastro de Sócio
 
-1- A pessoa procura o clube.
+1- A pessoa procura o clube para realizar o cadastro.
 
-2- Ela preenche o formulário de cadastro.
+2- Ela preenche o formulário com seus dados.
 
-3- O funcionário verifica o CPF informado.
+3- O funcionário consulta o CPF informado.
 
 Se o CPF já estiver cadastrado:
 
-- Verifica se a pessoa já é sócia.
+- O funcionário verifica se essa pessoa já é sócia.
 
 Se já for sócia:
 
-- Os dados são atualizados, se necessário.
-- O processo é encerrado.
+- Os dados são conferidos e atualizados, caso seja necessário.
+- O atendimento é finalizado.
 
 Se não for sócia:
 
 - É criada uma nova matrícula.
 - A categoria do sócio é definida.
 - A data de associação é registrada.
-- É emitido o boleto da primeira mensalidade.
-- O processo é encerrado.
+- O boleto da primeira mensalidade é gerado.
+- O cadastro é concluído.
 
 Se o CPF não estiver cadastrado:
 
-- A nova pessoa é cadastrada no sistema.
-- Em seguida, é criada uma nova matrícula.
-- A categoria do sócio é definida.
+- Primeiro é feito o cadastro da pessoa.
+- Depois, é criada a matrícula de sócio.
+- A categoria é definida.
 - A data de associação é registrada.
-- É emitido o boleto da primeira mensalidade.
-- O processo é encerrado.
-
+- O boleto da primeira mensalidade é gerado.
+- O cadastro é concluído.
 
 ### Processo 2: Matrícula em Modalidade Esportiva
 
-1- O sócio ou dependente deseja praticar uma modalidade.
+1- O sócio ou dependente escolhe a modalidade que deseja praticar.
 
-2- O funcionário verifica a categoria do sócio.
+2- O funcionário confere a categoria do sócio responsável.
 
-3- O sistema verifica se o sócio está ativo.
+3- Depois, verifica se o sócio está ativo.
 
 Se o sócio não estiver ativo:
 
 - As pendências são informadas.
-- O processo é encerrado.
+- A matrícula não é realizada naquele momento.
 
 Se o sócio estiver ativo:
 
-- O funcionário verifica se existem vagas disponíveis na modalidade.
+- O funcionário verifica se ainda existem vagas na modalidade.
 
 Se não houver vaga:
 
-- O sócio ou dependente é colocado na lista de espera.
-- O processo é encerrado.
+- O sócio ou dependente pode ser colocado na lista de espera.
+- O processo fica encerrado até surgir uma vaga.
 
 Se houver vaga:
 
 - A matrícula é registrada.
-- O participante é vinculado a uma turma.
+- O participante é colocado em uma turma.
 - O nível é definido como iniciante, intermediário ou avançado.
 - A data de início é registrada.
-- Caso exista alguma taxa adicional, a cobrança é gerada.
-- O processo é encerrado.
-
-
+- Se houver alguma taxa adicional, a cobrança também é gerada.
 
 ### Processo 3: Reserva de Dependência Física
 
-
 1- O sócio solicita a reserva de uma dependência do clube.
 
-2- O funcionário verifica a disponibilidade para a data e o horário desejados.
+2- O funcionário consulta se o local está disponível na data e no horário pedidos.
 
 Se a dependência não estiver disponível:
 
-- O funcionário informa os horários disponíveis.
-- O processo é encerrado.
+- O funcionário informa outros horários disponíveis.
+- Se o sócio não escolher outra opção, o processo é encerrado.
 
 Se a dependência estiver disponível:
 
 - O funcionário verifica a situação do sócio.
-- É conferido se a mensalidade está em dia.
+- Também confere se a mensalidade está em dia.
 
 Se a mensalidade estiver atrasada:
 
-- A reserva é bloqueada.
-- O processo é encerrado.
+- A reserva não é liberada.
+- O sócio é informado da pendência.
 
 Se a mensalidade estiver em dia:
 
 - A reserva é registrada.
-- A confirmação é enviada ao sócio.
-- O responsável pela reserva é registrado.
-- O processo é encerrado.
-
-
+- O sócio recebe a confirmação.
+- O responsável pela reserva fica registrado no sistema.
 
 ### Processo 4: Contratação de Funcionário
 
+1- Um departamento informa a necessidade de contratar um novo funcionário.
 
-1- O departamento solicita a contratação de um novo funcionário.
-
-2- A diretoria analisa e aprova a abertura da vaga.
+2- A diretoria analisa a solicitação e aprova a abertura da vaga.
 
 3- O RH recebe os candidatos.
 
-4- Um candidato é selecionado.
+4- Depois da seleção, um candidato é escolhido.
 
 Após a seleção:
 
-- Os dados pessoais do candidato são cadastrados na entidade PESSOA.
-- O cadastro é vinculado à entidade FUNCIONÁRIO.
+- Os dados pessoais são cadastrados na entidade PESSOA.
+- Esse cadastro é vinculado à entidade FUNCIONÁRIO.
 - O cargo e o departamento são definidos.
 - A data de admissão é registrada.
-- O salário e a jornada de trabalho são definidos.
+- O salário e a jornada de trabalho são informados.
 - A matrícula funcional é gerada.
-- O processo é encerrado.
-
 
 ### Processo 5: Organização de Evento
 
@@ -177,106 +166,96 @@ Após a seleção:
 
 3- O funcionário cadastra o evento no sistema.
 
-4- A capacidade máxima de participantes é definida.
+4- A capacidade máxima é informada.
 
-5- O valor da inscrição é definido, caso exista cobrança.
+5- Se houver cobrança, o valor da inscrição também é definido.
 
-6- As inscrições são abertas para os sócios.
+6- Depois disso, as inscrições são abertas.
 
 Durante o período de inscrições:
 
-- Os sócios realizam suas inscrições.
-- O sistema verifica se todas as vagas foram preenchidas.
+- Os interessados realizam suas inscrições.
+- O sistema acompanha a quantidade de vagas ocupadas.
 
 Se ainda houver vagas:
 
--O sistema continua aguardando novas inscrições.
+- As inscrições continuam abertas.
 
-Se as vagas forem preenchidas:
+Se todas as vagas forem preenchidas:
 
 - As inscrições são encerradas.
-- Os participantes são registrados.
-- O evento é realizado.
-- O processo é encerrado.
-
-
+- Os participantes ficam registrados.
+- Na data definida, o evento é realizado.
 
 ### Processo 6: Cadastro de Dependente
 
 1- O sócio solicita o cadastro de um dependente.
 
-2- O funcionário verifica os dados do dependente.
+2- O funcionário confere os dados apresentados.
 
-3- O sistema verifica se a pessoa já possui cadastro.
+3- Depois, verifica se essa pessoa já possui cadastro.
 
 Se a pessoa já estiver cadastrada:
 
-- O cadastro existente é localizado.
+- O cadastro existente é utilizado.
 - O dependente é vinculado ao sócio responsável.
 
 Se a pessoa não estiver cadastrada:
 
-- Os dados pessoais são cadastrados.
-- O dependente é vinculado ao sócio responsável.
+- Os dados pessoais são cadastrados primeiro.
+- Em seguida, é feito o vínculo com o sócio responsável.
 
 Após o vínculo:
 
-- É verificada a categoria do plano do sócio.
-- A validade do vínculo do dependente é registrada.
-- O processo é encerrado
-
+- A categoria do plano é conferida.
+- A data e a situação do vínculo são registradas.
 
 ### Processo 7: Geração e Pagamento de Mensalidade
 
+1- O sistema identifica os sócios que devem receber a mensalidade.
 
-1- O sistema identifica os sócios com mensalidade a gerar.
+2- O valor é definido de acordo com a categoria do sócio.
 
-2- O valor da mensalidade é definido conforme a categoria do sócio.
+3- A mensalidade é registrada.
 
-3- A mensalidade é registrada no sistema.
+4- A data de vencimento é informada.
 
-4- É definida a data de vencimento.
-
-5- O boleto -ou cobrança é disponibilizado ao sócio.
+5- A cobrança é disponibilizada para o sócio.
 
 Quando o pagamento é realizado:
 
-- O funcionário ou sistema registra o pagamento.
-- O valor pago é conferido.
+- O pagamento é registrado no sistema.
+- O valor recebido é conferido.
 
 Se o pagamento for parcial:
 
-- O valor pago é registrado.
-- O saldo restante permanece pendente.
-- A mensalidade continua em aberto até a quitação.
+- O valor pago fica registrado.
+- O restante continua pendente.
+- A mensalidade só é considerada quitada quando o valor total for pago.
 
-Se o pagamento quitar a mensalidade:
+Se o pagamento completar o valor da mensalidade:
 
-- A mensalidade é marcada como paga.
+- A situação é alterada para paga.
 - O recibo é gerado.
-- O processo é encerrado.
-
-
 
 ### Processo 8: Criação e Gestão de Turma
 
+1- O funcionário escolhe a modalidade da nova turma.
 
-1- O funcionário seleciona uma modalidade esportiva.
+2- A turma é cadastrada no sistema.
 
-2- Uma nova turma é cadastrada no sistema.
+3- São definidos os dias e horários.
 
-3- Não definidos os horários da turma.
+4- A faixa etária é informada.
 
-4- A faixa etária é definida.
-
-5- A capacidade máxima de alunos é registrada.
+5- É definida a capacidade máxima de alunos.
 
 6- Um ou mais professores são vinculados à turma.
 
 Após a criação:
 
-- A turma fica disponível para novas matrículas.
-- O número de participantes é acompanhado pelo sistema.
+- A turma passa a ficar disponível para novas matrículas.
+- O sistema acompanha a quantidade de participantes.
 
 Se a capacidade máxima for atingida:
 
@@ -284,58 +263,48 @@ Se a capacidade máxima for atingida:
 
 Se ainda houver vagas:
 
-- Novas matrículas continuam sendo permitidas.
-- O processo de gestão da turma permanece ativo.
-
+- As matrículas continuam sendo aceitas normalmente.
 
 ### Processo 9: Cadastro e Vinculação de Atleta
 
-1- A pessoa solicita participação como atleta do clube.
+1- A pessoa demonstra interesse em participar como atleta do clube.
 
-2- O funcionário verifica se a pessoa já possui cadastro.
+2- O funcionário verifica se ela já possui cadastro.
 
 Se a pessoa não estiver cadastrada:
 
--Os dados pessoais são cadastrados no sistema.
+- Os dados pessoais são cadastrados.
 
 Se a pessoa já estiver cadastrada:
 
--O cadastro existente é utilizado.
+- O cadastro existente é utilizado.
 
 Em seguida:
 
-
 - A pessoa é vinculada como atleta.
-- O funcionário seleciona uma ou mais modalidades.
-- O atleta é vinculado às modalidades escolhidas.
-- A data de início é registrada.
-- O processo é encerrado.
-
+- São escolhidas as modalidades em que ela irá participar.
+- Os vínculos com essas modalidades são registrados.
+- A data de início da atividade também é informada.
 
 ### Processo 10: Gestão de Diretoria e Mandatos
 
-1- O clube define os membros que farão parte da diretoria.
+1- O clube define quem fará parte da diretoria.
 
-2- O funcionário verifica se cada membro possui cadastro no sistema.
+2- É verificado se cada integrante já possui cadastro no sistema.
 
 3- Os membros são vinculados à diretoria.
 
-4- O cargo de cada integrante é definido.
+4- Para cada integrante, é informado o cargo ocupado.
 
 5- A data de início do mandato é registrada.
 
-6- A data prevista para o término do mandato é definida.
+6- Também é definida a previsão de término.
 
 Quando houver alteração na diretoria:
 
 - O mandato anterior é encerrado.
 - O novo responsável é vinculado ao cargo.
 - Um novo período de mandato é registrado.
-- O processo é encerrado.
-
-
-
----
 
 ## 5. Requisitos Funcionais
 
@@ -667,11 +636,12 @@ Quando houver alteração na diretoria:
 
 ### Nota sobre "POLÍTICO"
 
-Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCAO_DIRETORIA**, pois:
-- O termo "político" é vago e não representa claramente o contexto
-- O clube possui uma diretoria eleita com cargos definidos
-- Os cargos são ocupados por sócios titulares com mandato definido
-- Essa modelagem representa melhor a realidade do clube
+No início do projeto usamos o termo "Político", mas depois percebemos que ele não representava bem o contexto de um clube. Por isso, substituímos essa ideia por **DIRETORIA** e **FUNCAO_DIRETORIA**.
+
+- "Político" era um termo muito genérico para o que queríamos representar
+- O clube possui uma diretoria com cargos definidos
+- Esses cargos são ocupados por sócios durante um período de mandato
+- Dessa forma, a modelagem ficou mais próxima da organização real do clube
 
 ---
 
@@ -1165,101 +1135,99 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 
 ### Justificativa 1: Substituição de "Político" por "Diretoria"
 
-**Decisão:** A entidade "Político" foi substituída por "DIRETORIA" e "FUNCAO_DIRETORIA".
+**Decisão:** Substituir a entidade "Político" por **DIRETORIA** e **FUNCAO_DIRETORIA**.
 
-**Por quê:** O termo "político" é ambíguo e não representa adequadamente o contexto de um clube. Um clube possui uma diretoria eleita com cargos específicos (Presidente, Tesoureiro, Secretário). Modelar como "DIRETORIA" permite registrar o período do mandato, vincular o cargo ao sócio, manter histórico e representar a estrutura hierárquica.
+**Por quê:** Durante a revisão do modelo, percebemos que "Político" não descrevia bem o que existe dentro de um clube. A diretoria possui cargos definidos e cada cargo pode ser ocupado por um sócio durante determinado período. Dessa forma, conseguimos registrar melhor os mandatos e manter o histórico de quem ocupou cada função.
 
 ### Justificativa 2: PESSOA como Entidade Central
 
-**Decisão:** Criar PESSOA como entidade genérica com SÓCIO, FUNCIONÁRIO e ATLETA como especializações.
+**Decisão:** Utilizar PESSOA como cadastro principal e relacionar SÓCIO, FUNCIONÁRIO e ATLETA a ela.
 
-**Por quê:** Diversas entidades compartilham os mesmos dados básicos (nome, CPF, telefone, endereço). A generalização evita duplicação, inconsistência e dificuldade de manutenção. Uma mesma pessoa pode assumir múltiplos papéis.
+**Por quê:** Esses perfis compartilham vários dados, como nome, CPF e telefone. Se cada entidade guardasse essas informações separadamente, haveria muita repetição. Com PESSOA no centro, um mesmo cadastro pode assumir mais de um papel dentro do clube.
 
 ### Justificativa 3: ATLETA pode não ser SÓCIO
 
-**Decisão:** O relacionamento ATLETA → SÓCIO é opcional (0,1).
+**Decisão:** Deixar o vínculo entre ATLETA e SÓCIO como opcional.
 
-**Por quê:** A regra RN14 estabelece que atletas externos podem ser convidados sem ser sócios. Se ATLETA tivesse vínculo obrigatório com SÓCIO, não seria possível representar esta situação.
+**Por quê:** Nem todo atleta precisa ser sócio do clube. O projeto considera a participação de atletas externos, então esse vínculo não pode ser obrigatório.
 
 ### Justificativa 4: Relacionamento N:N entre ATLETA e MODALIDADE
 
-**Decisão:** ATLETA e MODALIDADE possuem relacionamento N:N.
+**Decisão:** Manter o relacionamento entre ATLETA e MODALIDADE como N:N.
 
-**Por quê:** Um atleta pode praticar várias modalidades simultaneamente. O relacionamento possui atributos próprios (nível, frequência semanal), justificando uma entidade associativa.
+**Por quê:** Um atleta pode praticar várias modalidades e cada modalidade pode ter vários atletas. Como esse vínculo também possui informações próprias, foi usada uma entidade associativa.
 
 ### Justificativa 5: MENSALIDADE separada de PAGAMENTO
 
-**Decisão:** Criar entidades separadas para MENSALIDADE e PAGAMENTO.
+**Decisão:** Manter MENSALIDADE e PAGAMENTO como entidades separadas.
 
-**Por quê:** Uma mensalidade pode receber múltiplos pagamentos (pagamento parcial). Separar permite rastrear histórico, controlar parciais, gerar recibos individuais e manter registro de inadimplência.
+**Por quê:** Uma mensalidade pode ser paga em mais de uma parte. Separando os pagamentos, conseguimos registrar cada valor recebido e acompanhar corretamente o que ainda está pendente.
 
 ### Justificativa 6: DEPENDENTE como entidade separada de SÓCIO
 
-**Decisão:** Criar entidade DEPENDENTE separada de SÓCIO.
+**Decisão:** Criar DEPENDENTE separado de SÓCIO.
 
-**Por quê:** Dependentes possuem características próprias (tipo de dependência, datas de vínculo, situação). Um dependente pode se tornar sócio titular futuramente, exigindo histórico separado.
+**Por quê:** O dependente possui informações próprias do vínculo com o titular, como tipo de dependência, período do vínculo e situação. Além disso, futuramente ele pode deixar de ser dependente e passar a ser sócio.
 
 ### Justificativa 7: ENDEREÇO separado de PESSOA
 
-**Decisão**: Criar a entidade ENDEREÇO separada de PESSOA.
+**Decisão:** Criar ENDEREÇO fora da entidade PESSOA.
 
-**Por quê:** Uma pessoa pode possuir mais de um endereço ao longo do tempo ou diferentes tipos de endereço. Separar ENDEREÇO evita repetição de campos em PESSOA e facilita atualização, histórico e manutenção dos dados.
+**Por quê:** Dessa forma, uma pessoa pode ter mais de um endereço sem repetir vários campos dentro do cadastro principal. Também fica mais simples atualizar essas informações quando necessário.
 
 ### Justificativa 8: REGISTRO_ACESSO como entidade própria
 
-**Decisão:**  Criar REGISTRO_ACESSO para armazenar entradas e saídas das pessoas no clube.
+**Decisão:** Criar REGISTRO_ACESSO para controlar entradas e saídas.
 
-**Por quê:** Os acessos possuem dados próprios, como data, horário e tipo de movimentação. Mantê-los separados permite histórico, auditoria e controle de circulação dentro do clube.
+**Por quê:** Cada acesso precisa guardar informações como data, horário e tipo de movimentação. Mantendo esses dados separados, o clube consegue consultar o histórico de acesso de cada pessoa.
 
 ### Justificativa 9: VENDA separada de ITEM_VENDA e PRODUTO
 
-**Decisão:** Utilizar VENDA, ITEM_VENDA e PRODUTO como entidades distintas.
+**Decisão:** Trabalhar com VENDA, ITEM_VENDA e PRODUTO separadamente.
 
-**Por quê:** Uma venda pode conter vários produtos e um mesmo produto pode aparecer em várias vendas. ITEM_VENDA resolve esse relacionamento e permite armazenar quantidade, preço unitário e subtotal de cada item.
+**Por quê:** Uma venda pode possuir vários produtos e um mesmo produto pode aparecer em várias vendas. ITEM_VENDA faz essa ligação e também guarda informações como quantidade e valor do item.
 
 ### Justificativa 10: ESTOQUE separado de PRODUTO
 
-**Decisão:** Criar a entidade ESTOQUE separada de PRODUTO.
+**Decisão:** Separar ESTOQUE de PRODUTO.
 
-**Por quê:** O produto representa o item comercializado, enquanto o estoque representa sua disponibilidade. Essa separação facilita o controle de quantidades, atualizações e possíveis históricos de movimentação.
+**Por quê:** PRODUTO guarda as informações do item vendido, enquanto ESTOQUE controla sua quantidade disponível. Assim, alterações no estoque não precisam mexer nos dados principais do produto.
 
 ### Justificativa 11: EXAME_MEDICO como entidade própria
 
-**Decisão:** Criar EXAME_MEDICO vinculado a PESSOA.
+**Decisão:** Criar EXAME_MEDICO ligado a PESSOA.
 
-**Por quê:** Uma pessoa pode realizar vários exames ao longo do tempo. A entidade permite registrar histórico, validade, resultado e informações necessárias para participação em determinadas modalidades.
+**Por quê:** Uma pessoa pode realizar vários exames ao longo do tempo. Com uma entidade própria, é possível guardar a data, validade, resultado e manter o histórico desses exames.
 
 ### Justificativa 12: CONVITE_VISITANTE como entidade própria
 
 **Decisão:** Criar CONVITE_VISITANTE separado de SÓCIO e PESSOA.
 
-**Por quê:** Um sócio pode emitir vários convites, e cada convite possui informações próprias, como validade, situação e identificação do visitante. A entidade permite controlar e manter o histórico dos convites.
+**Por quê:** O convite possui informações próprias, como código, validade e situação. Também é necessário saber qual sócio emitiu o convite e qual visitante está relacionado a ele.
 
 ### Justificativa 13: OCORRENCIA como entidade própria
 
-**Decisão:** Criar OCORRENCIA para registrar situações envolvendo pessoas no clube.
+**Decisão:** Criar OCORRENCIA para registrar situações ocorridas dentro do clube.
 
-**Por quê:** Uma ocorrência possui dados próprios, como data, horário, descrição, gravidade e providências tomadas. Separá-la permite histórico, auditoria e identificação do funcionário responsável pelo registro.
+**Por quê:** Uma ocorrência precisa ter informações próprias, como data, descrição, gravidade e responsáveis envolvidos. Mantê-la separada facilita a consulta do histórico.
 
 ### Justificativa 14: Entidades associativas para relacionamentos N:N
 
-**Decisão:** Utilizar entidades associativas como ATLETA_MODALIDADE, MATRÍCULA, TURMA_PROFESSOR, INSCRIÇÃO e ITEM_VENDA.
+**Decisão:** Utilizar entidades associativas nos relacionamentos N:N do projeto.
 
-**Por quê:** Relacionamentos muitos-para-muitos não são representados diretamente no modelo relacional. As entidades associativas permitem transformar esses relacionamentos em estruturas próprias e armazenar atributos específicos do vínculo.
+**Por quê:** Em alguns relacionamentos, além do vínculo entre as entidades, também existem dados específicos desse vínculo. Por isso foram usadas entidades como ATLETA_MODALIDADE, MATRÍCULA, TURMA_PROFESSOR, INSCRIÇÃO e ITEM_VENDA.
 
 ### Justificativa 15: INSCRIÇÃO separada de PESSOA e EVENTO
 
-**Decisão:** Criar INSCRIÇÃO como entidade intermediária entre PESSOA e EVENTO.
+**Decisão:** Utilizar INSCRIÇÃO para ligar PESSOA e EVENTO.
 
-**Por quê:** Uma pessoa pode participar de vários eventos e um evento pode possuir vários participantes. Além disso, a inscrição possui dados próprios, como data, situação e confirmação de pagamento.
+**Por quê:** Uma pessoa pode participar de vários eventos e um evento pode receber várias pessoas. A inscrição ainda possui informações próprias, como data e situação, então faz sentido manter esse vínculo em uma entidade.
 
 ### Justificativa 16: MATRÍCULA separada do vínculo ATLETA–TURMA
 
-**Decisão:** Representar a participação do atleta em uma turma por meio da entidade MATRÍCULA.
+**Decisão:** Utilizar MATRÍCULA para representar a participação do atleta em uma turma.
 
-**Por quê:** A matrícula possui características próprias, como data, situação e histórico. Isso permite controlar entradas, cancelamentos e conclusão da participação em uma turma.
-
----
+**Por quê:** Além de ligar o atleta à turma, a matrícula possui informações próprias, como data e situação. Isso ajuda a acompanhar matrículas ativas, canceladas ou concluídas.
 
 ## 16. Conclusão
 
