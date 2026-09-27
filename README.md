@@ -1202,5 +1202,5 @@ A utilização de PESSOA como entidade central também permite evitar a repetiç
 | Requisitos não funcionais | 7 |
 | Regras de negócio | 43 |
 | Processos documentados | 10 |
-| Justificativas técnicas | 6 |
+| Justificativas técnicas | 16 |
 
