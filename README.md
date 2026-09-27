@@ -489,21 +489,37 @@ Quando houver alteração na diretoria:
 - Senhas devem ser armazenadas de forma criptografada
 - Acesso por perfil (administrador, funcionário, sócio)
 - Dados de CPF devem ser mascarados para consulta pública
+- Dados de exames médicos devem possuir acesso restrito a usuários autorizados
+- Registros de ocorrências devem ser acessíveis apenas por funcionários autorizados
+- Registros de acesso ao clube não devem poder ser alterados por usuários sem permissão
+- Convites de visitantes devem possuir código único para validação
+- Operações de venda devem registrar o funcionário responsável
 
 ### RNF02 — Desempenho
 - Consultas devem responder em menos de 3 segundos
 - Relatórios mensais devem ser gerados em menos de 10 segundos
 - Sistema deve suportar 50 usuários simultâneos
+- Consultas de estoque devem apresentar a quantidade disponível de forma rápida
+- O registro de vendas deve atualizar o estoque sem atrasos perceptíveis
+- A validação de convites e registros de acesso deve ocorrer em poucos segundos
 
 ### RNF03 — Disponibilidade
 - Sistema deve estar disponível 99% do tempo
 - Manutenções programadas em horários de baixo uso
+- O módulo de registro de acesso deve permanecer disponível durante o horário de funcionamento do clube
+- Os módulos de vendas e estoque devem permanecer acessíveis durante as atividades comerciais do clube
+- Em caso de indisponibilidade, registros críticos devem poder ser recuperados após o restabelecimento do sistema
 
 ### RNF04 — Usabilidade
 - Interface intuitiva
 - Formulários com validação de dados
 - Mensagens de erro claras
 - Responsivo para dispositivos móveis
+- O cadastro de endereços deve possuir campos organizados e de fácil preenchimento
+- O registro de vendas deve permitir inclusão simples de produtos e quantidades
+- A consulta de estoque deve apresentar claramente produtos disponíveis e indisponíveis
+- A tela de ocorrências deve facilitar o registro de descrição, data e pessoas envolvidas
+- A validação de convites deve apresentar claramente se o convite está válido, utilizado ou expirado
 
 ### RNF05 — Compatibilidade
 - Funcionar nos navegadores: Chrome, Firefox, Edge
@@ -514,11 +530,18 @@ Quando houver alteração na diretoria:
 - Backup automático diário
 - Backup semanal completo
 - Capacidade de restauração em até 24 horas
+- Registros de vendas e movimentações de estoque devem ser incluídos nos backups
+- Registros de acesso, exames médicos e ocorrências devem ser preservados nos backups
+- Dados de convites utilizados ou expirados devem ser mantidos para consulta histórica
+- A restauração deve preservar os vínculos entre vendas, itens, produtos e estoque
 
 ### RNF07 — Escalabilidade
 - Arquitetura modular
 - Capacidade de adicionar novos módulos
 - Capacidade de expandir número de sócios sem perda de desempenho
+- O sistema deve permitir aumento do número de produtos e vendas sem perda significativa de desempenho
+- O histórico de acessos e ocorrências deve poder crescer sem comprometer as consultas
+- Novos tipos de produtos, convites, ocorrências e exames devem poder ser adicionados sem grandes alterações na estrutura do sistema
 
 ---
 
@@ -1072,6 +1095,9 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 | **ATLETA_MODALIDADE** | ATLETA — PRATICA — MODALIDADE | data_inicio_pratica, nivel_na_modalidade, frequencia_semanal |
 | **MATRÍCULA** | ATLETA — MATRICULADO EM — TURMA | data_matricula, situacao_matricula |
 | **TURMA_PROFESSOR** | FUNCIONÁRIO — MINISTRA — TURMA | funcao_na_turma, carga_horaria_semanal |
+| **INSCRIÇÃO**| 	PESSOA — PARTICIPA DE — EVENTO	|data_inscricao, situacao_inscricao, valor_pago|
+|**DIRETORIA**	|SÓCIO — EXERCE — FUNCAO_DIRETORIA	|data_inicio_mandato, data_fim_mandato|
+|**ITEM_VENDA**|	VENDA — CONTÉM — PRODUTO|	quantidade, valor_unitario, subtotal|
 
 ---
 
@@ -1172,6 +1198,66 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 **Decisão:** Criar entidade DEPENDENTE separada de SÓCIO.
 
 **Por quê:** Dependentes possuem características próprias (tipo de dependência, datas de vínculo, situação). Um dependente pode se tornar sócio titular futuramente, exigindo histórico separado.
+
+## Justificativa 7: ENDEREÇO separado de PESSOA
+
+**Decisão**: Criar a entidade ENDEREÇO separada de PESSOA.
+
+**Por quê:** Uma pessoa pode possuir mais de um endereço ao longo do tempo ou diferentes tipos de endereço. Separar ENDEREÇO evita repetição de campos em PESSOA e facilita atualização, histórico e manutenção dos dados.
+
+## Justificativa 8: REGISTRO_ACESSO como entidade própria
+
+**Decisão:**  Criar REGISTRO_ACESSO para armazenar entradas e saídas das pessoas no clube.
+
+**Por quê:** Os acessos possuem dados próprios, como data, horário e tipo de movimentação. Mantê-los separados permite histórico, auditoria e controle de circulação dentro do clube.
+
+## Justificativa 9: VENDA separada de ITEM_VENDA e PRODUTO
+
+**Decisão:** Utilizar VENDA, ITEM_VENDA e PRODUTO como entidades distintas.
+
+**Por quê:** Uma venda pode conter vários produtos e um mesmo produto pode aparecer em várias vendas. ITEM_VENDA resolve esse relacionamento e permite armazenar quantidade, preço unitário e subtotal de cada item.
+
+## Justificativa 10: ESTOQUE separado de PRODUTO
+
+**Decisão:** Criar a entidade ESTOQUE separada de PRODUTO.
+
+**Por quê:** O produto representa o item comercializado, enquanto o estoque representa sua disponibilidade. Essa separação facilita o controle de quantidades, atualizações e possíveis históricos de movimentação.
+
+## Justificativa 11: EXAME_MEDICO como entidade própria
+
+**Decisão:** Criar EXAME_MEDICO vinculado a PESSOA.
+
+**Por quê:** Uma pessoa pode realizar vários exames ao longo do tempo. A entidade permite registrar histórico, validade, resultado e informações necessárias para participação em determinadas modalidades.
+
+## Justificativa 12: CONVITE_VISITANTE como entidade própria
+
+**Decisão:** Criar CONVITE_VISITANTE separado de SÓCIO e PESSOA.
+
+**Por quê:** Um sócio pode emitir vários convites, e cada convite possui informações próprias, como validade, situação e identificação do visitante. A entidade permite controlar e manter o histórico dos convites.
+
+## Justificativa 13: OCORRENCIA como entidade própria
+
+**Decisão:** Criar OCORRENCIA para registrar situações envolvendo pessoas no clube.
+
+**Por quê:** Uma ocorrência possui dados próprios, como data, horário, descrição, gravidade e providências tomadas. Separá-la permite histórico, auditoria e identificação do funcionário responsável pelo registro.
+
+## Justificativa 14: Entidades associativas para relacionamentos N:N
+
+**Decisão:** Utilizar entidades associativas como ATLETA_MODALIDADE, MATRÍCULA, TURMA_PROFESSOR, INSCRIÇÃO e ITEM_VENDA.
+
+**Por quê:** Relacionamentos muitos-para-muitos não são representados diretamente no modelo relacional. As entidades associativas permitem transformar esses relacionamentos em estruturas próprias e armazenar atributos específicos do vínculo.
+
+## Justificativa 15: INSCRIÇÃO separada de PESSOA e EVENTO
+
+**Decisão:** Criar INSCRIÇÃO como entidade intermediária entre PESSOA e EVENTO.
+
+**Por quê:** Uma pessoa pode participar de vários eventos e um evento pode possuir vários participantes. Além disso, a inscrição possui dados próprios, como data, situação e confirmação de pagamento.
+
+## Justificativa 16: MATRÍCULA separada do vínculo ATLETA–TURMA
+
+**Decisão:** Representar a participação do atleta em uma turma por meio da entidade MATRÍCULA.
+
+**Por quê:** A matrícula possui características próprias, como data, situação e histórico. Isso permite controlar entradas, cancelamentos e conclusão da participação em uma turma.
 
 ---
 
