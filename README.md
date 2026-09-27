@@ -226,7 +226,7 @@ Após o vínculo:
 - O processo é encerrado
 
 
-## Processo 7: Geração e Pagamento de Mensalidade
+### Processo 7: Geração e Pagamento de Mensalidade
 
 
 1- O sistema identifica os sócios com mensalidade a gerar.
@@ -258,7 +258,7 @@ Se o pagamento quitar a mensalidade:
 
 
 
-## Processo 8: Criação e Gestão de Turma
+### Processo 8: Criação e Gestão de Turma
 
 
 1- O funcionário seleciona uma modalidade esportiva.
@@ -288,7 +288,7 @@ Se ainda houver vagas:
 - O processo de gestão da turma permanece ativo.
 
 
-## Processo 9: Cadastro e Vinculação de Atleta
+### Processo 9: Cadastro e Vinculação de Atleta
 
 1- A pessoa solicita participação como atleta do clube.
 
@@ -312,7 +312,7 @@ Em seguida:
 - O processo é encerrado.
 
 
-## Processo 10: Gestão de Diretoria e Mandatos
+### Processo 10: Gestão de Diretoria e Mandatos
 
 1- O clube define os membros que farão parte da diretoria.
 
@@ -1199,61 +1199,61 @@ Após análise, substituímos a entidade "Político" por **DIRETORIA** e **FUNCA
 
 **Por quê:** Dependentes possuem características próprias (tipo de dependência, datas de vínculo, situação). Um dependente pode se tornar sócio titular futuramente, exigindo histórico separado.
 
-## Justificativa 7: ENDEREÇO separado de PESSOA
+### Justificativa 7: ENDEREÇO separado de PESSOA
 
 **Decisão**: Criar a entidade ENDEREÇO separada de PESSOA.
 
 **Por quê:** Uma pessoa pode possuir mais de um endereço ao longo do tempo ou diferentes tipos de endereço. Separar ENDEREÇO evita repetição de campos em PESSOA e facilita atualização, histórico e manutenção dos dados.
 
-## Justificativa 8: REGISTRO_ACESSO como entidade própria
+### Justificativa 8: REGISTRO_ACESSO como entidade própria
 
 **Decisão:**  Criar REGISTRO_ACESSO para armazenar entradas e saídas das pessoas no clube.
 
 **Por quê:** Os acessos possuem dados próprios, como data, horário e tipo de movimentação. Mantê-los separados permite histórico, auditoria e controle de circulação dentro do clube.
 
-## Justificativa 9: VENDA separada de ITEM_VENDA e PRODUTO
+### Justificativa 9: VENDA separada de ITEM_VENDA e PRODUTO
 
 **Decisão:** Utilizar VENDA, ITEM_VENDA e PRODUTO como entidades distintas.
 
 **Por quê:** Uma venda pode conter vários produtos e um mesmo produto pode aparecer em várias vendas. ITEM_VENDA resolve esse relacionamento e permite armazenar quantidade, preço unitário e subtotal de cada item.
 
-## Justificativa 10: ESTOQUE separado de PRODUTO
+### Justificativa 10: ESTOQUE separado de PRODUTO
 
 **Decisão:** Criar a entidade ESTOQUE separada de PRODUTO.
 
 **Por quê:** O produto representa o item comercializado, enquanto o estoque representa sua disponibilidade. Essa separação facilita o controle de quantidades, atualizações e possíveis históricos de movimentação.
 
-## Justificativa 11: EXAME_MEDICO como entidade própria
+### Justificativa 11: EXAME_MEDICO como entidade própria
 
 **Decisão:** Criar EXAME_MEDICO vinculado a PESSOA.
 
 **Por quê:** Uma pessoa pode realizar vários exames ao longo do tempo. A entidade permite registrar histórico, validade, resultado e informações necessárias para participação em determinadas modalidades.
 
-## Justificativa 12: CONVITE_VISITANTE como entidade própria
+### Justificativa 12: CONVITE_VISITANTE como entidade própria
 
 **Decisão:** Criar CONVITE_VISITANTE separado de SÓCIO e PESSOA.
 
 **Por quê:** Um sócio pode emitir vários convites, e cada convite possui informações próprias, como validade, situação e identificação do visitante. A entidade permite controlar e manter o histórico dos convites.
 
-## Justificativa 13: OCORRENCIA como entidade própria
+### Justificativa 13: OCORRENCIA como entidade própria
 
 **Decisão:** Criar OCORRENCIA para registrar situações envolvendo pessoas no clube.
 
 **Por quê:** Uma ocorrência possui dados próprios, como data, horário, descrição, gravidade e providências tomadas. Separá-la permite histórico, auditoria e identificação do funcionário responsável pelo registro.
 
-## Justificativa 14: Entidades associativas para relacionamentos N:N
+### Justificativa 14: Entidades associativas para relacionamentos N:N
 
 **Decisão:** Utilizar entidades associativas como ATLETA_MODALIDADE, MATRÍCULA, TURMA_PROFESSOR, INSCRIÇÃO e ITEM_VENDA.
 
 **Por quê:** Relacionamentos muitos-para-muitos não são representados diretamente no modelo relacional. As entidades associativas permitem transformar esses relacionamentos em estruturas próprias e armazenar atributos específicos do vínculo.
 
-## Justificativa 15: INSCRIÇÃO separada de PESSOA e EVENTO
+### Justificativa 15: INSCRIÇÃO separada de PESSOA e EVENTO
 
 **Decisão:** Criar INSCRIÇÃO como entidade intermediária entre PESSOA e EVENTO.
 
 **Por quê:** Uma pessoa pode participar de vários eventos e um evento pode possuir vários participantes. Além disso, a inscrição possui dados próprios, como data, situação e confirmação de pagamento.
 
-## Justificativa 16: MATRÍCULA separada do vínculo ATLETA–TURMA
+### Justificativa 16: MATRÍCULA separada do vínculo ATLETA–TURMA
 
 **Decisão:** Representar a participação do atleta em uma turma por meio da entidade MATRÍCULA.
 
