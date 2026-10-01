@@ -1077,7 +1077,7 @@ O dicionário de dados está representado na seção 10 deste documento. Para ca
 
 O Diagrama Entidade-Relacionamento será apresentado no arquivo:
 
-`Conceptual model - BRMW.pdf`
+`Conceptual model - BRMW.pdf](https://miro.com/app/board/uXjVHgJPWnY=/)
 
 O diagrama deve representar as entidades, atributos principais, relacionamentos e cardinalidades descritos neste documento.
 
