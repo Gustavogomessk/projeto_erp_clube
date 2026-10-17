@@ -82,13 +82,14 @@ Se o sócio estiver inadimplente ou suspenso:
 
 Se não houver vaga:
 
-* O participante pode ser colocado em uma lista de espera.
+* O interessado é orientado a aguardar nova vaga; a lista de espera de turmas não será persistida nesta versão.
 
 Se houver vaga:
 
-* A matrícula é registrada.
+* O participante é identificado ou cadastrado como ATLETA.
+* A matrícula é registrada após as validações da RN55.
 * O participante é vinculado a uma turma.
-* O nível é informado.
+* O nível do atleta é conferido.
 * A data de início é registrada.
 * Caso exista uma taxa adicional, ela é incluída na cobrança.
 
@@ -158,22 +159,16 @@ Após a realização:
 1. O sócio solicita o cadastro.
 2. Os dados do dependente são conferidos.
 3. O CPF é consultado no sistema.
-
 Se a pessoa já estiver cadastrada:
-
 * O cadastro existente é utilizado.
 * O vínculo com o sócio titular é criado.
-
 Se a pessoa ainda não estiver cadastrada:
-
 * O cadastro de PESSOA é criado.
 * Depois, o vínculo com o sócio titular é registrado.
-
 Após o vínculo:
-
 * O tipo de dependência é informado.
 * A data de início é registrada.
-* A situação do dependente é definida.
+* A situação do dependente é definida e validada contra outros períodos da pessoa.
 
 ### Processo 7: Geração e Pagamento de Mensalidade
 
@@ -185,17 +180,13 @@ Após o vínculo:
 
 Quando o pagamento acontece:
 
-* O pagamento é registrado.
-* O valor recebido é associado à mensalidade.
-
+* O recebimento é registrado em PAGAMENTO.
+* Uma BAIXA_FINANCEIRA associa o valor ao título da mensalidade.
 Se o pagamento for parcial:
-
 * O valor pago fica registrado.
 * O saldo restante permanece pendente.
 * A mensalidade continua em aberto.
-
 Quando o valor total é pago:
-
 * A mensalidade passa para a situação "Pago".
 * O recibo é gerado.
 
@@ -216,7 +207,7 @@ Após a criação:
 Quando a capacidade é atingida:
 
 * Novas matrículas são bloqueadas.
-* Novos interessados podem ser encaminhados para uma lista de espera.
+* Novos interessados são orientados a aguardar nova vaga; não há cadastro de espera de turmas nesta versão.
 
 ### Processo 9: Cadastro e Vinculação de Atleta
 
@@ -253,6 +244,27 @@ Quando ocorre uma alteração:
 * O novo responsável é vinculado ao cargo.
 * Um novo período é registrado.
 
+## Processo 11: Venda e movimentação de estoque
+
+1. O funcionário registra comprador e itens com preço e quantidade.
+2. Na confirmação, o sistema verifica o saldo e grava venda, saídas e título a receber na mesma transação.
+3. Na venda à vista, registra também recebimento e baixa do título.
+4. Uma devolução gera movimento inverso e, quando houver dinheiro devolvido, estorno financeiro. Registros originais permanecem.
+
+## Processo 12: Cobranças, pagamentos e conciliação
+
+1. Mensalidade, inscrição paga ou venda gera um título a receber; uma despesa gera título a pagar.
+2. O funcionário registra a entrada ou saída na conta financeira e aloca seu valor aos títulos por baixas.
+3. Recebimentos ou pagamentos parciais mantêm saldo em aberto.
+4. O extrato é importado e seus lançamentos são relacionados às operações internas.
+5. Diferenças permanecem pendentes para conferência. Tarifas bancárias são despesas próprias, com título e pagamento.
+
+## Processo 13: Encerramento e recriação de dependência
+
+1. O funcionário informa o fim do vínculo vigente, sem excluir o registro.
+2. Um retorno ou troca de titular cria outro registro, com nova data de início e novo identificador.
+3. O sistema rejeita períodos sobrepostos para a mesma pessoa e permite consultar toda a sequência histórica.
+
 ## 5. Requisitos Funcionais
 
 ### RF01 - Cadastro de Pessoas
@@ -287,6 +299,7 @@ Quando ocorre uma alteração:
 * Tipos de dependência: Cônjuge, Filho(a), Enteado(a) e Pais.
 * Dependente menor de idade deve possuir responsável legal.
 * O dependente pode se tornar sócio futuramente.
+* Vínculos encerrados são preservados; novo período recebe novo identificador.
 
 ### RF04 - Cadastro de Funcionários
 
@@ -330,7 +343,7 @@ Quando ocorre uma alteração:
 * Cada turma pertence a uma modalidade.
 * A turma possui faixa etária.
 * A turma possui capacidade máxima.
-* Uma turma pode possuir um ou mais professores.
+* Uma turma ativa deve possuir ao menos um professor com vínculo vigente.
 
 ### RF08 - Controle de Mensalidades
 
@@ -350,10 +363,11 @@ Quando ocorre uma alteração:
 
 **Regras:**
 
-* O pagamento deve estar vinculado a uma mensalidade.
+* A operação pode receber mensalidades, inscrições, vendas ou receitas manuais, ou pagar despesas.
+* O vínculo com a obrigação ocorre por BAIXA_FINANCEIRA e TITULO_FINANCEIRO.
 * Deve possuir data, valor e forma de pagamento.
 * Pode ser parcial.
-* Deve gerar um recibo.
+* Deve gerar comprovante na confirmação e identificar a conta financeira.
 
 ### RF10 - Reserva de Dependências
 
@@ -397,7 +411,7 @@ Quando ocorre uma alteração:
 
 * Departamento possui nome único.
 * Pode possuir um funcionário responsável.
-* Pode possuir subdivisões.
+* Subdivisões não serão controladas nesta versão.
 
 ### RF14 - Gestão de Diretoria
 
@@ -410,6 +424,128 @@ Quando ocorre uma alteração:
 * A data de término pode ser registrada.
 * Um sócio pode ocupar diferentes cargos em períodos diferentes.
 * Um cargo pode ser ocupado por diferentes sócios ao longo do tempo.
+
+## RF15 - Gestão de Vendas
+**Descrição:** O sistema deve permitir registrar vendas de produtos ou serviços.
+
+**Regras:**
+
+* Toda venda deve conter comprador, funcionário responsável e itens vendidos.
+* O preço praticado na venda deve preservar o valor contratado no momento da operação.
+* A conclusão da venda exige ao menos um item selecionado.
+* A venda exige estoque disponível suficiente para os itens.
+* A conclusão da venda gera automaticamente a saída do estoque e o título a receber correspondente.
+* Caso a venda seja à vista, o recebimento e a baixa financeira devem ser gerados na mesma operação.
+
+## RF16 - Estoque e Movimentações
+
+**Descrição:** O sistema deve manter o controle do saldo de produtos e registrar suas movimentações.
+
+**Regras:**
+
+* O sistema deve manter um saldo global por produto.
+* Devem ser registradas movimentações de entrada, saída, perda, devolução e ajuste.
+* Toda movimentação deve conter quantidade, sentido, responsável, data e origem.
+* O saldo do produto não pode ficar negativo em nenhuma hipótese.
+* Correções de estoque devem ser feitas mediante a geração de novos movimentos.
+
+## RF17 - Convites de Visitantes
+**Descrição:** O sistema deve permitir emitir e controlar convites de acesso para visitantes.
+
+**Regras:**
+
+* Cada convite deve possuir um sócio responsável, a pessoa visitante, um código único, prazo de validade e situação.
+* O sistema deve validar o prazo de validade e o uso do convite no momento do acesso.
+* O convite utilizado não pode ser reutilizado.
+*  sistema deve manter o histórico completo de convites cancelados, expirados e utilizados.
+
+## RF18 - Controle de Acesso
+
+**Descrição:** O sistema deve registrar e validar os acessos de pessoas ao local.
+
+**Regras:**
+
+* Todo acesso deve registrar a pessoa, data, hora, tipo (entrada ou saída) e meio de acesso.
+* O acesso deve validar a situação cadastral da pessoa.
+* O acesso deve validar o vínculo autorizador da pessoa ou o convite associado, quando aplicável.
+* Tentativas de acesso negadas podem ser registradas como ocorrências.
+
+## RF19 - Gestão de Exames Médicos
+
+**Descrição:** O sistema deve gerenciar o histórico de exames médicos e condicionar matrículas e participações à aptidão.
+
+**Regras:**
+
+* O sistema deve manter o histórico de exames contendo resultado, validade e médico responsável.
+* Devem ser identificadas as modalidades esportivas ou atividades que exigem exame médico.
+* O sistema deve impedir a matrícula ou participação em modalidades exigentes sem exame vigente e resultado de aptidão compatível.
+* Qualquer avaliação de restrição médica deve ser realizada exclusivamente por usuário autorizado.
+
+## RF20 - Gestão de Ocorrências
+
+**Descrição:** O sistema deve permitir registrar eventos e incidentes ocorridos nas dependências.
+
+**Regras:**
+
+* Toda ocorrência deve registrar a pessoa envolvida, o funcionário responsável, data, hora, tipo, descrição, gravidade e providências tomadas.
+* Cada ocorrência deve possuir obrigatoriamente uma pessoa envolvida principal.
+* Registros correlatos podem ser agrupados para descrever o mesmo incidente.
+
+## RF21 - Contas a Receber
+
+**Descrição:** O sistema deve gerenciar os títulos e valores a serem recebidos.
+
+**Regras:**
+
+* O sistema deve gerar e acompanhar títulos originados de mensalidades, inscrições pagas, vendas e receitas manuais.
+* Todo título a receber deve registrar devedor, data de vencimento, valor, descontos, acréscimos e saldo restante.
+* O sistema deve permitir a realização de recebimentos parciais.
+* O sistema deve impedir a liquidação em duplicidade de um mesmo título.
+
+## RF22 - Contas a Pagar
+
+**Descrição:** O sistema deve registrar e controlar as obrigações financeiras e despesas.
+
+**Regras:**
+
+* Devem ser registrados títulos de despesas informando fornecedor/favorecido (inclusive pessoa jurídica), descrição, valor e vencimento.
+* O sistema deve registrar pagamentos parciais, saldo devedor e liquidação do título.
+* O cadastro financeiro de pessoa jurídica não deve criar perfil de sócio ou atleta.
+
+## RF23 - Contas Financeiras e Fluxo de Caixa
+
+**Descrição:** O sistema deve gerenciar contas bancárias, caixas e a visualização do fluxo de caixa.
+
+**Regras:**
+
+* O sistema deve manter o cadastro de contas bancárias e caixas com saldo inicial e movimentações de entrada e saída.
+* Deve ser possível consultar o fluxo de caixa realizado por data de confirmação das operações.
+* Deve ser possível consultar o fluxo de caixa projetado com base nos títulos em aberto.
+* Transferências entre contas e parcelamento contratual não fazem parte do escopo desta versão.
+
+## RF24 - Conciliação Financeira
+
+**Descrição:** O sistema deve permitir conciliar os registros internos com o extrato bancário.
+
+**Regras:**
+
+* O sistema deve permitir importar ou registrar itens de extrato bancário.
+* Deve-se impedir a duplicação de itens de extrato com base na conta e identificador externo.
+* Os valores do extrato devem ser vinculados às operações financeiras internas.
+* O sistema deve aceitar correspondências parciais e agrupadas de lançamentos.
+* O sistema deve evidenciar divergências encontradas.
+* Deve-se preservar o autor e o histórico de todas as conciliações realizadas.
+
+## RF25 - Cobrança de Eventos
+
+**Descrição:** O sistema deve gerenciar a cobrança e os valores associados às inscrições de eventos.
+
+**Regras:**
+
+* A inscrição no evento deve registrar o preço contratado e eventuais descontos aplicados.
+* Inscrições gratuitas não devem gerar títulos a receber.
+* Inscrições pagas devem gerar automaticamente um título a receber.
+* Recebimentos e estornos devem ser registrados por meio de operações e baixas financeiras, com controle de valores e comprovantes.
 
 ## 6. Requisitos Não Funcionais
 
@@ -492,17 +628,17 @@ Quando ocorre uma alteração:
 | RN08 | Cargos de diretoria são ocupados por sócios durante determinado mandato                                 | DIRETORIA                              |
 | RN09 | Dependente pode se tornar sócio titular                                                                 | Histórico do vínculo                   |
 | RN10 | Valor da mensalidade é definido pela categoria                                                          | CATEGORIA_SOCIO                        |
-| RN11 | Pagamentos podem ser parciais                                                                           | PAGAMENTO vinculado à MENSALIDADE      |
+| RN11 | Pagamentos podem ser parciais                                                                           | TITULO_FINANCEIRO e BAIXA_FINANCEIRA      |
 | RN12 | Eventos podem ser abertos ou restritos                                                                  | tipo_evento em EVENTO                  |
 | RN13 | Funcionário também pode possuir vínculo como sócio                                                      | PESSOA pode possuir ambos os vínculos  |
-| RN14 | Atleta externo pode participar sem ser sócio                                                            | vínculo opcional entre ATLETA e SÓCIO  |
+| RN14 | Atleta pode ser sócio, dependente ou externo; o papel é identificado pela mesma PESSOA                                                           | Sem referência direta ATLETA–SÓCIO  |
 | RN15 | Reserva deve ser solicitada com antecedência mínima de 24 horas e máxima de 30 dias                     | Validação em RESERVA                   |
 | RN16 | Um sócio pode possuir vários dependentes                                                                | Relacionamento 1:N                     |
 | RN17 | Um dependente pertence a apenas um sócio titular                                                        | FK id_socio_titular                    |
 | RN18 | Dependente pode perder o vínculo quando atingir a idade limite definida para sua categoria              | Atualização da situação                |
 | RN19 | Um atleta pode participar de várias modalidades                                                         | ATLETA_MODALIDADE                      |
 | RN20 | Um funcionário pode ministrar várias turmas                                                             | TURMA_PROFESSOR                        |
-| RN21 | Uma mensalidade pode possuir vários pagamentos parciais                                                 | MENSALIDADE e PAGAMENTO                |
+| RN21 | Uma mensalidade pode possuir vários pagamentos parciais                                                 | Título da mensalidade e suas baixas                |
 | RN22 | Não é permitida reserva conflitante para a mesma dependência                                            | Validação de data e horário            |
 | RN23 | Toda reserva deve possuir um sócio responsável                                                          | FK id_socio em RESERVA                 |
 | RN24 | Uma reserva pode ser cancelada caso o sócio responsável fique inadimplente, conforme as regras do clube | situacao_reserva                       |
@@ -516,7 +652,7 @@ Quando ocorre uma alteração:
 | RN32 | Um funcionário pode registrar várias vendas                                                             | VENDA                                  |
 | RN33 | Uma venda pode possuir vários itens                                                                     | ITEM_VENDA                             |
 | RN34 | Um produto pode aparecer em várias vendas                                                               | ITEM_VENDA                             |
-| RN35 | Um produto pode possuir registros de estoque                                                            | ESTOQUE                                |
+| RN35 | Cada produto possui exatamente um saldo global de estoque                                               |PRODUTO–ESTOQUE 1:1                     |
 | RN36 | Uma pessoa pode estar envolvida em várias ocorrências                                                   | OCORRENCIA                             |
 | RN37 | Um funcionário pode registrar várias ocorrências                                                        | OCORRENCIA                             |
 | RN38 | Todo registro de acesso deve possuir data, horário e tipo de movimentação                               | REGISTRO_ACESSO                        |
@@ -525,6 +661,22 @@ Quando ocorre uma alteração:
 | RN41 | A quantidade vendida não pode ultrapassar o estoque disponível                                          | Validação da venda                     |
 | RN42 | Toda venda concluída deve atualizar o estoque                                                           | ESTOQUE                                |
 | RN43 | Toda ocorrência deve possuir data e descrição                                                           | OCORRENCIA                             |
+| RN44 | Toda pessoa cadastrada deve possuir CPF único e válido                                                  | CPF único em PESSOA                    |
+| RN45 | Todo dependente deve estar vinculado a um sócio titular                                                 | FK id_socio_titular em DEPENDENTE      |
+| RN46 | A categoria do sócio define o valor da mensalidade e os benefícios                                      | Relacionamento SÓCIO e CATEGORIA_SOCIO |
+| RN47 | O sócio pode estar Ativo, Inadimplente, Suspenso ou Inativo                                             | situacao_socio em SÓCIO                |
+| RN48 | Atleta deve estar vinculado a pelo menos uma modalidade                                                 | ATLETA_MODALIDADE                      |
+| RN49 | Cada turma possui capacidade máxima                                                                     | capacidade_maxima em TURMA             |
+| RN50 | Somente sócios titulares ativos e regulares podem realizar reservas                                     | Validação em RESERVA                   |
+| RN51 | Cargos de diretoria são ocupados por sócios durante determinado mandato                                 | DIRETORIA                              |
+| RN52 | Dependente pode se tornar sócio titular                                                                 | Histórico do vínculo                   |
+| RN53 | Valor da mensalidade é definido pela categoria                                                          | CATEGORIA_SOCIO                        |
+| RN54 | Pagamentos podem ser parciais                                                                           | TITULO_FINANCEIRO e BAIXA_FINANCEIRA      |
+| RN55 | Eventos podem ser abertos ou restritos                                                                  | tipo_evento em EVENTO                  |
+| RN56 | Funcionário também pode possuir vínculo como sócio                                                      | PESSOA pode possuir ambos os vínculos  |
+| RN57 | Atleta pode ser sócio, dependente ou externo; o papel é identificado pela mesma PESSOA                                                           | Sem referência direta ATLETA–SÓCIO  |
+| RN58 | Reserva deve ser solicitada com antecedência mínima de 24 horas e máxima de 30 dias                     | Validação em RESERVA                   |
+| RN59 | Reserva deve ser solicitada com antecedência mínima de 24 horas e máxima de 30 dias                     | Validação em RESERVA                   |
 
 ### Tabela de Categorias de Sócio
 
