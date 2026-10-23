@@ -1,0 +1,15 @@
+GABARITO — cada comando inválido deve ser executado isoladamente
+
+01. PK duplicada: ERROR 1062 (23000): Duplicate entry '1001' for key 'pessoa.PRIMARY'
+02. CPF repetido: ERROR 1062 (23000): Duplicate entry '12345678901' for key 'pessoa.uq_pessoa_cpf'
+03. FK pessoa inexistente: ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`clube_erp`.`matricula`, CONSTRAINT `fk_matricula_pessoa` FOREIGN KEY (`id_pessoa`) REFERENCES `pessoa` (`id_pessoa`))
+04. FK modalidade inexistente: ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`clube_erp`.`matricula`, CONSTRAINT `fk_matricula_modalidade` FOREIGN KEY (`id_modalidade`) REFERENCES `modalidade` (`id_modalidade`))
+05. CHECK taxa negativa: ERROR 3819 (HY000): Check constraint 'ck_modalidade_taxa' is violated.
+06. CHECK status inválido: ERROR 3819 (HY000): Check constraint 'ck_matricula_status' is violated.
+07. NOT NULL ausente: ERROR 1048 (23000): Column 'nome' cannot be null
+08. UNIQUE composto matrícula: ERROR 1062 (23000): Duplicate entry '1001-20-2026-08' for key 'matricula.uq_matricula'
+09. PK composta associativa: ERROR 1062 (23000): Duplicate entry '10-20-2026-08' for key 'funcionario_modalidade.PRIMARY'
+10. FK associativa: ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`clube_erp`.`funcionario_modalidade`, CONSTRAINT `fk_fm_funcionario` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionario` (`id_funcionario`))
+
+Os textos das mensagens podem variar por SGBD e versão.
+(MySQL 5.7 mostra apenas 'PRIMARY' / nome da chave, sem o prefixo da tabela; MariaDB usa "CONSTRAINT `...` failed for ..." nos CHECKs.)
