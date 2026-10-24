@@ -1614,12 +1614,12 @@ A utilização de PESSOA como entidade central também permite evitar a repetiç
 | Elemento | Quantidade |
 |---|---|
 | Entidades principais | 26 |
-| Entidades associativas | 3 |
-| Relacionamentos | 37 |
+| Entidades associativas | 7 |
+| Relacionamentos | 55 |
 | Atributos documentados | ~150 |
 | Requisitos funcionais | 14 |
 | Requisitos não funcionais | 7 |
-| Regras de negócio | 43 |
+| Regras de negócio | 60 |
 | Processos documentados | 10 |
-| Justificativas técnicas | 16 |
+| Justificativas técnicas | 25 |
 
