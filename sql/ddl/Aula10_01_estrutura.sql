@@ -1,9 +1,6 @@
--- Projeto ERP - Clube Social e Esportivo
--- Aula10_01: estrutura (DDL). Requer MySQL 8.0.16+ (para o CHECK ser aplicado).
-
 CREATE DATABASE IF NOT EXISTS clube_erp CHARACTER SET utf8mb4;
 USE clube_erp;
-SET NAMES utf8mb4;
+
 
 DROP TABLE IF EXISTS funcionario_modalidade;
 DROP TABLE IF EXISTS matricula;
