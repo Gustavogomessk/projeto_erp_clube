@@ -752,7 +752,8 @@ Quando ocorre uma alteração:
 | 34 | BAIXA_FINANCEIRA|Relaciona operações financeiras aos títulos e registra os valores liquidados ou estornados|RF09, RN50, RN52 |
 | 35 | CONTA_FINANCEIRA|Representa contas bancárias e caixas utilizados pelo clube|RF23|
 | 36 | ITEM_EXTRATO |Registra lançamentos bancários utilizados na conciliação |RF24|
-| 37 | CONCILIACAO|Relaciona lançamentos do extrato às operações financeiras para conferir os valores|RF24, RN53|
+| 37 | DEVOLUCAO_VENDA|Registra e controla as devoluções de produtos vendidos, identificando itens, quantidades, motivos e responsáveis|RF15, RF16, RN47|
+| 38 | CONCILIACAO|Relaciona lançamentos do extrato às operações financeiras para conferir os valores|RF24, RN53|
 
 ### Nota sobre "Político"
 
@@ -800,11 +801,11 @@ A alteração foi feita porque:
 | ----------------------- | ------------- | ----------- | ----- | ------------------------------------- |
 | id_dependente           | Identificador | Sim         | Sim   | Identificador                         |
 | id_socio_titular        | Referência    | Sim         | Não   | FK para SÓCIO                         |
-| CPF               | Referência    | Sim         | Sim   | FK para PESSOA                        |
+| CPF                     | Referência    | Sim         | Não   | FK para PESSOA dependente             |
 | tipo_dependencia        | Texto(20)     | Sim         | Não   | Cônjuge, Filho(a), Enteado(a) ou Pais |
 | data_inicio_dependencia | Data          | Sim         | Não   | Início do vínculo                     |
 | data_fim_dependencia    | Data          | Não         | Não   | Fim do vínculo                        |
-| situacao_dependente     | Texto(10)     | Sim         | Não   | Ativo ou Inativo                      |
+| situacao_dependente     | Texto(10)     | Sim         | Não   | Ativo ou Encerrado                    |
 | observacao              | Texto(500)    | Não         | Não   | Observações                           |
 
 ### 10.4 FUNCIONÁRIO
@@ -812,7 +813,7 @@ A alteração foi feita porque:
 | Atributo             | Tipo          | Obrigatório | Único | Descrição                         |
 | -------------------- | ------------- | ----------- | ----- | --------------------------------- |
 | id_funcionario       | Identificador | Sim         | Sim   | Identificador                     |
-| CPF            | Referência    | Sim         | Sim   | FK para PESSOA                    |
+| CPF                  | Referência    | Sim         | Sim   | FK para PESSOA                    |
 | id_departamento      | Referência    | Sim         | Não   | FK para DEPARTAMENTO              |
 | matricula_funcional  | Texto(12)     | Sim         | Sim   | Matrícula funcional               |
 | cargo                | Texto(50)     | Sim         | Não   | Cargo exercido                    |
@@ -829,8 +830,7 @@ A alteração foi feita porque:
 | Atributo              | Tipo          | Obrigatório | Único | Descrição                                          |
 | --------------------- | ------------- | ----------- | ----- | -------------------------------------------------- |
 | id_atleta             | Identificador | Sim         | Sim   | Identificador                                      |
-| CPF             | Referência    | Sim         | Sim   | FK para PESSOA                                     |
-| id_socio              | Referência    | Não         | Não   | FK para SÓCIO quando aplicável                     |
+| CPF                   | Referência    | Sim         | Sim   | FK para PESSOA                                     |
 | nivel_atleta          | Texto(15)     | Sim         | Não   | Iniciante, Intermediário, Avançado ou Profissional |
 | registro_federacao    | Texto(30)     | Não         | Não   | Registro esportivo                                 |
 | data_inicio_atividade | Data          | Sim         | Não   | Início da atividade                                |
@@ -917,7 +917,7 @@ A alteração foi feita porque:
 | -------------------- | ------------- | ----------- | ----- | ---------------------------------------- |
 | id_inscricao         | Identificador | Sim         | Sim   | Identificador                            |
 | id_evento            | Referência    | Sim         | Não   | FK para EVENTO                           |
-| CPF            | Referência    | Sim         | Não   | FK para PESSOA                           |
+| CPF                  | Referência    | Sim         | Não   | FK para PESSOA                           |
 | data_inscricao       | Data/Hora     | Sim         | Não   | Data da inscrição                        |
 | situacao_inscricao   | Texto(15)     | Sim         | Não   | Confirmada, Cancelada ou Lista de Espera |
 | pagamento_confirmado | Booleano      | Não         | Não   | Indica se o pagamento foi confirmado     |
@@ -1028,7 +1028,7 @@ A alteração foi feita porque:
 | Atributo           | Tipo          | Obrigatório | Único | Descrição                       |
 | ------------------ | ------------- | ----------- | ----- | ------------------------------- |
 | id_endereco        | Identificador | Sim         | Sim   | Identificador                   |
-| CPF          | Referência    | Sim         | Não   | FK para PESSOA                  |
+| CPF                | Referência    | Sim         | Não   | FK para PESSOA                  |
 | logradouro         | Texto(100)    | Sim         | Não   | Rua ou avenida                  |
 | numero             | Texto(10)     | Sim         | Não   | Número                          |
 | complemento        | Texto(50)     | Não         | Não   | Complemento                     |
@@ -1044,7 +1044,7 @@ A alteração foi feita porque:
 | Atributo           | Tipo          | Obrigatório | Único | Descrição                         |
 | ------------------ | ------------- | ----------- | ----- | --------------------------------- |
 | id_registro_acesso | Identificador | Sim         | Sim   | Identificador                     |
-| CPF          | Referência    | Sim         | Não   | FK para PESSOA                    |
+| CPF                | Referência    | Sim         | Não   | FK para PESSOA                    |
 | data_acesso        | Data          | Sim         | Não   | Data                              |
 | hora_acesso        | Hora          | Sim         | Não   | Horário                           |
 | tipo_acesso        | Texto(10)     | Sim         | Não   | Entrada ou Saída                  |
@@ -1056,7 +1056,7 @@ A alteração foi feita porque:
 | Atributo        | Tipo          | Obrigatório | Único | Descrição                       |
 | --------------- | ------------- | ----------- | ----- | ------------------------------- |
 | id_venda        | Identificador | Sim         | Sim   | Identificador                   |
-| CPF       | Referência    | Sim         | Não   | FK para PESSOA compradora       |
+| CPF             | Referência    | Sim         | Não   | FK para PESSOA compradora       |
 | id_funcionario  | Referência    | Sim         | Não   | FK para FUNCIONÁRIO responsável |
 | data_venda      | Data/Hora     | Sim         | Não   | Data e horário                  |
 | valor_total     | Decimal(10,2) | Sim         | Não   | Valor total                     |
@@ -1132,7 +1132,7 @@ A alteração foi feita porque:
 | Atributo            | Tipo          | Obrigatório | Único | Descrição                            |
 | ------------------- | ------------- | ----------- | ----- | ------------------------------------ |
 | id_ocorrencia       | Identificador | Sim         | Sim   | Identificador                        |
-| CPF           | Referência    | Sim         | Não   | FK para PESSOA envolvida             |
+| CPF                 | Referência    | Sim         | Não   | FK para PESSOA envolvida             |
 | id_funcionario      | Referência    | Sim         | Não   | FK para FUNCIONÁRIO responsável      |
 | data_ocorrencia     | Data          | Sim         | Não   | Data                                 |
 | hora_ocorrencia     | Hora          | Sim         | Não   | Horário                              |
@@ -1144,36 +1144,30 @@ A alteração foi feita porque:
 
 ### 10.30 MOVIMENTACAO_ESTOQUE
 
-| Atributo            | Tipo          | Obrigatório | Único | Descrição                                                    |
-| ------------------- | ------------- | ----------- | ----- | ------------------------------------------------------------ |
-| id_movimentacao     | Identificador | Sim         | Sim   | Identificador da movimentação de estoque                     |
-| id_estoque          | Referência    | Sim         | Não   | FK para ESTOQUE                                              |
-| id_funcionario      | Referência    | Sim         | Não   | FK para FUNCIONÁRIO responsável pela movimentação            |
-| id_item_venda       |Referência     | Não         | Não   | FK para ITEM_VENDA, quando originada de uma venda            |
-| id_movimentacao_origem| Referência  | Não         | Não   | FK para MOVIMENTACAO_ESTOQUE original, quando houver reversão|
-| tipo_movimentacao   | Texto(15)     | Sim         | Não   | Entrada, Saída, Perda, Devolução ou Ajuste                   |
-| sentido             | Texto(10)     | Sim         | Não   | Crédito ou Débito                                            |
-| quantidade          | Inteiro       | Não         | Não   | Quantidade positiva de produtos movimentados                 |
-| data_movimentacao   | Data/Hora     | Sim         | Não   | Data e horário da movimentação                               |
-| origem              | Texto(20)     | Não         | Não   | Venda, Compra, Perda, Devolução, Ajuste ou Saldo Inicial     |
-| motivo              | Texto(500)    | Não         | Não   | Justificativa da movimentação                                |
+| Atributo              | Tipo          | Obrigatório | Único | Descrição                                                    |
+| --------------------- | ------------- | ----------- | ----- | ------------------------------------------------------------ |
+| id_movimentacao       | Identificador | Sim         | Sim   | Identificador da movimentação de estoque                     |
+| id_estoque            | Referência    | Sim         | Não   | FK para ESTOQUE                                              |
+| id_funcionario        | Referência    | Sim         | Não   | FK para FUNCIONÁRIO responsável pela movimentação            |
+| id_item_venda         |Referência     | Não         | Não   | FK para ITEM_VENDA, quando originada de uma venda            |
+| id_movimentacao_origem| Referência    | Não         | Não   | FK para MOVIMENTACAO_ESTOQUE original, quando houver reversão|
+| tipo_movimentacao     | Texto(15)     | Sim         | Não   | Entrada, Saída, Perda, Devolução ou Ajuste                   |
+| sentido               | Texto(10)     | Sim         | Não   | Crédito ou Débito                                            |
+| quantidade            | Inteiro       | Não         | Não   | Quantidade positiva de produtos movimentados                 |
+| data_movimentacao     | Data/Hora     | Sim         | Não   | Data e horário da movimentação                               |
+| origem                | Texto(20)     | Não         | Não   | Venda, Compra, Perda, Devolução, Ajuste ou Saldo Inicial     |
+| motivo                | Texto(500)    | Não         | Não   | Justificativa da movimentação                                |
 
 
-### 10.31 DEVOLUCAO_VENDA
+### 10.31 CATEGORIA_DEPENDENCIA
 
-| Atributo            | Tipo          | Obrigatório | Único | Descrição                                                            |
-| ------------------- | ------------- | ----------- | ----- | ---------------------------------------------------------------------|
-| id_devolucao        | Identificador | Sim         | Sim   | Identificador da devolução                                           |
-| id_item_venda       | Referência    | Sim         | Não   | FK para ITEM_VENDA                                                   |
-| id_movimentacao_saida| Referência   | Sim         | Não   | FK para MOVIMENTACAO_ESTOQUE referente à saída original              |
-| id_movimentacao_devolucao| Referência| Não        | Sim   | FK para MOVIMENTACAO_ESTOQUE referente à entrada do produto devolvido|
-| id_funcionario      | Referência    | Sim         | Não   | FK para FUNCIONÁRIO responsável pelo atendimento                     |
-| data_devolucao      | Data/Hora     | Sim         | Não   | Data e horário da devolução                                          |
-| quantidade_devolvida| Inteiro       | Sim         | Não   | Quantidade de produtos devolvidos                                    |
-| valor_reembolso     | Decimal(10,2) | Não         | Não   | Valor financeiro devolvido ao comprador                              |
-| motivo              | Texto(500)    | Sim         | Não   |Motivo informado para a devolução                                     |
-| situacao            | Texto(15)     | sim         | Não   | Solicitada, Confirmada ou Cancelada                                  |
-
+| Atributo                   | Tipo          | Obrigatório | Único | Descrição                                    |
+| -------------------------- | ------------- | ----------- | ----- | ---------------------------------------------|
+| id_categoria_dependencia   | Identificador | Sim         | Sim   | Identificador da associação (PK)             |
+| id_categoria_socio         | Referência    | Sim         | Não   | FK para CATEGORIA_SOCIO                      |
+| id_dependencia_fisica      | Referência    | Sim         | Não   | FK para DEPENDENCIA_FISICA                   |
+| situacao                   | texto(10)     | Sim         | Não   | Situação da permissão: Ativa ou Inativa      |
+| observacao                 | texto(500)    | Não         | Não   | Observações sobre a permissão de utilização  |
 
 ### 10.32 CONTRAPARTE_FINANCEIRA
 
@@ -1250,7 +1244,22 @@ A alteração foi feita porque:
 | situacao_conciliacao | Derivado      | Sim         | Não   | Não conciliado, Parcial ou Conciliado     |
 
 
-### 10.37 CONCILIACAO
+### 10.37 DEVOLUCAO_VENDA
+
+| Atributo                   | Tipo          | Obrigatório | Único | Descrição                                                            |
+| -------------------------- | ------------- | ----------- | ----- | ---------------------------------------------------------------------|
+| id_devolucao               | Identificador | Sim         | Sim   | Identificador da devolução                                           |
+| id_item_venda              | Referência    | Sim         | Não   | FK para ITEM_VENDA                                                   |
+| id_movimentacao_saida      | Referência    | Sim         | Não   | FK para MOVIMENTACAO_ESTOQUE referente à saída original              |
+| id_movimentacao_devolucao  | Referência    | Não         | Sim   | FK para MOVIMENTACAO_ESTOQUE referente à entrada do produto devolvido|
+| id_funcionario             | Referência    | Sim         | Não   | FK para FUNCIONÁRIO responsável pelo atendimento                     |
+| data_devolucao             | Data/Hora     | Sim         | Não   | Data e horário da devolução                                          |
+| quantidade_devolvida       | Inteiro       | Sim         | Não   | Quantidade de produtos devolvidos                                    |
+| valor_reembolso            | Decimal(10,2) | Não         | Não   | Valor financeiro devolvido ao comprador                              |
+| motivo                     | Texto(500)    | Sim         | Não   |Motivo informado para a devolução                                     |
+| situacao                   | Texto(15)     | sim         | Não   | Solicitada, Confirmada ou Cancelada                                  |
+
+### 10.38 CONCILIACAO
 
 | Atributo            | Tipo          | Obrigatório | Único | Descrição                                                            |
 | ------------------- | ------------- | ----------- | ----- | -------------------------------------------------------------------- |
@@ -1271,35 +1280,34 @@ A alteração foi feita porque:
 | 2  | PESSOA             | (0,1)         | É                 | (1,1)         | FUNCIONÁRIO       | Especialização |
 | 3  | PESSOA             | (0,1)         | É                 | (1,1)         | ATLETA            | Especialização |
 | 4  | SÓCIO              | (0,N)         | POSSUI            | (1,1)         | DEPENDENTE        | 1:N            |
-| 5  | ATLETA             | (0,1)         | VINCULADO A       | (0,1)         | SÓCIO             | 1:1 opcional   |
-| 6  | SÓCIO              | (1,1)         | PERTENCE A        | (0,N)         | CATEGORIA_SOCIO   | N:1            |
-| 7  | FUNCIONÁRIO        | (1,1)         | TRABALHA EM       | (0,N)         | DEPARTAMENTO      | N:1            |
-| 8  | DEPARTAMENTO       | (0,1)         | É GERENCIADO POR  | (0,1)         | FUNCIONÁRIO       | 1:1 opcional   |
-| 9  | ATLETA             | (0,N)         | PRATICA           | (0,N)         | MODALIDADE        | N:N            |
-| 10 | MODALIDADE         | (0,N)         | POSSUI            | (1,1)         | TURMA             | 1:N            |
-| 11 | ATLETA             | (0,N)         | MATRICULA-SE EM   | (0,N)         | TURMA             | N:N            |
-| 12 | FUNCIONÁRIO        | (0,N)         | MINISTRA          | (0,N)         | TURMA             | N:N            |
-| 13 | SÓCIO              | (0,N)         | GERA              | (1,1)         | MENSALIDADE       | 1:N            |
-| 14 | MENSALIDADE        | (0,N)         | RECEBE            | (1,1)         | PAGAMENTO         | 1:N            |
-| 15 | SÓCIO              | (0,N)         | REALIZA           | (1,1)         | RESERVA           | 1:N            |
-| 16 | DEPENDENCIA_FISICA | (0,N)         | RECEBE            | (1,1)         | RESERVA           | 1:N            |
-| 17 | EVENTO             | (0,N)         | RECEBE            | (1,1)         | INSCRIÇÃO         | 1:N            |
-| 18 | PESSOA             | (0,N)         | REALIZA           | (1,1)         | INSCRIÇÃO         | 1:N            |
-| 19 | SÓCIO              | (0,N)         | OCUPA             | (1,1)         | DIRETORIA         | 1:N            |
-| 20 | DIRETORIA          | (1,1)         | UTILIZA           | (0,N)         | FUNCAO_DIRETORIA  | N:1            |
-| 21 | PESSOA             | (1,1)         | POSSUI            | (0,N)         | ENDEREÇO          | 1:N            |
-| 22 | PESSOA             | (1,1)         | POSSUI            | (0,N)         | REGISTRO_ACESSO   | 1:N            |
-| 23 | SÓCIO              | (1,1)         | EMITE             | (0,N)         | CONVITE_VISITANTE | 1:N            |
-| 24 | PESSOA             | (1,1)         | É VISITANTE EM    | (0,N)         | CONVITE_VISITANTE | 1:N            |
-| 25 | PESSOA             | (1,1)         | REALIZA           | (0,N)         | EXAME_MEDICO      | 1:N            |
-| 26 | PESSOA             | (1,1)         | REALIZA           | (0,N)         | VENDA             | 1:N            |
-| 27 | FUNCIONÁRIO        | (1,1)         | REGISTRA          | (0,N)         | VENDA             | 1:N            |
-| 28 | VENDA              | (1,1)         | CONTÉM            | (1,N)         | ITEM_VENDA        | 1:N            |
-| 29 | ITEM_VENDA         | (1,1)         | REFERE-SE A       | (0,N)         | PRODUTO           | N:1            |
-| 30 | PRODUTO            | (1,1)         | POSSUI            | (0,N)         | ESTOQUE           | 1:N            |
-| 31 | PESSOA             | (1,1)         | ESTÁ ENVOLVIDA EM | (0,N)         | OCORRENCIA        | 1:N            |
-| 32 | FUNCIONÁRIO        | (1,1)         | REGISTRA          | (0,N)         | OCORRENCIA        | 1:N            |
-| 33 | DEPENDENCIA_FISICA | (0,N)         | SEDIA             | (0,1)         | EVENTO            | 1:N            |
+| 5  | SÓCIO              | (1,1)         | PERTENCE A        | (0,N)         | CATEGORIA_SOCIO   | N:1            |
+| 6  | FUNCIONÁRIO        | (1,1)         | TRABALHA EM       | (0,N)         | DEPARTAMENTO      | N:1            |
+| 7  | DEPARTAMENTO       | (0,1)         | É GERENCIADO POR  | (0,1)         | FUNCIONÁRIO       | 1:1 opcional   |
+| 8  | ATLETA             | (0,N)         | PRATICA           | (0,N)         | MODALIDADE        | N:N            |
+| 9 | MODALIDADE         | (0,N)         | POSSUI            | (1,1)         | TURMA             | 1:N            |
+| 10 | ATLETA             | (0,N)         | MATRICULA-SE EM   | (0,N)         | TURMA             | N:N            |
+| 11 | FUNCIONÁRIO        | (0,N)         | MINISTRA          | (0,N)         | TURMA             | N:N            |
+| 12 | SÓCIO              | (0,N)         | GERA              | (1,1)         | MENSALIDADE       | 1:N            |
+| 13 | MENSALIDADE        | (0,N)         | RECEBE            | (1,1)         | PAGAMENTO         | 1:N            |
+| 14 | SÓCIO              | (0,N)         | REALIZA           | (1,1)         | RESERVA           | 1:N            |
+| 15 | DEPENDENCIA_FISICA | (0,N)         | RECEBE            | (1,1)         | RESERVA           | 1:N            |
+| 16 | EVENTO             | (0,N)         | RECEBE            | (1,1)         | INSCRIÇÃO         | 1:N            |
+| 17 | PESSOA             | (0,N)         | REALIZA           | (1,1)         | INSCRIÇÃO         | 1:N            |
+| 18 | SÓCIO              | (0,N)         | OCUPA             | (1,1)         | DIRETORIA         | 1:N            |
+| 19 | DIRETORIA          | (1,1)         | UTILIZA           | (0,N)         | FUNCAO_DIRETORIA  | N:1            |
+| 20 | PESSOA             | (1,1)         | POSSUI            | (0,N)         | ENDEREÇO          | 1:N            |
+| 21 | PESSOA             | (1,1)         | POSSUI            | (0,N)         | REGISTRO_ACESSO   | 1:N            |
+| 22 | SÓCIO              | (1,1)         | EMITE             | (0,N)         | CONVITE_VISITANTE | 1:N            |
+| 23 | PESSOA             | (1,1)         | É VISITANTE EM    | (0,N)         | CONVITE_VISITANTE | 1:N            |
+| 24 | PESSOA             | (1,1)         | REALIZA           | (0,N)         | EXAME_MEDICO      | 1:N            |
+| 25 | PESSOA             | (1,1)         | REALIZA           | (0,N)         | VENDA             | 1:N            |
+| 26 | FUNCIONÁRIO        | (1,1)         | REGISTRA          | (0,N)         | VENDA             | 1:N            |
+| 27 | VENDA              | (1,1)         | CONTÉM            | (1,N)         | ITEM_VENDA        | 1:N            |
+| 28 | ITEM_VENDA         | (1,1)         | REFERE-SE A       | (0,N)         | PRODUTO           | N:1            |
+| 29 | PRODUTO            | (1,1)         | POSSUI            | (0,N)         | ESTOQUE           | 1:N            |
+| 30 | PESSOA             | (1,1)         | ESTÁ ENVOLVIDA EM | (0,N)         | OCORRENCIA        | 1:N            |
+| 31 | FUNCIONÁRIO        | (1,1)         | REGISTRA          | (0,N)         | OCORRENCIA        | 1:N            |
+| 32 | DEPENDENCIA_FISICA | (0,N)         | SEDIA             | (0,1)         | EVENTO            | 1:N            |
 
 ### Entidades Associativas
 
@@ -1320,7 +1328,6 @@ A alteração foi feita porque:
 | PESSOA - É - FUNCIONÁRIO                      | PESSOA (0,1) - É - FUNCIONÁRIO (1,1)                    | RN13  |
 | PESSOA - É - ATLETA                           | PESSOA (0,1) - É - ATLETA (1,1)                         | RN14  |
 | SÓCIO - POSSUI - DEPENDENTE                   | SÓCIO (0,N) - POSSUI - DEPENDENTE (1,1)                 | RN02  |
-| ATLETA - VINCULADO A - SÓCIO                  | ATLETA (0,1) - VINCULADO A - SÓCIO (0,1)                | RN14  |
 | SÓCIO - PERTENCE A - CATEGORIA                | SÓCIO (1,1) - PERTENCE A - CATEGORIA (0,N)              | RN03  |
 | FUNCIONÁRIO - TRABALHA EM - DEPARTAMENTO      | FUNCIONÁRIO (1,1) - TRABALHA EM - DEPARTAMENTO (0,N)    | RN13  |
 | DEPARTAMENTO - É GERENCIADO POR - FUNCIONÁRIO | DEPARTAMENTO (0,1) - GERENCIADO POR - FUNCIONÁRIO (0,1) | RN13  |
