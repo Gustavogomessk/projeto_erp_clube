@@ -745,6 +745,14 @@ Quando ocorre uma alteração:
 | 27 | EXAME_MEDICO       | Mantém o histórico de exames médicos                        | RN30, RN40       |
 | 28 | CONVITE_VISITANTE  | Registra convites emitidos por sócios                       | RN28, RN29, RN39 |
 | 29 | OCORRENCIA         | Registra ocorrências e seus responsáveis                    | RN36, RN37, RN43 |
+| 30 | MOVIMENTACAO_ESTOQUE|Registra entradas, saídas, perdas, devoluções e ajustes de produtos|RF16, RN46|
+| 31 | CATEGORIA_DEPENDENCIA|Define quais dependências cada categoria de sócio pode reservar|RN25|
+| 32 | CONTRAPARTE_FINANCEIRA|Identifica clientes, fornecedores e favorecidos, incluindo pessoas jurídicas|RF21, RF22|
+| 33 | TITULO_FINANCEIRO|Registra obrigações a receber ou a pagar, seus valores, vencimentos e origens|RF21, RF22, RF25|
+| 34 | BAIXA_FINANCEIRA|Relaciona operações financeiras aos títulos e registra os valores liquidados ou estornados|RF09, RN50, RN52 |
+| 35 | CONTA_FINANCEIRA|Representa contas bancárias e caixas utilizados pelo clube|RF23|
+| 36 | ITEM_EXTRATO |Registra lançamentos bancários utilizados na conciliação |RF24|
+| 37 | CONCILIACAO|Relaciona lançamentos do extrato às operações financeiras para conferir os valores|RF24, RN53|
 
 ### Nota sobre "Político"
 
