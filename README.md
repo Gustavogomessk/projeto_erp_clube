@@ -941,15 +941,21 @@ A alteração foi feita porque:
 
 ### 10.14 PAGAMENTO
 
-| Atributo        | Tipo          | Obrigatório | Único | Descrição                       |
-| --------------- | ------------- | ----------- | ----- | ------------------------------- |
-| id_pagamento    | Identificador | Sim         | Sim   | Identificador                   |
-| id_mensalidade  | Referência    | Sim         | Não   | FK para MENSALIDADE             |
-| data_pagamento  | Data          | Sim         | Não   | Data                            |
-| valor_pago      | Decimal(10,2) | Sim         | Não   | Valor pago                      |
-| forma_pagamento | Texto(15)     | Sim         | Não   | Boleto, Cartão, PIX ou Dinheiro |
-| numero_recibo   | Texto(20)     | Sim         | Sim   | Número do recibo                |
-| observacao      | Texto(500)    | Não         | Não   | Observações                     |
+| Atributo           | Tipo          | Obrigatório | Único | Descrição                       |
+| ------------------ | ------------- | ----------- | ----- | ------------------------------- |
+| id_pagamento       | Identificador | Sim         | Sim   | Identificador                   |
+| id_conta_financeira| Referência    | Sim         | Não   | FK para CONTA_FINANCEIRA        |
+| data_pagamento     | Data          | Sim         | Não   | Data                            |
+| valor_pago         | Decimal(10,2) | Sim         | Não   | Valor pago                      |
+| forma_pagamento    | Texto(20)     | Sim         | Não   | Boleto, Cartão, PIX ou Dinheiro |
+| numero_recibo      | Texto(20)     | Sim         | Sim   | Número do comprovante ou recibo |
+| tipo_operacao      | Texto(15)     | SIM         | Não   | Recebimento ou Pagamento        |
+| situacao_pagamento | Texto(15)     | Sim         | Não   | Confirmado ou Estornado         |
+| observacao         | Texto(500)    | Não         | Não   | Observações                     |
+
+
+
+
 
 ### 10.15 TURMA
 
