@@ -1350,6 +1350,7 @@ A alteração foi feita porque:
 | INSCRIÇÃO            | PESSOA e EVENTO          | data_inscricao, situacao_inscricao, pagamento_confirmado |
 | DIRETORIA            | SÓCIO e FUNCAO_DIRETORIA | data_inicio_mandato, data_fim_mandato, situacao_mandato  |
 | ITEM_VENDA           | VENDA e PRODUTO          | quantidade, valor_unitario, subtotal                     |
+| CATEGORIA_DEPENDENCIA| CATEGORIA_SOCIO e DEPENDENCIA_FISICA | situacao, observacao                         |
 
 ## 12. Cardinalidades
 
@@ -1437,29 +1438,33 @@ PESSOA foi utilizada como cadastro principal porque sócios, funcionários e atl
 
 Com essa estrutura, uma mesma pessoa pode possuir mais de um vínculo dentro do clube sem precisar repetir seus dados pessoais.
 
-### Justificativa 3: ATLETA pode não ser SÓCIO
+### Justificativa 3: ATLETA identificado por PESSOA
 
-O vínculo entre ATLETA e SÓCIO foi definido como opcional porque o clube pode trabalhar com atletas externos.
+A entidade ATLETA foi vinculada diretamente a PESSOA porque nem todo atleta possui vínculo como sócio do clube.
 
-Assim, uma pessoa pode participar das atividades esportivas sem necessariamente possuir uma matrícula de sócio.
+Uma pessoa pode participar das atividades esportivas como sócia, dependente ou pessoa externa. Dessa forma, não é necessário criar uma relação direta entre ATLETA e SÓCIO.
+
+Essa estrutura também permite que uma mesma pessoa possua diferentes vínculos dentro do clube sem duplicar seus dados pessoais.
 
 ### Justificativa 4: Relacionamento N:N entre ATLETA e MODALIDADE
 
 Um atleta pode praticar mais de uma modalidade e uma modalidade pode possuir vários atletas.
 
-Por esse motivo, foi criada a entidade ATLETA_MODALIDADE para representar esse relacionamento e guardar informações do vínculo.
+Por esse motivo, foi criada a entidade ATLETA_MODALIDADE para representar esse relacionamento e guardar informações do vínculo, como data de início, data de término e situação.
 
-### Justificativa 5: MENSALIDADE separada de PAGAMENTO
+### Justificativa 5: Separação entre MENSALIDADE, PAGAMENTO e TÍTULO_FINANCEIRO
 
-MENSALIDADE e PAGAMENTO foram separados porque uma mesma mensalidade pode ser paga em partes.
+MENSALIDADE e PAGAMENTO representam informações diferentes. A mensalidade registra a cobrança gerada para o sócio, enquanto PAGAMENTO registra uma operação financeira de entrada ou saída.
 
-Com isso, cada pagamento pode ser registrado individualmente e o sistema consegue calcular quanto ainda falta para quitar a mensalidade.
+TITULO_FINANCEIRO foi utilizado para centralizar as obrigações a receber e a pagar, permitindo que mensalidades, inscrições, vendas e despesas sejam controladas em uma estrutura única.
+
+BAIXA_FINANCEIRA relaciona os pagamentos aos títulos correspondentes, permitindo pagamentos parciais, liquidações e estornos sem perder o histórico das operações.
 
 ### Justificativa 6: DEPENDENTE como entidade separada
 
 DEPENDENTE possui informações próprias do relacionamento com o sócio titular, como tipo de dependência, início do vínculo e situação.
 
-Além disso, o dependente pode futuramente deixar essa condição e se tornar sócio.
+Além disso, o dependente pode futuramente deixar essa condição e se tornar sócio titular, mantendo o histórico do vínculo anterior.
 
 ### Justificativa 7: ENDEREÇO separado de PESSOA
 
@@ -1477,7 +1482,7 @@ Cada registro possui data, horário e tipo de movimentação, permitindo consult
 
 Uma venda pode possuir vários produtos e um produto pode aparecer em várias vendas.
 
-ITEM_VENDA foi utilizado para representar esse relacionamento e armazenar quantidade, valor unitário e subtotal.
+ITEM_VENDA foi utilizado para representar esse relacionamento e armazenar informações como quantidade, valor unitário e subtotal.
 
 ### Justificativa 10: ESTOQUE separado de PRODUTO
 
@@ -1507,7 +1512,7 @@ Também permite manter histórico da situação e das providências tomadas.
 
 As entidades associativas foram utilizadas nos relacionamentos em que uma entidade pode estar relacionada a várias ocorrências da outra.
 
-Além de resolver o relacionamento N:N, algumas dessas entidades possuem informações próprias, como data, situação e quantidade.
+Além de resolver o relacionamento N:N, essas entidades possuem informações próprias, como datas, situações, quantidades e outras características dos vínculos.
 
 ### Justificativa 15: INSCRIÇÃO separada de PESSOA e EVENTO
 
@@ -1520,6 +1525,78 @@ INSCRIÇÃO representa esse vínculo e permite controlar informações como data
 MATRÍCULA foi criada para representar a participação do atleta em determinada turma.
 
 Além do vínculo entre atleta e turma, a entidade permite controlar a data e a situação da matrícula.
+
+### Justificativa 17: CATEGORIA_DEPENDENCIA como entidade associativa
+
+CATEGORIA_DEPENDENCIA foi criada para resolver o relacionamento N:N entre CATEGORIA_SOCIO e DEPENDENCIA_FISICA.
+
+Uma categoria pode permitir a utilização de várias dependências, assim como uma dependência pode estar disponível para diferentes categorias.
+
+A entidade permite controlar quais dependências cada categoria pode utilizar, além de registrar a situação da permissão e impedir associações duplicadas.
+
+### Justificativa 18: MOVIMENTACAO_ESTOQUE como entidade própria
+
+MOVIMENTACAO_ESTOQUE foi criada para registrar todas as alterações realizadas no saldo dos produtos.
+
+A entidade permite controlar entradas, saídas, perdas, devoluções e ajustes, identificando quantidade, sentido, origem e funcionário responsável.
+
+Dessa maneira, o sistema mantém o histórico das movimentações e evita alterações diretas no saldo sem justificativa.
+
+### Justificativa 19: DEVOLUCAO_VENDA como entidade própria
+
+DEVOLUCAO_VENDA foi criada para registrar os produtos devolvidos pelos compradores.
+
+A entidade permite identificar o item vendido, a quantidade devolvida, o motivo, a data e o funcionário responsável.
+
+Sua integração com MOVIMENTACAO_ESTOQUE permite registrar o retorno dos produtos, enquanto a integração financeira possibilita controlar eventuais reembolsos.
+
+### Justificativa 20: CONTRAPARTE_FINANCEIRA como entidade própria
+
+CONTRAPARTE_FINANCEIRA foi criada para identificar clientes, fornecedores e favorecidos envolvidos nas operações financeiras do clube.
+
+A entidade permite registrar tanto pessoas físicas quanto jurídicas, sem obrigar empresas a possuírem cadastro na entidade PESSOA.
+
+Dessa maneira, o clube consegue organizar os responsáveis pelas obrigações financeiras de forma centralizada.
+
+### Justificativa 21: TITULO_FINANCEIRO como entidade centralizadora
+
+TITULO_FINANCEIRO foi criado para centralizar as obrigações financeiras do clube, incluindo contas a receber e contas a pagar.
+
+A entidade permite registrar valores, vencimentos, origem, contraparte e situação das obrigações.
+
+Com essa estrutura, diferentes processos do clube podem utilizar o mesmo controle financeiro.
+
+### Justificativa 22: BAIXA_FINANCEIRA para controle de liquidações
+
+BAIXA_FINANCEIRA foi criada para relacionar as operações financeiras aos títulos correspondentes.
+
+Essa entidade permite registrar pagamentos parciais, recebimentos, liquidações e estornos, mantendo o histórico de cada operação.
+
+Sua utilização evita que o controle financeiro fique limitado a uma única cobrança ou pagamento.
+
+### Justificativa 23: CONTA_FINANCEIRA para controle de recursos
+
+CONTA_FINANCEIRA foi criada para representar as contas bancárias e os caixas utilizados pelo clube.
+
+A entidade permite identificar onde os recebimentos são registrados e de onde os pagamentos são realizados.
+
+Também possibilita acompanhar saldos e movimentações financeiras em diferentes contas.
+
+### Justificativa 24: ITEM_EXTRATO para registro bancário
+
+ITEM_EXTRATO foi criado para armazenar os lançamentos importados ou registrados a partir dos extratos financeiros.
+
+Essa entidade permite comparar os valores apresentados pelas instituições financeiras com as operações registradas internamente pelo clube.
+
+Também auxilia na identificação de lançamentos duplicados e divergências.
+
+### Justificativa 25: CONCILIACAO para conferência financeira
+
+CONCILIACAO foi criada para relacionar os lançamentos bancários às operações financeiras registradas no sistema.
+
+A entidade permite conferir valores, identificar diferenças e registrar conciliações parciais ou agrupadas.
+
+Dessa forma, o clube consegue manter um histórico das conferências realizadas e dos funcionários responsáveis.
 
 ## 16. Conclusão
 
