@@ -677,7 +677,7 @@ Quando ocorre uma alteração:
 | RN57 | Não são permitidas permissões, lançamentos de extrato ou mensalidades duplicados, nem períodos sobrepostos nos vínculos esportivos equivalentes| Unicidade composta e validação de períodos  |
 | RN58 | 	Valores e quantidades devem respeitar os limites permitidos, descontos não podem gerar saldo negativo e datas finais devem ser posteriores às iniciais| Validação de valores, quantidades e datas|
 | RN59 | RUm dependente deve encerrar seu vínculo antes de se tornar sócio ativo, preservando seu histórico, enquanto funcionários e atletas podem também ser sócios| DEPENDENTE, SÓCIO, FUNCIONÁRIO e ATLETA|
-
+| RN60 | Cada categoria de sócio poderá possuir permissão de acesso a várias dependências físicas, assim como cada dependência física poderá ser permitida para várias categorias de sócio, não sendo permitida a duplicidade da mesma associação | CATEGORIA_DEPENDENCIA, CATEGORIA_SOCIO e DEPENDENCIA_FISICA |
 ### Tabela de Categorias de Sócio
 
 | Categoria  | Valor Mensalidade | Benefícios                                       |
@@ -1395,8 +1395,8 @@ A alteração foi feita porque:
 | MOVIMENTACAO_ESTOQUE - É SAÍDA ORIGINAL DE - DEVOLUCAO_VENDA | MOVIMENTACAO_ESTOQUE (0,N) - É SAÍDA ORIGINAL DE - DEVOLUCAO_VENDA (1,1) | RN47 |
 | MOVIMENTACAO_ESTOQUE - REGISTRA RETORNO DE - DEVOLUCAO_VENDA | MOVIMENTACAO_ESTOQUE (0,1) - REGISTRA RETORNO DE - DEVOLUCAO_VENDA (0,1) | RN47 |
 | FUNCIONÁRIO - ATENDE - DEVOLUCAO_VENDA        | FUNCIONÁRIO (0,N) - ATENDE - DEVOLUCAO_VENDA (1,1)     | RN47  |
-| CATEGORIA_SOCIO - POSSUI PERMISSÃO EM - CATEGORIA_DEPENDENCIA | CATEGORIA_SOCIO (0,N) - POSSUI PERMISSÃO EM - CATEGORIA_DEPENDENCIA (1,1) | A DEFINIR |
-| DEPENDENCIA_FISICA - É PERMITIDA EM - CATEGORIA_DEPENDENCIA | DEPENDENCIA_FISICA (0,N) - É PERMITIDA EM - CATEGORIA_DEPENDENCIA (1,1) | A DEFINIR |
+| CATEGORIA_SOCIO - POSSUI PERMISSÃO EM - CATEGORIA_DEPENDENCIA | CATEGORIA_SOCIO (0,N) - POSSUI PERMISSÃO EM - CATEGORIA_DEPENDENCIA (1,1) | RN53 |
+| DEPENDENCIA_FISICA - É PERMITIDA EM - CATEGORIA_DEPENDENCIA | DEPENDENCIA_FISICA (0,N) - É PERMITIDA EM - CATEGORIA_DEPENDENCIA (1,1) | RN60 |
 | PESSOA - POSSUI CADASTRO COMO - CONTRAPARTE_FINANCEIRA | PESSOA (0,1) - POSSUI CADASTRO COMO - CONTRAPARTE_FINANCEIRA (0,1) | RN48 |
 | CONTRAPARTE_FINANCEIRA - POSSUI - TITULO_FINANCEIRO | CONTRAPARTE_FINANCEIRA (0,N) - POSSUI - TITULO_FINANCEIRO (1,1) | RN48 |
 | MENSALIDADE - ORIGINA - TITULO_FINANCEIRO     | MENSALIDADE (0,1) - ORIGINA - TITULO_FINANCEIRO (0,1) | RN48 |
@@ -1410,7 +1410,6 @@ A alteração foi feita porque:
 | PAGAMENTO - PARTICIPA DE - CONCILIACAO       | PAGAMENTO (0,N) - PARTICIPA DE - CONCILIACAO (1,1) | RN51 |
 | FUNCIONÁRIO - REALIZA - CONCILIACAO           | FUNCIONÁRIO (0,N) - REALIZA - CONCILIACAO (1,1) | RN51 |
 | BAIXA_FINANCEIRA - É ESTORNADA POR - BAIXA_FINANCEIRA | BAIXA_FINANCEIRA (0,N) - É ESTORNADA POR - BAIXA_FINANCEIRA (0,1) | RN52 |
-
 
 ## 13. Dicionário de Dados Conceitual
 
