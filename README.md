@@ -1106,7 +1106,7 @@ A alteração foi feita porque:
 | Atributo        | Tipo          | Obrigatório | Único | Descrição                     |
 | --------------- | ------------- | ----------- | ----- | ----------------------------- |
 | id_exame_medico | Identificador | Sim         | Sim   | Identificador                 |
-| CPF       | Referência    | Sim         | Não   | FK para PESSOA                |
+| CPF             | Referência    | Sim         | Não   | FK para PESSOA                |
 | data_exame      | Data          | Sim         | Não   | Data                          |
 | data_validade   | Data          | Sim         | Não   | Validade                      |
 | resultado       | Texto(15)     | Sim         | Não   | Apto, Inapto ou Com Restrição |
@@ -1141,6 +1141,127 @@ A alteração foi feita porque:
 | gravidade           | Texto(15)     | Não         | Não   | Baixa, Média ou Alta                 |
 | situacao_ocorrencia | Texto(20)     | Sim         | Não   | Aberta, Em análise ou Resolvida      |
 | providencia_tomada  | Texto(500)    | Não         | Não   | Medidas tomadas                      |
+
+### 10.30 MOVIMENTACAO_ESTOQUE
+
+| Atributo            | Tipo          | Obrigatório | Único | Descrição                                                    |
+| ------------------- | ------------- | ----------- | ----- | ------------------------------------------------------------ |
+| id_movimentacao     | Identificador | Sim         | Sim   | Identificador da movimentação de estoque                     |
+| id_estoque          | Referência    | Sim         | Não   | FK para ESTOQUE                                              |
+| id_funcionario      | Referência    | Sim         | Não   | FK para FUNCIONÁRIO responsável pela movimentação            |
+| id_item_venda       |Referência     | Não         | Não   | FK para ITEM_VENDA, quando originada de uma venda            |
+| id_movimentacao_origem| Referência  | Não         | Não   | FK para MOVIMENTACAO_ESTOQUE original, quando houver reversão|
+| tipo_movimentacao   | Texto(15)     | Sim         | Não   | Entrada, Saída, Perda, Devolução ou Ajuste                   |
+| sentido             | Texto(10)     | Sim         | Não   | Crédito ou Débito                                            |
+| quantidade          | Inteiro       | Não         | Não   | Quantidade positiva de produtos movimentados                 |
+| data_movimentacao   | Data/Hora     | Sim         | Não   | Data e horário da movimentação                               |
+| origem              | Texto(20)     | Não         | Não   | Venda, Compra, Perda, Devolução, Ajuste ou Saldo Inicial     |
+| motivo              | Texto(500)    | Não         | Não   | Justificativa da movimentação                                |
+
+
+### 10.31 DEVOLUCAO_VENDA
+
+| Atributo            | Tipo          | Obrigatório | Único | Descrição                                                            |
+| ------------------- | ------------- | ----------- | ----- | ---------------------------------------------------------------------|
+| id_devolucao        | Identificador | Sim         | Sim   | Identificador da devolução                                           |
+| id_item_venda       | Referência    | Sim         | Não   | FK para ITEM_VENDA                                                   |
+| id_movimentacao_saida| Referência   | Sim         | Não   | FK para MOVIMENTACAO_ESTOQUE referente à saída original              |
+| id_movimentacao_devolucao| Referência| Não        | Sim   | FK para MOVIMENTACAO_ESTOQUE referente à entrada do produto devolvido|
+| id_funcionario      | Referência    | Sim         | Não   | FK para FUNCIONÁRIO responsável pelo atendimento                     |
+| data_devolucao      | Data/Hora     | Sim         | Não   | Data e horário da devolução                                          |
+| quantidade_devolvida| Inteiro       | Sim         | Não   | Quantidade de produtos devolvidos                                    |
+| valor_reembolso     | Decimal(10,2) | Não         | Não   | Valor financeiro devolvido ao comprador                              |
+| motivo              | Texto(500)    | Sim         | Não   |Motivo informado para a devolução                                     |
+| situacao            | Texto(15)     | sim         | Não   | Solicitada, Confirmada ou Cancelada                                  |
+
+
+### 10.32 CONTRAPARTE_FINANCEIRA
+
+| Atributo            | Tipo          | Obrigatório | Único | Descrição                                         |
+| ------------------- | ------------- | ----------- | ----- | ------------------------------------------------- |
+| id_contraparte      | Identificador | Sim         | Sim   | Identificador do cliente, fornecedor ou favorecido|
+| CPF                 | Referência    | Sim         | Sim   | FK para PESSOA, quando houver cadastro vinculado  |
+| nome_razao_social   | Texto(150)    | Sim         | Não   | Nome da pessoa física ou razão social da empresa  |
+| documento           | Texto(14)     | Sim         | Sim   | CPF ou CNPJ sem pontuação                         |
+| tipo_pessoa         | Texto(10)     | Sim         | Não   | Física ou Jurídica                                |
+| situacao            | Texto(10)     | Sim         | Não   | Ativa ou Inativa                                  |
+
+
+
+### 10.33 TITULO_FINANCEIRO
+
+| Atributo            | Tipo          | Obrigatório | Único | Descrição                                                      |
+| ------------------- | ------------- | ----------- | ----- | -------------------------------------------------------------- |
+| id_titulo           | Identificador | Sim         | Sim   | Identificador da conta a receber ou a pagar                    |
+| id_contraparte      | Referência    | Sim         | Não   | FK para CONTRAPARTE_FINANCEIRA                                 |
+| id_mensalidade      | Referência    | Não         | Sim   | FK para MENSALIDADE, quando for a origem da cobrança           |
+| id_inscricao        | Referência    | Não         | Sim   | FK para INSCRIÇÃO, quando for a origem da cobrança             |
+| id_venda            | Referência    | Não         | Sim   | FK para VENDA, quando for a origem da cobrança                 |
+| natureza            | Texto(10)     | Sim         | Não   | Receber ou Pagar                                               |
+| origem              | Texto(20)     | Sim         | Não   | Mensalidade, Evento, Venda ou Manual                           |
+| descricao           | Texto(200)    | Sim         | Não   | Descrição da cobrança ou despesa                               |
+| data_emissao        | Data          | Sim         | Não   | Data de criação do título financeiro                           |
+| data_vencimento     | Data          | Sim         | Não   |Data prevista para pagamento ou recebimento                     |
+| valor_original      | Decimal(10,2) | Sim         | Não   | Valor inicial da obrigação financeira                          |
+| valor_acrescimos    | Decimal(10,2) | Sim         | Não   | Juros e acréscimos, com padrão zero                            |
+| valor_descontos     | Decimal(10,2) | Sim         | Não   | Descontos concedidos, com padrão zero                          |
+| situacao            | Texto(15)     | Sim         | Não   | Aberto, Parcial, Liquidado ou Cancelado                        |
+| saldo_aberto        | Derivado      | Sim         | Não   | Valor devido menos as baixas efetivas, considerando os estornos|
+
+### 10.34 BAIXA_FINANCEIRA
+
+| Atributo            | Tipo          | Obrigatório | Único | Descrição                                        |
+| ------------------- | ------------- | ----------- | ----- | ------------------------------------------------ |
+| id_baixa            | Identificador | Sim         | Sim   | Identificador da baixa financeira                |
+| id_titulo           | Referência    | Sim         | Não   | FK para TITULO_FINANCEIRO                        |
+| id_pagamento        | Referência    | Sim         | Não   | FK para PAGAMENTO                                |
+| valor_baixado       | Decimal(10,2) | Sim         | Não   | Valor positivo aplicado ao título                |
+| tipo_baixa          | Texto(10)     | Sim         | Não   | Liquidação ou Estorno                            |
+| data_baixa          | Data/Hora     | Sim         | Não   | Data e horário do registro da baixa              |
+| id_baixa_origem     | Referência    | Não         | Não   | FK para BAIXA_FINANCEIRA que está sendo estornada|
+
+
+### 10.35 CONTA_FINANCEIRA
+
+| Atributo            | Tipo          | Obrigatório | Único | Descrição                                       |
+| ------------------- | ------------- | ----------- | ----- | ----------------------------------------------- |
+| id_conta_financeira | Identificador | Sim         | Sim   | Identificador                                   |
+| nome_conta          | Texto(80)     | Sim         | Sim   |Nome utilizado para identificar a conta          |
+| tipo_conta          | Texto(15)     | Sim         | Não   | Caixa ou Bancária                               |
+| banco               | Texto(80)     | Sim         | Não   | Nome da instituição financeira                  |
+| agencia             | Texto(20)     | Sim         | Não   | Número da agência bancária                      |
+| numero_conta        | Texto(30)     | Sim         | Não   | Número da conta com dígito                      |
+| data_saldo_inicial  | Data/Hora     | Sim         | Não   | Marco inicial do controle financeiro            |
+| saldo_inicial       | Decimal(12,2) | Sim         | Não   | Saldo existente antes das operações controladas |
+| situacao            | Texto(10)     | Sim         | Não   | Ativa ou Inativa                                |
+
+
+### 10.36 ITEM_EXTRATO
+
+| Atributo             | Tipo          | Obrigatório | Único | Descrição                                 |
+| -------------------- | ------------- | ----------- | ----- | ----------------------------------------- |
+| id_item_extrato      | Identificador | Sim         | Sim   | Identificador                             |
+| id_conta_financeira  | Referência    | Sim         | Não   | FK para CONTA_FINANCEIRA                  | 
+| identificador_externo| Texto(100)    | Sim         | Não   | Código do lançamento informado pelo banco |
+| data_lancamento      | Data/Hora     | Sim         | Não   | Data e horário do lançamento bancário     |
+| sentido              | Texto(10)     | Sim         | Não   | Crédito ou Débito                         |
+| valor                | Decimal(10,2) | Sim         | Não   |Valor positivo do lançamento               |
+| descricao            | Texto(200)    | Não         | Não   | Descrição apresentada no extrato bancário |
+| situacao_conciliacao | Derivado      | Sim         | Não   | Não conciliado, Parcial ou Conciliado     |
+
+
+### 10.37 CONCILIACAO
+
+| Atributo            | Tipo          | Obrigatório | Único | Descrição                                                            |
+| ------------------- | ------------- | ----------- | ----- | -------------------------------------------------------------------- |
+| id_conciliacao      | Identificador | Sim         | Sim   | Identificador                                                        |
+| id_item_extrato     | Referência    | Sim         | Não   | FK para ITEM_EXTRATO                                                 |
+| id_pagamento        | Referência    | Sim         | Não   | FK para PAGAMENTO                                                    |
+| id_funcionario      | Referência    | Sim         | Não   | FK para FUNCIONÁRIO responsável pela conferência                     |
+| valor_conciliado    | Decimal(10,2) | Sim         | Não   | Valor positivo associado entre o lançamento e a operação financeira  |
+| data_conciliacao    | Data/Hora     | Sim         | Não   | Data e horário da conferência                                        |
+| situacao            | Texto(10)     | Sim         | Não   | Ativa ou Cancelada                                                   |
+| justificativa       | Texto(500)    | Não         | Não   | Motivo de correção ou cancelamento                                   |
 
 ## 11. Relacionamentos
 
