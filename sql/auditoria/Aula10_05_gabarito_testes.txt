@@ -1,15 +1,67 @@
 GABARITO — cada comando inválido deve ser executado isoladamente
 
-01. PK duplicada: ERROR 1062 (23000): Duplicate entry '1001' for key 'pessoa.PRIMARY'
-02. CPF repetido: ERROR 1062 (23000): Duplicate entry '12345678901' for key 'pessoa.uq_pessoa_cpf'
-03. FK pessoa inexistente: ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`clube_erp`.`matricula`, CONSTRAINT `fk_matricula_pessoa` FOREIGN KEY (`id_pessoa`) REFERENCES `pessoa` (`id_pessoa`))
-04. FK modalidade inexistente: ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`clube_erp`.`matricula`, CONSTRAINT `fk_matricula_modalidade` FOREIGN KEY (`id_modalidade`) REFERENCES `modalidade` (`id_modalidade`))
-05. CHECK taxa negativa: ERROR 3819 (HY000): Check constraint 'ck_modalidade_taxa' is violated.
-06. CHECK status inválido: ERROR 3819 (HY000): Check constraint 'ck_matricula_status' is violated.
-07. NOT NULL ausente: ERROR 1048 (23000): Column 'nome' cannot be null
-08. UNIQUE composto matrícula: ERROR 1062 (23000): Duplicate entry '1001-20-2026-08' for key 'matricula.uq_matricula'
-09. PK composta associativa: ERROR 1062 (23000): Duplicate entry '10-20-2026-08' for key 'funcionario_modalidade.PRIMARY'
-10. FK associativa: ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`clube_erp`.`funcionario_modalidade`, CONSTRAINT `fk_fm_funcionario` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionario` (`id_funcionario`))
+01. PK duplicada em pessoa:
+    ERROR 1062 (23000): Duplicate entry '11111111111' for key 'pessoa.PRIMARY'
 
-Os textos das mensagens podem variar por SGBD e versão.
-(MySQL 5.7 mostra apenas 'PRIMARY' / nome da chave, sem o prefixo da tabela; MariaDB usa "CONSTRAINT `...` failed for ..." nos CHECKs.)
+02. UNIQUE de email em pessoa:
+    ERROR 1062 (23000): Duplicate entry 'ana.silva@email.com' for key 'pessoa.email'
+
+03. CHECK length(cpf)=11 em pessoa:
+    ERROR 3819 (HY000): Check constraint 'pessoa_chk_1' is violated.
+
+04. CHECK status_pessoa inválido:
+    ERROR 3819 (HY000): Check constraint 'pessoa_chk_2' is violated.
+
+05. NOT NULL em pessoa.nome:
+    ERROR 1048 (23000): Column 'nome' cannot be null
+
+06. FK pessoa inexistente em socio:
+    ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails
+    (`clube_erp`.`socio`, CONSTRAINT `socio_ibfk_1` FOREIGN KEY (`cpf`) REFERENCES `pessoa` (`cpf`))
+
+07. FK categoria_socio inexistente em socio:
+    ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails
+    (`clube_erp`.`socio`, CONSTRAINT `socio_ibfk_2` FOREIGN KEY (`id_categoria_socio`) REFERENCES `categoria_socio` (`id_categoria_socio`))
+
+08. UNIQUE numero_matricula em socio:
+    ERROR 1062 (23000): Duplicate entry 'MAT000000001' for key 'socio.numero_matricula'
+
+09. CHECK situacao_socio inválido:
+    ERROR 3819 (HY000): Check constraint 'socio_chk_2' is violated.
+
+10. CHECK valor_mensalidade negativa em categoria_socio:
+    ERROR 3819 (HY000): Check constraint 'categoria_socio_chk_1' is violated.
+
+11. FK id_departamento inexistente em funcionario:
+    ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails
+    (`clube_erp`.`funcionario`, CONSTRAINT `funcionario_ibfk_2` FOREIGN KEY (`id_departamento`) REFERENCES `departamento` (`id_departamento`))
+
+12. CHECK salario > 0 em funcionario:
+    ERROR 3819 (HY000): Check constraint 'funcionario_chk_1' is violated.
+
+13. FK id_modalidade inexistente em turma:
+    ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails
+    (`clube_erp`.`turma`, CONSTRAINT `turma_ibfk_1` FOREIGN KEY (`id_modalidade`) REFERENCES `modalidade` (`id_modalidade`))
+
+14. UNIQUE (id_turma, dia_semana) em turma_horario:
+    ERROR 1062 (23000): Duplicate entry '1-SEG' for key 'turma_horario.id_turma'
+
+15. FK id_funcionario inexistente em turma_professor:
+    ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails
+    (`clube_erp`.`turma_professor`, CONSTRAINT `turma_professor_ibfk_2` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionario` (`id_funcionario`))
+
+16. FK id_atleta inexistente em matricula:
+    ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails
+    (`clube_erp`.`matricula`, CONSTRAINT `matricula_ibfk_1` FOREIGN KEY (`id_atleta`) REFERENCES `atleta` (`id_atleta`))
+
+17. CHECK resultado inválido em exame_medico:
+    ERROR 3819 (HY000): Check constraint 'exame_medico_chk_1' is violated.
+
+18. UNIQUE (id_evento, cpf) em inscricao:
+    ERROR 1062 (23000): Duplicate entry '1-77777777777' for key 'inscricao.id_evento'
+
+19. UNIQUE (id_socio, mes_referencia) em mensalidade:
+    ERROR 1062 (23000): Duplicate entry '1-2024-05' for key 'mensalidade.id_socio'
+
+20. UNIQUE numero_recibo em pagamento:
+    ERROR 1062 (23000): Duplicate entry 'REC-2024-0001' for key 'pagamento.numero_recibo'
