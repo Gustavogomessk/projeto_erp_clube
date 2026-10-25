@@ -729,7 +729,7 @@ Quando ocorre uma alteração:
 | 11 | EVENTO             | Registra eventos do clube                                   | RF11             |
 | 12 | INSCRIÇÃO          | Registra a participação de pessoas em eventos               | RF12             |
 | 13 | MENSALIDADE        | Registra cobranças dos sócios                               | RF08             |
-| 14 | PAGAMENTO          | Registra pagamentos de mensalidades                         | RF09             |
+| 14 | PAGAMENTO          | Registra operações financeiras de recebimento e pagamento.  | RF09             |
 | 15 | TURMA              | Representa turmas de modalidades                            | RF07             |
 | 16 | MATRÍCULA          | Registra a matrícula de atletas em turmas                   | RF07             |
 | 17 | DIRETORIA          | Registra os mandatos dos sócios em cargos diretivos         | RF14             |
@@ -1159,9 +1159,9 @@ A alteração foi feita porque:
 | id_movimentacao_origem| Referência    | Não         | Não   | FK para MOVIMENTACAO_ESTOQUE original, quando houver reversão|
 | tipo_movimentacao     | Texto(15)     | Sim         | Não   | Entrada, Saída, Perda, Devolução ou Ajuste                   |
 | sentido               | Texto(10)     | Sim         | Não   | Crédito ou Débito                                            |
-| quantidade            | Inteiro       | Não         | Não   | Quantidade positiva de produtos movimentados                 |
+| quantidade            | Inteiro       | Sim         | Não   | Quantidade positiva de produtos movimentados                 |
 | data_movimentacao     | Data/Hora     | Sim         | Não   | Data e horário da movimentação                               |
-| origem                | Texto(20)     | Não         | Não   | Venda, Compra, Perda, Devolução, Ajuste ou Saldo Inicial     |
+| origem                | Texto(20)     | Sim         | Não   | Venda, Compra, Perda, Devolução, Ajuste ou Saldo Inicial     |
 | motivo                | Texto(500)    | Não         | Não   | Justificativa da movimentação                                |
 
 
@@ -1180,7 +1180,7 @@ A alteração foi feita porque:
 | Atributo            | Tipo          | Obrigatório | Único | Descrição                                         |
 | ------------------- | ------------- | ----------- | ----- | ------------------------------------------------- |
 | id_contraparte      | Identificador | Sim         | Sim   | Identificador do cliente, fornecedor ou favorecido|
-| CPF                 | Referência    | Sim         | Sim   | FK para PESSOA, quando houver cadastro vinculado  |
+| CPF                 | Referência    | Não         | Sim   | FK para PESSOA, quando houver cadastro vinculado  |
 | nome_razao_social   | Texto(150)    | Sim         | Não   | Nome da pessoa física ou razão social da empresa  |
 | documento           | Texto(14)     | Sim         | Sim   | CPF ou CNPJ sem pontuação                         |
 | tipo_pessoa         | Texto(10)     | Sim         | Não   | Física ou Jurídica                                |
@@ -1271,7 +1271,7 @@ A alteração foi feita porque:
 | ------------------- | ------------- | ----------- | ----- | -------------------------------------------------------------------- |
 | id_conciliacao      | Identificador | Sim         | Sim   | Identificador                                                        |
 | id_item_extrato     | Referência    | Sim         | Não   | FK para ITEM_EXTRATO                                                 |
-| id_pagamento        | Referência    | Sim         | Não   | FK para PAGAMENTO                                                    |
+| id_pagamento        | Referência    | Não         | Não   | FK para PAGAMENTO                                                    |
 | id_funcionario      | Referência    | Sim         | Não   | FK para FUNCIONÁRIO responsável pela conferência                     |
 | valor_conciliado    | Decimal(10,2) | Sim         | Não   | Valor positivo associado entre o lançamento e a operação financeira  |
 | data_conciliacao    | Data/Hora     | Sim         | Não   | Data e horário da conferência                                        |
@@ -1280,65 +1280,63 @@ A alteração foi feita porque:
 
 ## 11. Relacionamentos
 
-| #  | Entidade A              | Cardinalidade | Verbo                 | Cardinalidade | Entidade B        | Tipo           |
-| -- | ----------------------- | ------------- | --------------------- | ------------- | ----------------- | -------------- |
-| 1  | PESSOA                  | (0,1)         | É                     | (1,1)         | SÓCIO             | Especialização |
-| 2  | PESSOA                  | (0,1)         | É                     | (1,1)         | FUNCIONÁRIO       | Especialização |
-| 3  | PESSOA                  | (0,1)         | É                     | (1,1)         | ATLETA            | Especialização |
-| 4  | SÓCIO                   | (0,N)         | POSSUI                | (1,1)         | DEPENDENTE        | 1:N            |
-| 5  | SÓCIO                   | (1,1)         | PERTENCE A            | (0,N)         | CATEGORIA_SOCIO   | N:1            |
-| 6  | FUNCIONÁRIO             | (1,1)         | TRABALHA EM           | (0,N)         | DEPARTAMENTO      | N:1            |
-| 7  | DEPARTAMENTO            | (0,1)         | É GERENCIADO POR      | (0,1)         | FUNCIONÁRIO       | 1:1 opcional   |
-| 8  | ATLETA                  | (0,N)         | PRATICA               | (0,N)         | MODALIDADE        | N:N            |
-| 9  | MODALIDADE              | (0,N)         | POSSUI                | (1,1)         | TURMA             | 1:N            |
-| 10 | ATLETA                  | (0,N)         | MATRICULA-SE EM       | (0,N)         | TURMA             | N:N            |
-| 11 | FUNCIONÁRIO             | (0,N)         | MINISTRA              | (0,N)         | TURMA             | N:N            |
-| 12 | SÓCIO                   | (0,N)         | GERA                  | (1,1)         | MENSALIDADE       | 1:N            |
-| 13 | MENSALIDADE             | (0,N)         | RECEBE                | (1,1)         | PAGAMENTO         | 1:N            |
-| 14 | SÓCIO                   | (0,N)         | REALIZA               | (1,1)         | RESERVA           | 1:N            |
-| 15 | DEPENDENCIA_FISICA      | (0,N)         | RECEBE                | (1,1)         | RESERVA           | 1:N            |
-| 16 | EVENTO                  | (0,N)         | RECEBE                | (1,1)         | INSCRIÇÃO         | 1:N            |
-| 17 | PESSOA                  | (0,N)         | REALIZA               | (1,1)         | INSCRIÇÃO         | 1:N            |
-| 18 | SÓCIO                   | (0,N)         | OCUPA                 | (1,1)         | DIRETORIA         | 1:N            |
-| 19 | DIRETORIA               | (1,1)         | UTILIZA               | (0,N)         | FUNCAO_DIRETORIA  | N:1            |
-| 20 | PESSOA                  | (1,1)         | POSSUI                | (0,N)         | ENDEREÇO          | 1:N            |
-| 21 | PESSOA                  | (1,1)         | POSSUI                | (0,N)         | REGISTRO_ACESSO   | 1:N            |
-| 22 | SÓCIO                   | (1,1)         | EMITE                 | (0,N)         | CONVITE_VISITANTE | 1:N            |
-| 23 | PESSOA                  | (1,1)         | É VISITANTE EM        | (0,N)         | CONVITE_VISITANTE | 1:N            |
-| 24 | PESSOA                  | (1,1)         | REALIZA               | (0,N)         | EXAME_MEDICO      | 1:N            |
-| 25 | PESSOA                  | (1,1)         | REALIZA               | (0,N)         | VENDA             | 1:N            |
-| 26 | FUNCIONÁRIO             | (1,1)         | REGISTRA              | (0,N)         | VENDA             | 1:N            |
-| 27 | VENDA                   | (1,1)         | CONTÉM                | (1,N)         | ITEM_VENDA        | 1:N            |
-| 28 | ITEM_VENDA              | (1,1)         | REFERE-SE A           | (0,N)         | PRODUTO           | N:1            |
-| 29 | PRODUTO                 | (1,1)         | POSSUI                | (0,N)         | ESTOQUE           | 1:N            |
-| 30 | PESSOA                  | (1,1)         | ESTÁ ENVOLVIDA EM     | (0,N)         | OCORRENCIA        | 1:N            |
-| 31 | FUNCIONÁRIO             | (1,1)         | REGISTRA              | (0,N)         | OCORRENCIA        | 1:N            |
-| 32 | DEPENDENCIA_FISICA      | (0,N)         | SEDIA                 | (0,1)         | EVENTO            | 1:N            |
-| 33 | PESSOA                  | (0,N)         | POSSUI HISTÓRICO DE   | (1,1) | DEPENDENTE                | 1:N            |
-| 34 | PRODUTO                 | (0,1)         | POSSUI                | (1,1) | ESTOQUE                   | 1:1            |
-| 35 | ESTOQUE                 | (0,N)         | REGISTRA              | (1,1) | MOVIMENTACAO_ESTOQUE      | 1:N            |
-| 36 | FUNCIONÁRIO             | (0,N)         | REGISTRA              | (1,1) | MOVIMENTACAO_ESTOQUE      | 1:N            |
-| 37 | ITEM_VENDA              | (0,1)         | ORIGINA               | (0,1) | MOVIMENTACAO_ESTOQUE      | 1:1            |
-| 38 | MOVIMENTACAO_ESTOQUE    | (0,N)         | É REFERÊNCIA DE       | (0,1) | MOVIMENTACAO_ESTOQUE      | 1:N            |
-| 39 | ITEM_VENDA              | (0,N)         | POSSUI                | (1,1) | DEVOLUCAO_VENDA           | 1:N            |
-| 40 | MOVIMENTACAO_ESTOQUE    | (0,N)         | É SAÍDA ORIGINAL DE   | (1,1) | DEVOLUCAO_VENDA           | 1:N            |
-| 41 | MOVIMENTACAO_ESTOQUE    | (0,1)         | REGISTRA RETORNO DE   | (0,1) | DEVOLUCAO_VENDA           | 1:1            |
-| 42 | FUNCIONÁRIO             | (0,N)         | ATENDE                | (1,1) | DEVOLUCAO_VENDA           | 1:N            |
-| 43 | CATEGORIA_SOCIO         | (0,N)         | POSSUI PERMISSÃO EM   | (1,1) | CATEGORIA_DEPENDENCIA     | 1:N            |
-| 44 | DEPENDENCIA_FISICA      | (0,N)         | É PERMITIDA EM        | (1,1) | CATEGORIA_DEPENDENCIA     | 1:N            |
-| 45 | PESSOA                  | (0,1)         | POSSUI CADASTRO COMO  | (0,1) | CONTRAPARTE_FINANCEIRA    | 1:1            |
-| 46 | CONTRAPARTE_FINANCEIRA  | (0,N)         | POSSUI                | (1,1) | TITULO_FINANCEIRO         | 1:N            |
-| 47 | MENSALIDADE             | (0,1)         | ORIGINA               | (0,1) | TITULO_FINANCEIRO         | 1:1            |
-| 48 | INSCRIÇÃO               | (0,1)         | ORIGINA               | (0,1) | TITULO_FINANCEIRO         | 1:1            |
-| 49 | VENDA                   | (0,1)         | ORIGINA               | (0,1) | TITULO_FINANCEIRO         | 1:1            |
-| 50 | CONTA_FINANCEIRA        | (0,N)         | REGISTRA              | (1,1) | PAGAMENTO                 | 1:N            |
-| 51 | TITULO_FINANCEIRO       | (0,N)         | RECEBE                | (1,1) | BAIXA_FINANCEIRA          | 1:N            |
-| 52 | PAGAMENTO               | (0,N)         | POSSUI                | (1,1) | BAIXA_FINANCEIRA          | 1:N            |
-| 53 | CONTA_FINANCEIRA        | (0,N)         | POSSUI                | (1,1) | ITEM_EXTRATO              | 1:N            |
-| 54 | ITEM_EXTRATO            | (0,N)         | PARTICIPA DE          | (1,1) | CONCILIACAO               | 1:N            |
-| 55 | PAGAMENTO               | (0,N)         | PARTICIPA DE          | (1,1) | CONCILIACAO               | 1:N            |
-| 56 | FUNCIONÁRIO             | (0,N)         | REALIZA               | (1,1) | CONCILIACAO               | 1:N            |
-| 57 | BAIXA_FINANCEIRA        | (0,N)         | É ESTORNADA POR       | (0,1) | BAIXA_FINANCEIRA          | 1:N            |
+| #  | Entidade A              | Cardinalidade | Verbo                 | Cardinalidade | Entidade B                | Tipo           |
+| -- | ----------------------- | ------------- | --------------------- | ------------- | ------------------------- | -------------- |
+| 1  | PESSOA                  | (0,1)         | É                     | (1,1)         | SÓCIO                     | Especialização |
+| 2  | PESSOA                  | (0,1)         | É                     | (1,1)         | FUNCIONÁRIO               | Especialização |
+| 3  | PESSOA                  | (0,1)         | É                     | (1,1)         | ATLETA                    | Especialização |
+| 4  | SÓCIO                   | (0,N)         | POSSUI                | (1,1)         | DEPENDENTE                | 1:N            |
+| 5  | SÓCIO                   | (1,1)         | PERTENCE A            | (0,N)         | CATEGORIA_SOCIO           | N:1            |
+| 6  | FUNCIONÁRIO             | (1,1)         | TRABALHA EM           | (0,N)         | DEPARTAMENTO              | N:1            |
+| 7  | DEPARTAMENTO            | (0,1)         | É GERENCIADO POR      | (0,1)         | FUNCIONÁRIO               | 1:1 opcional   |
+| 8  | ATLETA                  | (0,N)         | PRATICA               | (0,N)         | MODALIDADE                | N:N            |
+| 9  | MODALIDADE              | (0,N)         | POSSUI                | (1,1)         | TURMA                     | 1:N            |
+| 10 | ATLETA                  | (0,N)         | MATRICULA-SE EM       | (0,N)         | TURMA                     | N:N            |
+| 11 | FUNCIONÁRIO             | (0,N)         | MINISTRA              | (0,N)         | TURMA                     | N:N            |
+| 12 | SÓCIO                   | (0,N)         | GERA                  | (1,1)         | MENSALIDADE               | 1:N            |
+| 13 | SÓCIO                   | (0,N)         | REALIZA               | (1,1)         | RESERVA                   | 1:N            |
+| 14 | DEPENDENCIA_FISICA      | (0,N)         | RECEBE                | (1,1)         | RESERVA                   | 1:N            |
+| 15 | EVENTO                  | (0,N)         | RECEBE                | (1,1)         | INSCRIÇÃO                 | 1:N            |
+| 16 | PESSOA                  | (0,N)         | REALIZA               | (1,1)         | INSCRIÇÃO                 | 1:N            |
+| 17 | SÓCIO                   | (0,N)         | OCUPA                 | (1,1)         | DIRETORIA                 | 1:N            |
+| 18 | DIRETORIA               | (1,1)         | UTILIZA               | (0,N)         | FUNCAO_DIRETORIA          | N:1            |
+| 19 | PESSOA                  | (1,1)         | POSSUI                | (0,N)         | ENDEREÇO                  | 1:N            |
+| 20 | PESSOA                  | (1,1)         | POSSUI                | (0,N)         | REGISTRO_ACESSO           | 1:N            |
+| 21 | SÓCIO                   | (1,1)         | EMITE                 | (0,N)         | CONVITE_VISITANTE         | 1:N            |
+| 22 | PESSOA                  | (1,1)         | É VISITANTE EM        | (0,N)         | CONVITE_VISITANTE         | 1:N            |
+| 23 | PESSOA                  | (1,1)         | REALIZA               | (0,N)         | EXAME_MEDICO              | 1:N            |
+| 24 | PESSOA                  | (1,1)         | REALIZA               | (0,N)         | VENDA                     | 1:N            |
+| 25 | FUNCIONÁRIO             | (1,1)         | REGISTRA              | (0,N)         | VENDA                     | 1:N            |
+| 26 | VENDA                   | (1,1)         | CONTÉM                | (1,N)         | ITEM_VENDA                | 1:N            |
+| 27 | ITEM_VENDA              | (1,1)         | REFERE-SE A           | (0,N)         | PRODUTO                   | N:1            |
+| 28 | PESSOA                  | (1,1)         | ESTÁ ENVOLVIDA EM     | (0,N)         | OCORRENCIA                | 1:N            |
+| 29 | FUNCIONÁRIO             | (1,1)         | REGISTRA              | (0,N)         | OCORRENCIA                | 1:N            |
+| 30 | DEPENDENCIA_FISICA      | (0,N)         | SEDIA                 | (0,1)         | EVENTO                    | 1:N            |
+| 31 | PESSOA                  | (0,N)         | POSSUI HISTÓRICO DE   | (1,1)         | DEPENDENTE                | 1:N            |
+| 32 | PRODUTO                 | (1,1)         | POSSUI                | (1,1)         | ESTOQUE                   | 1:1            |
+| 33 | ESTOQUE                 | (0,N)         | REGISTRA              | (1,1)         | MOVIMENTACAO_ESTOQUE      | 1:N            |
+| 34 | FUNCIONÁRIO             | (0,N)         | REGISTRA              | (1,1)         | MOVIMENTACAO_ESTOQUE      | 1:N            |
+| 35 | ITEM_VENDA              | (0,1)         | ORIGINA               | (0,1)         | MOVIMENTACAO_ESTOQUE      | 1:1            |
+| 36 | MOVIMENTACAO_ESTOQUE    | (0,N)         | É REFERÊNCIA DE       | (0,1)         | MOVIMENTACAO_ESTOQUE      | 1:N            |
+| 37 | ITEM_VENDA              | (0,N)         | POSSUI                | (1,1)         | DEVOLUCAO_VENDA           | 1:N            |
+| 38 | MOVIMENTACAO_ESTOQUE    | (0,N)         | É SAÍDA ORIGINAL DE   | (1,1)         | DEVOLUCAO_VENDA           | 1:N            |
+| 39 | MOVIMENTACAO_ESTOQUE    | (0,1)         | REGISTRA RETORNO DE   | (0,1)         | DEVOLUCAO_VENDA           | 1:1            |
+| 40 | FUNCIONÁRIO             | (0,N)         | ATENDE                | (1,1)         | DEVOLUCAO_VENDA           | 1:N            |
+| 41 | CATEGORIA_SOCIO         | (0,N)         | POSSUI PERMISSÃO EM   | (1,1)         | CATEGORIA_DEPENDENCIA     | 1:N            |
+| 42 | DEPENDENCIA_FISICA      | (0,N)         | É PERMITIDA EM        | (1,1)         | CATEGORIA_DEPENDENCIA     | 1:N            |
+| 43 | PESSOA                  | (0,1)         | POSSUI CADASTRO COMO  | (0,1)         | CONTRAPARTE_FINANCEIRA    | 1:1            |
+| 44 | CONTRAPARTE_FINANCEIRA  | (0,N)         | POSSUI                | (1,1)         | TITULO_FINANCEIRO         | 1:N            |
+| 45 | MENSALIDADE             | (0,1)         | ORIGINA               | (0,1)         | TITULO_FINANCEIRO         | 1:1            |
+| 46 | INSCRIÇÃO               | (0,1)         | ORIGINA               | (0,1)         | TITULO_FINANCEIRO         | 1:1            |
+| 47 | VENDA                   | (0,1)         | ORIGINA               | (0,1)         | TITULO_FINANCEIRO         | 1:1            |
+| 48 | CONTA_FINANCEIRA        | (0,N)         | REGISTRA              | (1,1)         | PAGAMENTO                 | 1:N            |
+| 49 | TITULO_FINANCEIRO       | (0,N)         | RECEBE                | (1,1)         | BAIXA_FINANCEIRA          | 1:N            |
+| 50 | PAGAMENTO               | (0,N)         | POSSUI                | (1,1)         | BAIXA_FINANCEIRA          | 1:N            |
+| 51 | CONTA_FINANCEIRA        | (0,N)         | POSSUI                | (1,1)         | ITEM_EXTRATO              | 1:N            |
+| 52 | ITEM_EXTRATO            | (0,N)         | PARTICIPA DE          | (1,1)         | CONCILIACAO               | 1:N            |
+| 53 | PAGAMENTO               | (0,N)         | PARTICIPA DE          | (1,1)         | CONCILIACAO               | 1:N            |
+| 54 | FUNCIONÁRIO             | (0,N)         | REALIZA               | (1,1)         | CONCILIACAO               | 1:N            |
+| 55 | BAIXA_FINANCEIRA        | (0,N)         | É ESTORNADA POR       | (0,1)         | BAIXA_FINANCEIRA          | 1:N            |
 
 ### Entidades Associativas
 
@@ -1396,7 +1394,7 @@ A alteração foi feita porque:
 | MOVIMENTACAO_ESTOQUE - É SAÍDA ORIGINAL DE - DEVOLUCAO_VENDA | MOVIMENTACAO_ESTOQUE (0,N) - É SAÍDA ORIGINAL DE - DEVOLUCAO_VENDA (1,1) | RN47 |
 | MOVIMENTACAO_ESTOQUE - REGISTRA RETORNO DE - DEVOLUCAO_VENDA | MOVIMENTACAO_ESTOQUE (0,1) - REGISTRA RETORNO DE - DEVOLUCAO_VENDA (0,1) | RN47 |
 | FUNCIONÁRIO - ATENDE - DEVOLUCAO_VENDA        | FUNCIONÁRIO (0,N) - ATENDE - DEVOLUCAO_VENDA (1,1)     | RN47  |
-| CATEGORIA_SOCIO - POSSUI PERMISSÃO EM - CATEGORIA_DEPENDENCIA | CATEGORIA_SOCIO (0,N) - POSSUI PERMISSÃO EM - CATEGORIA_DEPENDENCIA (1,1) | RN53 |
+| CATEGORIA_SOCIO - POSSUI PERMISSÃO EM - CATEGORIA_DEPENDENCIA | CATEGORIA_SOCIO (0,N) - POSSUI PERMISSÃO EM - CATEGORIA_DEPENDENCIA (1,1) | RN60 |
 | DEPENDENCIA_FISICA - É PERMITIDA EM - CATEGORIA_DEPENDENCIA | DEPENDENCIA_FISICA (0,N) - É PERMITIDA EM - CATEGORIA_DEPENDENCIA (1,1) | RN60 |
 | PESSOA - POSSUI CADASTRO COMO - CONTRAPARTE_FINANCEIRA | PESSOA (0,1) - POSSUI CADASTRO COMO - CONTRAPARTE_FINANCEIRA (0,1) | RN48 |
 | CONTRAPARTE_FINANCEIRA - POSSUI - TITULO_FINANCEIRO | CONTRAPARTE_FINANCEIRA (0,N) - POSSUI - TITULO_FINANCEIRO (1,1) | RN48 |
@@ -1600,13 +1598,15 @@ Dessa forma, o clube consegue manter um histórico das conferências realizadas 
 
 ## 16. Conclusão
 
-O projeto apresenta uma proposta de modelagem para um sistema de gestão de um clube social e esportivo.
+O projeto apresenta uma modelagem abrangente para um sistema de gestão de um clube social e esportivo, contemplando os principais processos administrativos, operacionais e financeiros necessários para seu funcionamento.
 
-A estrutura contempla os principais processos definidos pelo grupo, incluindo cadastro de pessoas, sócios, dependentes, funcionários e atletas, além de modalidades, turmas, eventos, reservas, mensalidades, pagamentos, vendas, estoque, controle de acesso, exames médicos, convites e ocorrências.
+A estrutura desenvolvida reúne entidades, relacionamentos e regras de negócio que representam atividades como cadastro de pessoas, gestão de sócios e dependentes, funcionários e atletas, modalidades, turmas, eventos, reservas, mensalidades, pagamentos, vendas, controle de estoque, acesso às dependências, exames médicos, convites e ocorrências.
 
-Durante a elaboração, algumas decisões foram revistas para deixar o modelo mais próximo do funcionamento de um clube. Um exemplo foi a substituição do conceito "Político" por DIRETORIA e FUNCAO_DIRETORIA.
+Durante a elaboração, o modelo passou por revisões e ajustes para representar melhor a realidade do clube. Entre as decisões tomadas, destaca-se a substituição do conceito de "Político" por DIRETORIA e FUNCAO_DIRETORIA, além da inclusão de estruturas específicas para controle de estoque, devoluções de vendas e gestão financeira.
 
-A utilização de PESSOA como entidade central também permite evitar a repetição de dados pessoais e facilita a criação de diferentes vínculos para uma mesma pessoa.
+A utilização de PESSOA como entidade central contribui para evitar a duplicidade de dados pessoais e permite que uma mesma pessoa possua diferentes vínculos com o clube, como sócio, funcionário ou atleta. Também foram considerados históricos de vínculos, restrições de acesso e regras para manter a integridade das informações.
+
+Dessa forma, o resultado é uma estrutura de dados organizada e alinhada às necessidades identificadas pelo grupo, servindo como base para o desenvolvimento de um sistema ERP capaz de integrar e facilitar a gestão das atividades do Clube Social e Esportivo União.
 
 ### Resumo dos Elementos
 
