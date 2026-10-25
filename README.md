@@ -1613,13 +1613,13 @@ Dessa forma, o resultado é uma estrutura de dados organizada e alinhada às nec
 
 | Elemento | Quantidade |
 |---|---|
-| Entidades principais | 26 |
+| Entidades principais | 31 |
 | Entidades associativas | 7 |
 | Relacionamentos | 55 |
-| Atributos documentados | ~150 |
-| Requisitos funcionais | 14 |
+| Atributos documentados | ~300 |
+| Requisitos funcionais | 25 |
 | Requisitos não funcionais | 7 |
 | Regras de negócio | 60 |
-| Processos documentados | 10 |
+| Processos documentados | 13 |
 | Justificativas técnicas | 25 |
 
