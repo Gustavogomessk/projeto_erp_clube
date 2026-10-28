@@ -286,9 +286,9 @@ Quando ocorre uma alteração:
 
 **Regras:**
 
-* CPF deve ser único e validado.
-* Nome é obrigatório.
-* Telefone pode ser informado posteriormente.
+- CPF deve ser único e validado.
+- Nome é obrigatório.
+- Telefone pode ser informado posteriormente.
 
 ### RF02 - Cadastro de Sócios
 
@@ -296,23 +296,26 @@ Quando ocorre uma alteração:
 
 **Regras:**
 
-* Uma pessoa cadastrada pode possuir vínculo de sócio.
-* O número de matrícula deve ser único.
-* A categoria deve ser definida no cadastro.
-* A data de associação é obrigatória.
-* A situação inicial será "Ativo".
+- Uma pessoa cadastrada pode possuir vínculo de sócio.
+- O número de matrícula deve ser único.
+- A categoria deve ser definida no cadastro.
+- A data de associação é obrigatória.
+- A situação inicial será "Ativo".
 
 ### RF03 - Cadastro de Dependentes
 
-**Descrição:** O sistema deve permitir cadastrar dependentes vinculados a um sócio titular.
+**Descrição:** O sistema deve permitir cadastrar dependentes vinculados a um sócio titular, mantendo o histórico dos vínculos.
 
 **Regras:**
 
-* Cada dependente possui um sócio titular.
-* Tipos de dependência: Cônjuge, Filho(a), Enteado(a) e Pais.
-* Dependente menor de idade deve possuir responsável legal.
-* O dependente pode se tornar sócio futuramente.
-* Vínculos encerrados são preservados; novo período recebe novo identificador.
+- Cada período de dependência deve estar vinculado a um único sócio titular.
+- Tipos de dependência: Cônjuge, Filho(a), Enteado(a) e Pais.
+- Dependente menor de idade deve possuir responsável legal.
+- O dependente pode se tornar sócio futuramente.
+- Vínculos encerrados devem ser preservados no histórico.
+- Cada novo período de dependência deve receber um novo identificador.
+- Um dependente não pode ser seu próprio titular.
+- Não pode existir mais de um vínculo de dependência vigente para o mesmo dependente.
 
 ### RF04 - Cadastro de Funcionários
 
@@ -320,22 +323,23 @@ Quando ocorre uma alteração:
 
 **Regras:**
 
-* Funcionário deve estar vinculado a um departamento.
-* Cargo deve ser informado.
-* Data de admissão é obrigatória.
-* Data de demissão pode ser nula enquanto o funcionário estiver ativo.
-* CTPS é obrigatória para funcionários CLT.
+- Funcionário deve estar vinculado a um departamento.
+- Cargo deve ser informado.
+- Data de admissão é obrigatória.
+- Data de demissão pode ser nula enquanto o funcionário estiver ativo.
+- CTPS é obrigatória para funcionários CLT.
 
 ### RF05 - Cadastro de Atletas
 
-**Descrição:** O sistema deve permitir identificar pessoas como atletas.
+**Descrição:** O sistema deve permitir identificar pessoas como atletas e controlar seus vínculos com as modalidades esportivas.
 
 **Regras:**
 
-* O atleta pode ser sócio, dependente ou pessoa externa.
-* O atleta deve estar vinculado a pelo menos uma modalidade ativa.
-* O nível do atleta deve ser informado.
-* Registro em federação é opcional.
+- O atleta pode ser sócio, dependente ou pessoa externa.
+- O atleta deve estar vinculado a pelo menos uma modalidade ativa.
+- O nível do atleta deve ser informado.
+- Registro em federação é opcional.
+- O vínculo de atleta não exige que a pessoa seja sócia.
 
 ### RF06 - Gestão de Modalidades
 
@@ -343,9 +347,9 @@ Quando ocorre uma alteração:
 
 **Regras:**
 
-* O nome da modalidade deve ser único.
-* Modalidade pode estar ativa ou inativa.
-* Modalidade pode possuir taxa adicional.
+- O nome da modalidade deve ser único.
+- Modalidade pode estar ativa ou inativa.
+- Modalidade pode possuir taxa adicional.
 
 ### RF07 - Gestão de Turmas
 
@@ -353,212 +357,225 @@ Quando ocorre uma alteração:
 
 **Regras:**
 
-* Cada turma pertence a uma modalidade.
-* A turma possui faixa etária.
-* A turma possui capacidade máxima.
-* Uma turma ativa deve possuir ao menos um professor com vínculo vigente.
+- Cada turma pertence a uma modalidade.
+- A turma possui faixa etária.
+- A turma possui capacidade máxima.
+- Uma turma ativa deve possuir ao menos um professor com vínculo vigente.
+- O número de matrículas ativas não pode ultrapassar a capacidade máxima da turma.
 
 ### RF08 - Controle de Mensalidades
 
-**Descrição:** O sistema deve controlar as mensalidades dos sócios.
+**Descrição:** O sistema deve controlar as mensalidades dos sócios, registrando os valores e as respectivas obrigações financeiras.
 
 **Regras:**
 
-* A mensalidade é gerada para cada sócio titular.
-* O valor considera a categoria do sócio.
-* Dependentes podem gerar acréscimos.
-* A mensalidade pode possuir desconto.
-* Situações: Pendente, Pago, Atrasado e Cancelado.
+- A mensalidade é gerada para cada sócio titular.
+- O valor considera a categoria do sócio.
+- Dependentes podem gerar acréscimos.
+- A mensalidade pode possuir desconto.
+- Situações: Pendente, Pago, Atrasado e Cancelado.
+- A obrigação financeira correspondente deve ser registrada por meio de um título a receber.
 
 ### RF09 - Gestão de Pagamentos
 
-**Descrição:** O sistema deve registrar pagamentos relacionados às mensalidades.
+**Descrição:** O sistema deve registrar os recebimentos e pagamentos relacionados às obrigações financeiras do clube.
 
 **Regras:**
 
-* A operação pode receber mensalidades, inscrições, vendas ou receitas manuais, ou pagar despesas.
-* O vínculo com a obrigação ocorre por BAIXA_FINANCEIRA e TITULO_FINANCEIRO.
-* Deve possuir data, valor e forma de pagamento.
-* Pode ser parcial.
-* Deve gerar comprovante na confirmação e identificar a conta financeira.
+- A operação pode envolver mensalidades, inscrições, vendas, receitas manuais ou pagamento de despesas.
+- O vínculo com a obrigação financeira deve ocorrer por meio de TITULO_FINANCEIRO e BAIXA_FINANCEIRA.
+- Deve possuir data, valor e forma de pagamento.
+- O sistema deve permitir pagamentos e recebimentos parciais.
+- A confirmação deve registrar a conta financeira utilizada.
+- A baixa deve manter o histórico da operação e permitir a identificação do comprovante, quando aplicável.
 
 ### RF10 - Reserva de Dependências
 
-**Descrição:** O sistema deve permitir que sócios titulares reservem dependências físicas.
+**Descrição:** O sistema deve permitir que sócios titulares reservem dependências físicas do clube.
 
 **Regras:**
 
-* A reserva deve estar vinculada a um sócio titular.
-* Deve estar vinculada a uma dependência.
-* Deve possuir data, horário inicial e horário final.
-* Não pode existir conflito de horário para a mesma dependência.
-* Sócio inadimplente não pode realizar novas reservas.
+- A reserva deve estar vinculada a um sócio titular.
+- Deve estar vinculada a uma dependência física.
+- Deve possuir data, horário inicial e horário final.
+- Não pode existir conflito de horário para a mesma dependência.
+- Sócio inadimplente não pode realizar novas reservas.
 
 ### RF11 - Gestão de Eventos
 
-**Descrição:** O sistema deve permitir cadastrar e acompanhar eventos.
+**Descrição:** O sistema deve permitir cadastrar e acompanhar eventos realizados pelo clube.
 
 **Regras:**
 
-* Evento possui nome, data, horário, local e capacidade.
-* Pode ser gratuito ou pago.
-* Pode ser aberto ao público ou restrito.
-* Situações: Planejado, Inscrições Abertas, Encerrado, Cancelado e Realizado.
+- Evento possui nome, data, horário, local e capacidade.
+- Pode ser gratuito ou pago.
+- Pode ser aberto ao público ou restrito.
+- Situações: Planejado, Inscrições Abertas, Encerrado, Cancelado e Realizado.
 
 ### RF12 - Inscrição em Eventos
 
-**Descrição:** O sistema deve permitir registrar pessoas em eventos.
+**Descrição:** O sistema deve permitir registrar pessoas em eventos, controlando inscrições, vagas e cancelamentos.
 
 **Regras:**
 
-* A inscrição deve estar vinculada a uma pessoa e a um evento.
-* A data da inscrição deve ser registrada.
-* A inscrição pode ser cancelada.
-* Evento lotado não aceita novas inscrições.
+- A inscrição deve estar vinculada a uma pessoa e a um evento.
+- A data da inscrição deve ser registrada.
+- A inscrição pode ser cancelada.
+- Evento lotado não aceita novas inscrições.
+- O valor contratado e eventuais descontos devem ser registrados quando houver cobrança.
+- Inscrições gratuitas não devem gerar títulos a receber.
+- Inscrições pagas devem gerar um título a receber.
 
 ### RF13 - Gestão de Departamentos
 
-**Descrição:** O sistema deve permitir cadastrar departamentos administrativos.
+**Descrição:** O sistema deve permitir cadastrar e organizar os departamentos administrativos do clube.
 
 **Regras:**
 
-* Departamento possui nome único.
-* Pode possuir um funcionário responsável.
-* Subdivisões não serão controladas nesta versão.
+- Departamento possui nome único.
+- Pode possuir um funcionário responsável.
+- Subdivisões não serão controladas nesta versão.
 
 ### RF14 - Gestão de Diretoria
 
-**Descrição:** O sistema deve permitir registrar os mandatos da diretoria.
+**Descrição:** O sistema deve permitir registrar os cargos e mandatos dos integrantes da diretoria.
 
 **Regras:**
 
-* O cargo diretivo é ocupado por um sócio.
-* O mandato possui data de início.
-* A data de término pode ser registrada.
-* Um sócio pode ocupar diferentes cargos em períodos diferentes.
-* Um cargo pode ser ocupado por diferentes sócios ao longo do tempo.
+- O cargo diretivo é ocupado por um sócio.
+- O mandato possui data de início.
+- A data de término pode ser registrada.
+- Um sócio pode ocupar diferentes cargos em períodos diferentes.
+- Um cargo pode ser ocupado por diferentes sócios ao longo do tempo.
 
-## RF15 - Gestão de Vendas
-**Descrição:** O sistema deve permitir registrar vendas de produtos ou serviços.
+### RF15 - Gestão de Vendas
 
-**Regras:**
-
-* Toda venda deve conter comprador, funcionário responsável e itens vendidos.
-* O preço praticado na venda deve preservar o valor contratado no momento da operação.
-* A conclusão da venda exige ao menos um item selecionado.
-* A venda exige estoque disponível suficiente para os itens.
-* A conclusão da venda gera automaticamente a saída do estoque e o título a receber correspondente.
-* Caso a venda seja à vista, o recebimento e a baixa financeira devem ser gerados na mesma operação.
-
-## RF16 - Estoque e Movimentações
-
-**Descrição:** O sistema deve manter o controle do saldo de produtos e registrar suas movimentações.
+**Descrição:** O sistema deve permitir registrar vendas de produtos ou serviços realizados pelo clube.
 
 **Regras:**
 
-* O sistema deve manter um saldo global por produto.
-* Devem ser registradas movimentações de entrada, saída, perda, devolução e ajuste.
-* Toda movimentação deve conter quantidade, sentido, responsável, data e origem.
-* O saldo do produto não pode ficar negativo em nenhuma hipótese.
-* Correções de estoque devem ser feitas mediante a geração de novos movimentos.
+- Toda venda deve conter comprador, funcionário responsável e itens vendidos.
+- O preço praticado na venda deve preservar o valor contratado no momento da operação.
+- A conclusão da venda exige ao menos um item selecionado.
+- A venda exige estoque disponível suficiente para os itens que possuem controle de estoque.
+- A conclusão da venda gera automaticamente a saída do estoque e o título a receber correspondente.
+- Caso a venda seja à vista, o recebimento e a baixa financeira devem ser gerados na mesma operação.
+- Devoluções devem estar vinculadas ao item vendido e à respectiva saída original do estoque.
 
-## RF17 - Convites de Visitantes
+### RF16 - Estoque e Movimentações
+
+**Descrição:** O sistema deve manter o controle do saldo dos produtos e registrar suas movimentações de estoque.
+
+**Regras:**
+
+- O sistema deve manter um saldo global por produto.
+- Devem ser registradas movimentações de entrada, saída, perda, devolução e ajuste.
+- Toda movimentação deve conter quantidade, sentido, responsável, data e origem.
+- A quantidade informada deve ser positiva.
+- O saldo do produto não pode ficar negativo em nenhuma hipótese.
+- Correções de estoque devem ser feitas mediante a geração de novas movimentações.
+- Movimentações efetivadas não podem ser alteradas ou excluídas.
+- O saldo deve corresponder à soma das entradas menos as saídas registradas.
+
+### RF17 - Convites de Visitantes
+
 **Descrição:** O sistema deve permitir emitir e controlar convites de acesso para visitantes.
 
 **Regras:**
 
-* Cada convite deve possuir um sócio responsável, a pessoa visitante, um código único, prazo de validade e situação.
-* O sistema deve validar o prazo de validade e o uso do convite no momento do acesso.
-* O convite utilizado não pode ser reutilizado.
-*  sistema deve manter o histórico completo de convites cancelados, expirados e utilizados.
+- Cada convite deve possuir um sócio responsável, a pessoa visitante, um código único, prazo de validade e situação.
+- O sistema deve validar o prazo de validade e o uso do convite no momento do acesso.
+- O convite utilizado não pode ser reutilizado.
+- O sistema deve manter o histórico completo de convites cancelados, expirados e utilizados.
 
-## RF18 - Controle de Acesso
+### RF18 - Controle de Acesso
 
-**Descrição:** O sistema deve registrar e validar os acessos de pessoas ao local.
-
-**Regras:**
-
-* Todo acesso deve registrar a pessoa, data, hora, tipo (entrada ou saída) e meio de acesso.
-* O acesso deve validar a situação cadastral da pessoa.
-* O acesso deve validar o vínculo autorizador da pessoa ou o convite associado, quando aplicável.
-* Tentativas de acesso negadas podem ser registradas como ocorrências.
-
-## RF19 - Gestão de Exames Médicos
-
-**Descrição:** O sistema deve gerenciar o histórico de exames médicos e condicionar matrículas e participações à aptidão.
+**Descrição:** O sistema deve registrar e validar os acessos de pessoas às dependências do clube.
 
 **Regras:**
 
-* O sistema deve manter o histórico de exames contendo resultado, validade e médico responsável.
-* Devem ser identificadas as modalidades esportivas ou atividades que exigem exame médico.
-* O sistema deve impedir a matrícula ou participação em modalidades exigentes sem exame vigente e resultado de aptidão compatível.
-* Qualquer avaliação de restrição médica deve ser realizada exclusivamente por usuário autorizado.
+- Todo acesso deve registrar a pessoa, data, hora, tipo (entrada ou saída) e meio de acesso.
+- O acesso deve validar a situação cadastral da pessoa.
+- O acesso deve validar o vínculo autorizador da pessoa ou o convite associado, quando aplicável.
+- Tentativas de acesso negadas podem ser registradas como ocorrências.
 
-## RF20 - Gestão de Ocorrências
+### RF19 - Gestão de Exames Médicos
 
-**Descrição:** O sistema deve permitir registrar eventos e incidentes ocorridos nas dependências.
-
-**Regras:**
-
-* Toda ocorrência deve registrar a pessoa envolvida, o funcionário responsável, data, hora, tipo, descrição, gravidade e providências tomadas.
-* Cada ocorrência deve possuir obrigatoriamente uma pessoa envolvida principal.
-* Registros correlatos podem ser agrupados para descrever o mesmo incidente.
-
-## RF21 - Contas a Receber
-
-**Descrição:** O sistema deve gerenciar os títulos e valores a serem recebidos.
+**Descrição:** O sistema deve gerenciar o histórico de exames médicos e condicionar matrículas e participações à aptidão dos participantes.
 
 **Regras:**
 
-* O sistema deve gerar e acompanhar títulos originados de mensalidades, inscrições pagas, vendas e receitas manuais.
-* Todo título a receber deve registrar devedor, data de vencimento, valor, descontos, acréscimos e saldo restante.
-* O sistema deve permitir a realização de recebimentos parciais.
-* O sistema deve impedir a liquidação em duplicidade de um mesmo título.
+- O sistema deve manter o histórico de exames contendo resultado, validade e médico responsável.
+- Devem ser identificadas as modalidades esportivas ou atividades que exigem exame médico.
+- O sistema deve impedir a matrícula ou participação em modalidades que exigem exame sem exame vigente e resultado de aptidão compatível.
+- Qualquer avaliação de restrição médica deve ser realizada exclusivamente por usuário autorizado.
 
-## RF22 - Contas a Pagar
+### RF20 - Gestão de Ocorrências
 
-**Descrição:** O sistema deve registrar e controlar as obrigações financeiras e despesas.
+**Descrição:** O sistema deve permitir registrar e acompanhar ocorrências e incidentes nas dependências do clube.
 
 **Regras:**
 
-* Devem ser registrados títulos de despesas informando fornecedor/favorecido (inclusive pessoa jurídica), descrição, valor e vencimento.
-* O sistema deve registrar pagamentos parciais, saldo devedor e liquidação do título.
-* O cadastro financeiro de pessoa jurídica não deve criar perfil de sócio ou atleta.
+- Toda ocorrência deve registrar a pessoa envolvida, o funcionário responsável, data, hora, tipo, descrição, gravidade e providências tomadas.
+- Cada ocorrência deve possuir obrigatoriamente uma pessoa envolvida principal.
+- Registros correlatos podem ser agrupados para descrever o mesmo incidente.
 
-## RF23 - Contas Financeiras e Fluxo de Caixa
+### RF21 - Contas a Receber
+
+**Descrição:** O sistema deve gerenciar os títulos e valores a serem recebidos pelo clube.
+
+**Regras:**
+
+- O sistema deve gerar e acompanhar títulos originados de mensalidades, inscrições pagas, vendas e receitas manuais.
+- Todo título a receber deve registrar devedor, data de vencimento, valor, descontos, acréscimos e saldo restante.
+- O sistema deve permitir a realização de recebimentos parciais.
+- O sistema deve impedir a liquidação em duplicidade de um mesmo título.
+
+### RF22 - Contas a Pagar
+
+**Descrição:** O sistema deve registrar e controlar as obrigações financeiras e despesas do clube.
+
+**Regras:**
+
+- Devem ser registrados títulos de despesas informando fornecedor ou favorecido, descrição, valor e vencimento.
+- O cadastro deve permitir fornecedores e favorecidos que sejam pessoas físicas ou jurídicas.
+- O sistema deve registrar pagamentos parciais, saldo devedor e liquidação do título.
+- O cadastro financeiro de pessoa jurídica não deve criar perfil de sócio ou atleta.
+
+### RF23 - Contas Financeiras e Fluxo de Caixa
 
 **Descrição:** O sistema deve gerenciar contas bancárias, caixas e a visualização do fluxo de caixa.
 
 **Regras:**
 
-* O sistema deve manter o cadastro de contas bancárias e caixas com saldo inicial e movimentações de entrada e saída.
-* Deve ser possível consultar o fluxo de caixa realizado por data de confirmação das operações.
-* Deve ser possível consultar o fluxo de caixa projetado com base nos títulos em aberto.
-* Transferências entre contas e parcelamento contratual não fazem parte do escopo desta versão.
+- O sistema deve manter o cadastro de contas bancárias e caixas com saldo inicial e movimentações de entrada e saída.
+- Deve ser possível consultar o fluxo de caixa realizado por data de confirmação das operações.
+- Deve ser possível consultar o fluxo de caixa projetado com base nos títulos em aberto.
+- Transferências entre contas e parcelamento contratual não fazem parte do escopo desta versão.
 
-## RF24 - Conciliação Financeira
+### RF24 - Conciliação Financeira
 
-**Descrição:** O sistema deve permitir conciliar os registros internos com o extrato bancário.
+**Descrição:** O sistema deve permitir conciliar os registros financeiros internos com os itens do extrato bancário.
 
 **Regras:**
 
-* O sistema deve permitir importar ou registrar itens de extrato bancário.
-* Deve-se impedir a duplicação de itens de extrato com base na conta e identificador externo.
-* Os valores do extrato devem ser vinculados às operações financeiras internas.
-* O sistema deve aceitar correspondências parciais e agrupadas de lançamentos.
-* O sistema deve evidenciar divergências encontradas.
-* Deve-se preservar o autor e o histórico de todas as conciliações realizadas.
+- O sistema deve permitir importar ou registrar itens de extrato bancário.
+- Deve-se impedir a duplicação de itens de extrato com base na conta e no identificador externo.
+- Os valores do extrato devem ser vinculados às operações financeiras internas.
+- O sistema deve aceitar correspondências parciais e agrupadas de lançamentos.
+- O sistema deve evidenciar divergências encontradas.
+- Deve-se preservar o autor e o histórico de todas as conciliações realizadas.
 
-## RF25 - Cobrança de Eventos
+### RF25 - Cobrança de Eventos
 
 **Descrição:** O sistema deve gerenciar a cobrança e os valores associados às inscrições de eventos.
 
 **Regras:**
 
-* A inscrição no evento deve registrar o preço contratado e eventuais descontos aplicados.
-* Inscrições gratuitas não devem gerar títulos a receber.
-* Inscrições pagas devem gerar automaticamente um título a receber.
-* Recebimentos e estornos devem ser registrados por meio de operações e baixas financeiras, com controle de valores e comprovantes.
+- A inscrição no evento deve registrar o preço contratado e eventuais descontos aplicados.
+- Inscrições gratuitas não devem gerar títulos a receber.
+- Inscrições pagas devem gerar automaticamente um título a receber.
+- Recebimentos e estornos devem ser registrados por meio de operações e baixas financeiras, com controle de valores e comprovantes.
 
 ## 6. Requisitos Não Funcionais
 
