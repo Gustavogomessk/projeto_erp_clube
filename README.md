@@ -4,13 +4,17 @@
 
 ## 1. Identificação da Equipe
 
-| Nome                                | Função                  | Responsabilidade                                               |
-| ----------------------------------- | ----------------------- | -------------------------------------------------------------- |
-| Guilherme Hiroshi                   | Coordenador             | Gestão do projeto e documentação                               |
-| Juan, Pedro Elias, Paola e Jonathan | Analistas de Requisitos | Levantamento de requisitos, regras de negócio e cardinalidades |
-| Vitor, Gustavo Gomes e Danilo       | Modeladores de Dados    | DER e dicionário de dados                                      |
-| Lucas e João Victor                 | Revisores Técnicos      | Validação e consistência do modelo                             |
-
+| Nome                                | Função                             | Responsabilidade                                                    |
+| ----------------------------------- | ---------------------------------- | ------------------------------------------------------------------- |
+| Guilherme Hiroshi                   |Coordenador                         |Coordenação geral, gestão do projeto e revisão da documentação       |
+| Jonathan Tiburcio                   |Modelador de Dados                  |Elaboração do DER e modelo lógico                                    |
+| Vitor                               |Validador e responsável pelos slides|Validação do DER e modelo lógico, elaboração e organização dos slides|
+| Paola                               |Normalização                        |Desenvolvimento e documentação da normalização                       |
+|Pedro Elias                          |Analista de Dados                   |Elaboração do dicionário de dados                                    |
+| Gustavo Gomes                       |Desenvolvedor SQL                   |Implementação do banco de dados em SQL                               |
+| Danilo                              |Analista de Dados Operacionais      |Organização e documentação dos dados operacionais                    |
+| Juan                                |Analista de BI/IA                   |Desenvolvimento das consultas gerenciais e análise de BI/IA          |
+| João Victor                         |Validador do SQL                    |Testes e validação do funcionamento do banco de dados                |
 ## 2. Justificativa da Escolha
 
 Escolhemos um clube social e esportivo porque esse cenário permite trabalhar diferentes processos dentro do mesmo sistema. O clube precisa controlar informações de pessoas, sócios, dependentes, funcionários, modalidades esportivas, reservas, eventos e pagamentos.
@@ -28,16 +32,25 @@ Escolhemos um clube social e esportivo porque esse cenário permite trabalhar di
 
 ## 3. Problemas Identificados
 
-| # | Problema                                      | Impacto                                                | Solução Proposta                                               |
+| # | Problema | Impacto | Solução Proposta |
 | - | --------------------------------------------- | ------------------------------------------------------ | -------------------------------------------------------------- |
-| 1 | Cadastro de sócios em planilhas               | Dados duplicados e inconsistentes                      | Centralização dos dados na entidade PESSOA e vínculo com SÓCIO |
-| 2 | Controle manual de mensalidades               | Dificuldade para acompanhar pagamentos e inadimplência | Entidades MENSALIDADE e PAGAMENTO                              |
-| 3 | Dependentes sem vínculo organizado            | Dificuldade para identificar o responsável             | Entidade DEPENDENTE vinculada ao sócio titular                 |
-| 4 | Atletas sem controle de modalidades           | Dificuldade para organizar atividades esportivas       | Entidades ATLETA, MODALIDADE e ATLETA_MODALIDADE               |
-| 5 | Reservas realizadas manualmente               | Possibilidade de conflitos de horário                  | Entidade RESERVA com controle de data e horário                |
-| 6 | Eventos sem controle de participantes         | Dificuldade para acompanhar inscrições e vagas         | Entidades EVENTO e INSCRIÇÃO                                   |
-| 7 | Funcionários sem organização por departamento | Dificuldade na administração interna                   | Entidade DEPARTAMENTO                                          |
-| 8 | Turmas sem controle de participantes          | Dificuldade para controlar vagas                       | Entidades TURMA e MATRÍCULA                                    |
+| 1 | Cadastro de sócios em planilhas | Dados duplicados e inconsistentes | Centralização dos dados na entidade PESSOA e vínculo com SÓCIO |
+| 2 | Controle manual de mensalidades | Dificuldade para acompanhar pagamentos e inadimplência | Entidades MENSALIDADE, PAGAMENTO e BAIXA_FINANCEIRA |
+| 3 | Dependentes sem vínculo organizado | Dificuldade para identificar o responsável e acompanhar alterações no vínculo | Entidade DEPENDENTE com controle de períodos e histórico |
+| 4 | Atletas sem controle de modalidades | Dificuldade para organizar atividades esportivas | Entidades ATLETA, MODALIDADE e ATLETA_MODALIDADE |
+| 5 | Reservas realizadas manualmente | Possibilidade de conflitos de horário e falta de controle de disponibilidade | Entidade RESERVA com controle de data e horário |
+| 6 | Eventos sem controle de participantes | Dificuldade para acompanhar inscrições e vagas | Entidades EVENTO e INSCRIÇÃO |
+| 7 | Funcionários sem organização por departamento | Dificuldade na administração interna | Entidade DEPARTAMENTO |
+| 8 | Turmas sem controle de participantes | Dificuldade para controlar vagas e matrículas | Entidades TURMA e MATRÍCULA |
+| 9 | Vendas sem registro centralizado | Dificuldade para acompanhar produtos vendidos, valores e responsáveis | Entidades VENDA e ITEM_VENDA |
+| 10 | Controle manual de estoque | Dificuldade para acompanhar entradas, saídas, perdas e saldo dos produtos | Entidades PRODUTO, ESTOQUE e MOVIMENTACAO_ESTOQUE |
+| 11 | Ausência de controle de acesso | Dificuldade para verificar entradas e saídas de sócios e visitantes | Entidades REGISTRO_ACESSO e CONVITE_VISITANTE |
+| 12 | Exames médicos sem acompanhamento organizado | Dificuldade para verificar validade e aptidão dos participantes | Entidade EXAME_MEDICO |
+| 13 | Convites de visitantes sem controle adequado | Risco de utilização indevida ou repetida de convites | Entidade CONVITE_VISITANTE com código, validade e situação |
+| 14 | Ocorrências sem registro centralizado | Dificuldade para acompanhar problemas, responsáveis e providências | Entidade OCORRENCIA |
+| 15 | Informações financeiras descentralizadas | Dificuldade para acompanhar contas a pagar, receber e pagamentos parciais | Entidades CONTRAPARTE_FINANCEIRA, TITULO_FINANCEIRO e BAIXA_FINANCEIRA |
+| 16 | Falta de conferência entre movimentações e extratos bancários | Dificuldade para identificar divergências financeiras | Entidades CONTA_FINANCEIRA, ITEM_EXTRATO e CONCILIACAO |
+
 
 ## 4. Processos de Negócio
 
