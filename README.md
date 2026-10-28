@@ -54,7 +54,7 @@ Escolhemos um clube social e esportivo porque esse cenário permite trabalhar di
 
 ## 4. Processos de Negócio
 
-### Processo 1: Cadastro de Sócio
+## Processo 1: Cadastro de Sócio
 
 1. A pessoa procura o clube para realizar o cadastro.
 2. O funcionário solicita os dados necessários.
@@ -82,7 +82,7 @@ Se o CPF ainda não estiver cadastrado:
 * A data de associação é registrada.
 * A primeira mensalidade é gerada.
 
-### Processo 2: Matrícula em Modalidade Esportiva
+## Processo 2: Matrícula em Modalidade Esportiva
 
 1. O sócio ou dependente escolhe a modalidade.
 2. O funcionário verifica a situação do sócio responsável.
@@ -106,7 +106,7 @@ Se houver vaga:
 * A data de início é registrada.
 * Caso exista uma taxa adicional, ela é incluída na cobrança.
 
-### Processo 3: Reserva de Dependência Física
+## Processo 3: Reserva de Dependência Física
 
 1. O sócio solicita uma reserva.
 2. O funcionário verifica a disponibilidade do local.
@@ -128,7 +128,7 @@ Se o sócio estiver regular:
 * O responsável pela reserva fica armazenado no sistema.
 * A confirmação é disponibilizada ao sócio.
 
-### Processo 4: Contratação de Funcionário
+## Processo 4: Contratação de Funcionário
 
 1. Um departamento identifica a necessidade de contratação.
 2. A diretoria analisa a solicitação.
@@ -144,7 +144,7 @@ Depois da contratação:
 * O salário e a jornada são informados.
 * A matrícula funcional é gerada.
 
-### Processo 5: Organização de Evento
+## Processo 5: Organização de Evento
 
 1. A diretoria aprova a realização do evento.
 2. São definidos data, horário, local e público.
@@ -183,7 +183,7 @@ Após o vínculo:
 * A data de início é registrada.
 * A situação do dependente é definida e validada contra outros períodos da pessoa.
 
-### Processo 7: Geração e Pagamento de Mensalidade
+## Processo 7: Geração e Pagamento de Mensalidade
 
 1. O sistema identifica os sócios que devem receber a cobrança.
 2. O valor é calculado conforme a categoria e os possíveis acréscimos ou descontos.
@@ -203,7 +203,7 @@ Quando o valor total é pago:
 * A mensalidade passa para a situação "Pago".
 * O recibo é gerado.
 
-### Processo 8: Criação e Gestão de Turma
+## Processo 8: Criação e Gestão de Turma
 
 1. O funcionário escolhe a modalidade.
 2. A turma é cadastrada.
@@ -222,7 +222,7 @@ Quando a capacidade é atingida:
 * Novas matrículas são bloqueadas.
 * Novos interessados são orientados a aguardar nova vaga; não há cadastro de espera de turmas nesta versão.
 
-### Processo 9: Cadastro e Vinculação de Atleta
+## Processo 9: Cadastro e Vinculação de Atleta
 
 1. A pessoa demonstra interesse em participar como atleta.
 2. O sistema verifica se já existe um cadastro.
