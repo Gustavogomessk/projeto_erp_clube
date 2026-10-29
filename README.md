@@ -646,68 +646,70 @@ Quando ocorre uma alteração:
 
 ## 7. Regras de Negócio
 
-| #    | Regra                                                                                                   | Impacto no Modelo                      |
+## 7. Regras de Negócio
+
+| # | Regra | Impacto no Modelo |
 | ---- | ------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| RN01 | Toda pessoa cadastrada deve possuir CPF único e válido                                                  | CPF único em PESSOA                    |
-| RN02 | Todo dependente deve estar vinculado a um sócio titular                                                 | FK id_socio_titular em DEPENDENTE      |
-| RN03 | A categoria do sócio define o valor da mensalidade e os benefícios                                      | Relacionamento SÓCIO e CATEGORIA_SOCIO |
-| RN04 | O sócio pode estar Ativo, Inadimplente, Suspenso ou Inativo                                             | situacao_socio em SÓCIO                |
-| RN05 | Atleta deve estar vinculado a pelo menos uma modalidade                                                 | ATLETA_MODALIDADE                      |
-| RN06 | Cada turma possui capacidade máxima                                                                     | capacidade_maxima em TURMA             |
-| RN07 | Somente sócios titulares ativos e regulares podem realizar reservas                                     | Validação em RESERVA                   |
-| RN08 | Cargos de diretoria são ocupados por sócios durante determinado mandato                                 | DIRETORIA                              |
-| RN09 | Dependente pode se tornar sócio titular                                                                 | Histórico do vínculo                   |
-| RN10 | Valor da mensalidade é definido pela categoria                                                          | CATEGORIA_SOCIO                        |
-| RN11 | Pagamentos podem ser parciais                                                                           | TITULO_FINANCEIRO e BAIXA_FINANCEIRA      |
-| RN12 | Eventos podem ser abertos ou restritos                                                                  | tipo_evento em EVENTO                  |
-| RN13 | Funcionário também pode possuir vínculo como sócio                                                      | PESSOA pode possuir ambos os vínculos  |
-| RN14 | Atleta pode ser sócio, dependente ou externo; o papel é identificado pela mesma PESSOA                                                           | Sem referência direta ATLETA–SÓCIO  |
-| RN15 | Reserva deve ser solicitada com antecedência mínima de 24 horas e máxima de 30 dias                     | Validação em RESERVA                   |
-| RN16 | Um sócio pode possuir vários dependentes                                                                | Relacionamento 1:N                     |
-| RN17 | Um dependente pertence a apenas um sócio titular                                                        | FK id_socio_titular                    |
-| RN18 | Dependente pode perder o vínculo quando atingir a idade limite definida para sua categoria              | Atualização da situação                |
-| RN19 | Um atleta pode participar de várias modalidades                                                         | ATLETA_MODALIDADE                      |
-| RN20 | Um funcionário pode ministrar várias turmas                                                             | TURMA_PROFESSOR                        |
-| RN21 | Uma mensalidade pode possuir vários pagamentos parciais                                                 | Título da mensalidade e suas baixas                |
-| RN22 | Não é permitida reserva conflitante para a mesma dependência                                            | Validação de data e horário            |
-| RN23 | Toda reserva deve possuir um sócio responsável                                                          | FK id_socio em RESERVA                 |
-| RN24 | Uma reserva pode ser cancelada caso o sócio responsável fique inadimplente, conforme as regras do clube | situacao_reserva                       |
-| RN25 | A categoria do sócio pode definir quais dependências estão disponíveis para reserva                     | Regra de permissão                     |
-| RN26 | Uma pessoa pode possuir vários endereços                                                                | ENDEREÇO                               |
-| RN27 | Uma pessoa pode possuir vários registros de acesso                                                      | REGISTRO_ACESSO                        |
-| RN28 | Um sócio pode emitir vários convites                                                                    | CONVITE_VISITANTE                      |
-| RN29 | Uma pessoa pode estar vinculada a vários convites como visitante                                        | id_pessoa_visitante                    |
-| RN30 | Uma pessoa pode possuir vários exames médicos                                                           | EXAME_MEDICO                           |
-| RN31 | Uma pessoa pode realizar várias compras                                                                 | VENDA                                  |
-| RN32 | Um funcionário pode registrar várias vendas                                                             | VENDA                                  |
-| RN33 | Uma venda pode possuir vários itens                                                                     | ITEM_VENDA                             |
-| RN34 | Um produto pode aparecer em várias vendas                                                               | ITEM_VENDA                             |
-| RN35 | Cada produto possui exatamente um saldo global de estoque                                               |PRODUTO–ESTOQUE 1:1                     |
-| RN36 | Uma pessoa pode estar envolvida em várias ocorrências                                                   | OCORRENCIA                             |
-| RN37 | Um funcionário pode registrar várias ocorrências                                                        | OCORRENCIA                             |
-| RN38 | Todo registro de acesso deve possuir data, horário e tipo de movimentação                               | REGISTRO_ACESSO                        |
-| RN39 | Convites somente podem ser utilizados dentro do período de validade                                     | CONVITE_VISITANTE                      |
-| RN40 | Algumas modalidades podem exigir exame médico válido                                                    | EXAME_MEDICO                           |
-| RN41 | A quantidade vendida não pode ultrapassar o estoque disponível                                          | Validação da venda                     |
-| RN42 | Toda venda concluída deve atualizar o estoque                                                           | ESTOQUE                                |
-| RN43 | Toda ocorrência deve possuir data e descrição                                                           | OCORRENCIA                             |
-| RN44 | 	Uma pessoa pode ser sócia, funcionária e atleta, enquanto a condição de dependente representa um vínculo com um sócio titular                   | PESSOA, SÓCIO, FUNCIONÁRIO, ATLETA e DEPENDENTE |
-| RN45 |	Uma pessoa pode possuir vários vínculos históricos de dependência, mas apenas um titular vigente, sem ser dependente de si mesmar               | Períodos sem sobreposição em DEPENDENTE     |
-| RN46 | 	Toda alteração de estoque deve registrar quantidade positiva, tipo, sentido, responsável e origem, preservando as movimentações anteriores e impedindo saldo negativo                                                                                                                     | MOVIMENTACAO_ESTOQUE e ESTOQUEO |
-| RN47 | 	Toda venda concluída deve gerar uma única saída por item, e as devoluções não podem ultrapassar a quantidade vendida ainda não devolvida                                                                                                                                                 |ITEM_VENDA e MOVIMENTACAO_ESTOQUE |
-| RN48 | 	Todo título financeiro deve indicar se é a receber ou a pagar, possuir uma contraparte e identificar uma única origem                           | TITULO_FINANCEIRO e CONTRAPARTE_FINANCEIRA |
-| RN49 | 	Toda mensalidade, inscrição paga ou venda concluída deve gerar um título a receber, enquanto inscrições gratuitas não geram cobrança            |	MENSALIDADE, INSCRIÇÃO, VENDA e TITULO_FINANCEIRO |
-| RN50 |Uma operação financeira pode liquidar vários títulos da mesma contraparte e natureza, sem ultrapassar seus saldos, e o total das baixas deve corresponder ao valor confirmado |  PAGAMENTO e BAIXA_FINANCEIRA  |
-| RN51 | 	O fluxo de caixa realizado deve considerar somente operações confirmadas, enquanto o projetado considera os saldos dos títulos em aberto     | CONTA_FINANCEIRA, PAGAMENTO e TITULO_FINANCEIRO |
-| RN52 | 	Toda correção de operação financeira confirmada deve ocorrer por estorno integral e único, preservando o registro original e respeitando a política de reembolso| PAGAMENTO e BAIXA_FINANCEIRA|
-| RN53 |A conciliação deve relacionar operações e lançamentos de extrato da mesma conta e sentido, sem ultrapassar seus valores e mantendo divergências pendentes|CONCILIACAO, PAGAMENTO e ITEM_EXTRATO |
-| RN54 | Não são permitidas reservas confirmadas com horários sobrepostos na mesma dependência, sendo permitidos horários consecutivos                | Validação de data e horário em RESERVA    |
-| RN55 | Toda matrícula ativa deve atender às condições da turma, idade, modalidade, exame e vínculo do participante, sem duplicidade ou excesso de capacidade| Validação em MATRÍCULA e TURMA|
-| RN56 |	Solicitações simultâneas não podem gerar reservas conflitantes nem matrículas acima da capacidade| Controle de concorrência em RESERVA e MATRÍCULA|
-| RN57 | Não são permitidas permissões, lançamentos de extrato ou mensalidades duplicados, nem períodos sobrepostos nos vínculos esportivos equivalentes| Unicidade composta e validação de períodos  |
-| RN58 | 	Valores e quantidades devem respeitar os limites permitidos, descontos não podem gerar saldo negativo e datas finais devem ser posteriores às iniciais| Validação de valores, quantidades e datas|
-| RN59 | RUm dependente deve encerrar seu vínculo antes de se tornar sócio ativo, preservando seu histórico, enquanto funcionários e atletas podem também ser sócios| DEPENDENTE, SÓCIO, FUNCIONÁRIO e ATLETA|
-| RN60 | Cada categoria de sócio poderá possuir permissão de acesso a várias dependências físicas, assim como cada dependência física poderá ser permitida para várias categorias de sócio, não sendo permitida a duplicidade da mesma associação | CATEGORIA_DEPENDENCIA, CATEGORIA_SOCIO e DEPENDENCIA_FISICA |
+| RN01 | Toda pessoa cadastrada deve possuir CPF único e válido. | CPF único em PESSOA |
+| RN02 | Todo período de dependência deve estar vinculado a um único sócio titular. | FK id_socio_titular em DEPENDENTE |
+| RN03 | A categoria do sócio define o valor da mensalidade e os benefícios disponíveis. | Relacionamento SÓCIO e CATEGORIA_SOCIO |
+| RN04 | O sócio pode estar Ativo, Inadimplente, Suspenso ou Inativo. | situacao_socio em SÓCIO |
+| RN05 | Todo atleta deve estar vinculado a pelo menos uma modalidade ativa. | ATLETA_MODALIDADE |
+| RN06 | Cada turma possui capacidade máxima de participantes. | capacidade_maxima em TURMA |
+| RN07 | Somente sócios titulares ativos e regulares podem realizar reservas. | Validação em RESERVA |
+| RN08 | Cargos de diretoria são ocupados por sócios durante determinado mandato. | DIRETORIA |
+| RN09 | Um dependente pode se tornar sócio titular, desde que seu vínculo de dependência seja encerrado. | Histórico em DEPENDENTE e vínculo em SÓCIO |
+| RN10 | O valor da mensalidade é definido de acordo com a categoria do sócio. | CATEGORIA_SOCIO |
+| RN11 | Pagamentos e recebimentos podem ser realizados parcialmente, respeitando o saldo do título financeiro. | TITULO_FINANCEIRO e BAIXA_FINANCEIRA |
+| RN12 | Eventos podem ser abertos ao público ou restritos a determinados participantes. | tipo_evento em EVENTO |
+| RN13 | Um funcionário também pode possuir vínculo como sócio. | PESSOA pode possuir ambos os vínculos |
+| RN14 | Um atleta pode ser sócio, dependente ou pessoa externa, sendo seus papéis identificados pela mesma PESSOA. | PESSOA, ATLETA e ausência de referência direta ATLETA–SÓCIO |
+| RN15 | A reserva deve ser solicitada com antecedência mínima de 24 horas e máxima de 30 dias. | Validação em RESERVA |
+| RN16 | Um sócio titular pode possuir vários vínculos de dependência ao longo do tempo. | Relacionamento 1:N em DEPENDENTE |
+| RN17 | Cada período de dependência deve possuir apenas um sócio titular responsável. | FK id_socio_titular em DEPENDENTE |
+| RN18 | O dependente pode perder o vínculo quando atingir a idade limite definida para sua categoria. | Encerramento do período em DEPENDENTE |
+| RN19 | Um atleta pode participar de várias modalidades, e uma modalidade pode possuir vários atletas. | ATLETA_MODALIDADE |
+| RN20 | Um funcionário pode ministrar várias turmas, e uma turma pode possuir vários professores. | TURMA_PROFESSOR |
+| RN21 | Uma mensalidade pode possuir vários recebimentos parciais, desde que o total das baixas não ultrapasse o valor do título. | TITULO_FINANCEIRO e BAIXA_FINANCEIRA |
+| RN22 | Não é permitida reserva conflitante para a mesma dependência física. | Validação de data e horário em RESERVA |
+| RN23 | Toda reserva deve possuir um sócio titular responsável. | FK id_socio em RESERVA |
+| RN24 | Uma reserva pode ser cancelada caso o sócio responsável fique inadimplente, conforme as regras do clube. | situacao_reserva |
+| RN25 | A categoria do sócio pode definir quais dependências físicas estão disponíveis para reserva. | CATEGORIA_DEPENDENCIA |
+| RN26 | Uma pessoa pode possuir vários endereços. | ENDERECO |
+| RN27 | Uma pessoa pode possuir vários registros de acesso. |REGISTRO_ACESSO |
+| RN28 | Um sócio pode emitir vários convites para visitantes. | CONVITE_VISITANTE |
+| RN29 | Uma pessoa pode estar vinculada a vários convites como visitante. | id_pessoa_visitante em CONVITE_VISITANTE |
+| RN30 | Uma pessoa pode possuir vários exames médicos registrados ao longo do tempo. | EXAME_MEDICO |
+| RN31 | Uma pessoa pode realizar várias compras |VENDA |
+| RN32 | Um funcionário pode registrar várias vendas. | VENDA|
+| RN33 | Uma venda pode possuir vários itens | ITEM_VENDA|
+| RN34 | Um produto pode aparecer em várias vendas. | ITEM_VENDA|
+| RN35 | Cada produto possui exatamente um saldo global de estoque. |Relacionamento PRODUTO–ESTOQUE 1:1 |
+| RN36 | Uma pessoa pode estar envolvida em várias ocorrências |OCORRENCIA |
+| RN37 | Um funcionário pode registrar várias ocorrências. | OCORRENCIA |
+| RN38 | Todo registro de acesso deve possuir data, horário e tipo de movimentação. | REGISTRO_ACESSO |
+| RN39 | Convites somente podem ser utilizados dentro do período de validade e uma única vez | CONVITE_VISITANTE |
+| RN40 | Algumas modalidades podem exigir exame médico válido para matrícula ou participação | EXAME_MEDICO e MODALIDADE |
+| RN41 | A quantidade vendida não pode ultrapassar o estoque disponível do produto | Validação da venda e ESTOQUE |
+| RN42 | Toda venda concluída deve gerar a respectiva movimentação de saída no estoque. | VENDA e MOVIMENTACAO_ESTOQUE |
+| RN43 | Toda ocorrência deve possuir data, descrição e pessoa envolvida principal | OCORRENCIA |
+| RN44 | Uma pessoa pode possuir simultaneamente os vínculos de sócio, funcionário e atleta, enquanto a condição de dependente representa um vínculo com um sócio titular. | PESSOA, SÓCIO, FUNCIONÁRIO, ATLETA e DEPENDENTE |
+| RN45 | Uma pessoa pode possuir vários períodos históricos de dependência, mas apenas um vínculo vigente por vez, sem possibilidade de ser dependente de si mesma. | Períodos e titularidade em DEPENDENTE |
+| RN46 | Toda movimentação de estoque deve registrar quantidade positiva, tipo, sentido, responsável, data e origem, preservando as movimentações anteriores e impedindo saldo negativo. | MOVIMENTACAO_ESTOQUE e ESTOQUE |
+| RN47 | Toda venda concluída deve gerar uma única saída de estoque por item, e as devoluções não podem ultrapassar a quantidade vendida ainda não devolvida. | ITEM_VENDA, DEVOLUCAO_VENDA e MOVIMENTACAO_ESTOQUE |
+| RN48 | Todo título financeiro deve indicar se é a receber ou a pagar, possuir uma contraparte e identificar uma única origem. | TITULO_FINANCEIRO e CONTRAPARTE_FINANCEIRA |
+| RN49 | Toda mensalidade, inscrição paga ou venda concluída deve gerar um título a receber, enquanto inscrições gratuitas não geram cobrança. | MENSALIDADE, INSCRICAO, VENDA e TITULO_FINANCEIRO |
+| RN50 | Uma operação financeira pode liquidar vários títulos da mesma contraparte e natureza, sem ultrapassar seus saldos, e o total das baixas deve corresponder ao valor confirmado. | PAGAMENTO e BAIXA_FINANCEIRA |
+| RN51 | O fluxo de caixa realizado deve considerar somente operações confirmadas, enquanto o projetado considera os saldos dos títulos em aberto. | CONTA_FINANCEIRA, PAGAMENTO e TITULO_FINANCEIRO |
+| RN52 | Toda correção de operação financeira confirmada deve ocorrer por estorno integral e único, preservando o registro original e respeitando a política de reembolso. | PAGAMENTO e BAIXA_FINANCEIRA |
+| RN53 | A conciliação deve relacionar operações e lançamentos de extrato da mesma conta e sentido, sem ultrapassar seus valores e mantendo divergências pendentes. | CONCILIACAO, PAGAMENTO e ITEM_EXTRATO |
+| RN54 | Não são permitidas reservas confirmadas com horários sobrepostos na mesma dependência física, sendo permitidos horários consecutivos. | Validação de data e horário em RESERVA |
+| RN55 | Toda matrícula ativa deve atender às condições da turma, idade, modalidade, exame médico e vínculo do participante, sem duplicidade ou excesso de capacidade. | Validação em MATRICULA e TURMA |
+| RN56 | Solicitações simultâneas não podem gerar reservas conflitantes nem matrículas acima da capacidade máxima da turma. | Controle de concorrência em RESERVA e MATRICULA |
+| RN57 | Não são permitidos registros duplicados de permissões, lançamentos de extrato ou mensalidades, nem períodos sobrepostos nos vínculos esportivos equivalentes. | Unicidade composta e validação de períodos |
+| RN58 | Valores e quantidades devem respeitar os limites permitidos, descontos não podem gerar saldo negativo e datas finais devem ser posteriores às iniciais. | Validação de valores, quantidades e datas |
+| RN59 | Um dependente deve encerrar seu vínculo antes de se tornar sócio ativo, preservando seu histórico, enquanto funcionários e atletas podem também possuir vínculo de sócio. | DEPENDENTE, SÓCIO, FUNCIONÁRIO e ATLETA |
+| RN60 | Cada categoria de sócio pode possuir permissão de acesso a várias dependências físicas, assim como cada dependência pode ser permitida para várias categorias, sem duplicidade da mesma associação. | CATEGORIA_DEPENDENCIA, CATEGORIA_SOCIO e DEPENDENCIA_FISICA |
 ### Tabela de Categorias de Sócio
 
 | Categoria  | Valor Mensalidade | Benefícios                                       |
