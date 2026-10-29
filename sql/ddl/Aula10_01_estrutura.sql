@@ -108,21 +108,6 @@ descricao TEXT,
 id_responsavel INTEGER UNIQUE,
 situacao_departamento TEXT NOT NULL CHECK(situacao_departamento IN ('ATIVO','INATIVO')));
 
-CREATE TABLE funcionario (
-id_funcionario INTEGER PRIMARY KEY,
-cpf char(11) NOT NULL,
-id_departamento INTEGER NOT NULL,
-matricula_funcional char(12) NOT NULL UNIQUE,
-cargo TEXT NOT NULL,
-salario DECIMAL(10,2) NOT NULL CHECK(salario>0),
-data_admissao timestamp NOT NULL,
-data_demissao timestamp,
-jornada_trabalho TEXT NOT NULL,
-tipo_contrato TEXT NOT NULL CHECK(tipo_contrato IN ('CLT','PJ','ESTAGIARIO','TEMPORARIO')),
-ctps_numero TEXT,
-situacao_funcionario TEXT NOT NULL CHECK(situacao_funcionario IN ('ATIVO','AFASTADO','DESLIGADO')),
-FOREIGN KEY(cpf) REFERENCES pessoa(cpf),
-FOREIGN KEY(id_departamento) REFERENCES departamento(id_departamento));
 
 CREATE TABLE atleta (
 id_atleta INTEGER PRIMARY KEY,
@@ -180,17 +165,35 @@ hora_fim char(5) NOT NULL,
 FOREIGN KEY(id_turma) REFERENCES turma(id_turma),
 UNIQUE(id_turma,dia_semana));
 
+
+CREATE TABLE funcionario (
+id_funcionario INTEGER PRIMARY KEY,
+cpf char(11) NOT NULL,
+id_departamento INTEGER NOT NULL,
+matricula_funcional char(12) NOT NULL UNIQUE,
+cargo TEXT NOT NULL,
+salario DECIMAL(10,2) NOT NULL CHECK(salario>0),
+data_admissao timestamp NOT NULL,
+data_demissao timestamp,
+jornada_trabalho TEXT NOT NULL,
+tipo_contrato TEXT NOT NULL CHECK(tipo_contrato IN ('CLT','PJ','ESTAGIARIO','TEMPORARIO')),
+ctps_numero TEXT,
+situacao_funcionario TEXT NOT NULL CHECK(situacao_funcionario IN ('ATIVO','AFASTADO','DESLIGADO')),
+FOREIGN KEY(cpf) REFERENCES pessoa(cpf),
+FOREIGN KEY(id_departamento) REFERENCES departamento(id_departamento));
+
 CREATE TABLE turma_professor (
-id_turma_professor INTEGER PRIMARY KEY,
 id_turma INTEGER NOT NULL,
 id_funcionario INTEGER NOT NULL,
 data_inicio timestamp NOT NULL,
 data_fim timestamp,
 situacao_vinculo TEXT NOT NULL CHECK(situacao_vinculo IN ('ATIVO','INATIVO')),
 observacao TEXT,
+primary key(id_turma,id_funcionario),
 FOREIGN KEY(id_turma) REFERENCES turma(id_turma),
 FOREIGN KEY(id_funcionario) REFERENCES funcionario(id_funcionario),
 UNIQUE(id_turma,id_funcionario,data_inicio));
+
 
 CREATE TABLE matricula (
 id_matricula INTEGER PRIMARY KEY,
@@ -368,25 +371,10 @@ id_produto INTEGER NOT NULL,
 quantidade INTEGER NOT NULL CHECK(quantidade>0),
 valor_unitario DECIMAL(10,2) NOT NULL CHECK(valor_unitario>=0),
 observacao TEXT,
-PRIMARY KEY(id_venda, id_produto),
+PRIMARY KEY(id_venda,id_produto),
 FOREIGN KEY(id_venda) REFERENCES venda(id_venda),
 FOREIGN KEY(id_produto) REFERENCES produto(id_produto),
 UNIQUE(id_venda,id_produto));
-
-CREATE TABLE movimentacao_estoque (
-id_movimentacao INTEGER PRIMARY KEY,
-id_produto INTEGER NOT NULL,
-id_funcionario INTEGER NOT NULL,
-id_item_venda INTEGER,
-tipo_movimentacao TEXT NOT NULL CHECK(tipo_movimentacao IN ('ENTRADA','SAIDA','PERDA','DEVOLUCAO','AJUSTE')),
-sentido char(1) NOT NULL CHECK(sentido IN ('E','S')),
-quantidade INTEGER NOT NULL CHECK(quantidade>0),
-origem TEXT NOT NULL,
-data_movimentacao timestamp NOT NULL,
-observacao TEXT,
-FOREIGN KEY(id_produto) REFERENCES produto(id_produto),
-FOREIGN KEY(id_funcionario) REFERENCES funcionario(id_funcionario),
-FOREIGN KEY(id_item_venda) REFERENCES item_venda(id_item_venda));
 
 
 CREATE TABLE mensalidade (
