@@ -88,14 +88,15 @@ FOREIGN KEY(cpf) REFERENCES pessoa(cpf),
 FOREIGN KEY(id_categoria_socio) REFERENCES categoria_socio(id_categoria_socio));
 
 CREATE TABLE dependente (
-id_dependente INTEGER PRIMARY KEY,
 id_socio_titular INTEGER NOT NULL,
+id_dependente INTEGER NOT NULL,
 cpf char(11) NOT NULL,
 tipo_dependencia TEXT NOT NULL CHECK(tipo_dependencia IN ('CONJUGE','FILHO','ENTEADO','PAIS')),
 data_inicio_dependencia timestamp NOT NULL,
 data_fim_dependencia timestamp,
 situacao_dependente TEXT NOT NULL CHECK(situacao_dependente IN ('ATIVO','INATIVO')),
 observacao TEXT,
+PRIMARY KEY (id_socio_titular, id_dependente), 
 FOREIGN KEY(id_socio_titular) REFERENCES socio(id_socio),
 FOREIGN KEY(cpf) REFERENCES pessoa(cpf),
 UNIQUE(cpf,data_inicio_dependencia));
@@ -109,7 +110,7 @@ situacao_departamento TEXT NOT NULL CHECK(situacao_departamento IN ('ATIVO','INA
 
 CREATE TABLE funcionario (
 id_funcionario INTEGER PRIMARY KEY,
-cpf char(11) NOT NULL UNIQUE,
+cpf char(11) NOT NULL,
 id_departamento INTEGER NOT NULL,
 matricula_funcional char(12) NOT NULL UNIQUE,
 cargo TEXT NOT NULL,
@@ -125,7 +126,7 @@ FOREIGN KEY(id_departamento) REFERENCES departamento(id_departamento));
 
 CREATE TABLE atleta (
 id_atleta INTEGER PRIMARY KEY,
-cpf char(11) NOT NULL UNIQUE,
+cpf char(11) NOT NULL,
 id_socio INTEGER,
 nivel_atleta TEXT NOT NULL CHECK(nivel_atleta IN ('INICIANTE','INTERMEDIARIO','AVANCADO','PROFISSIONAL')),
 registro_federacao TEXT,
@@ -221,7 +222,7 @@ FOREIGN KEY(id_medico) REFERENCES medico(id_medico));
 
 CREATE TABLE dependencia_fisica (
 id_dependencia INTEGER PRIMARY KEY,
-nome_dependencia TEXT NOT NULL UNIQUE,
+nome_dependencia TEXT NOT NULL,
 tipo_dependencia TEXT NOT NULL CHECK(tipo_dependencia IN ('QUADRA','PISCINA','SALAO','CAMPO')),
 capacidade_maxima INTEGER CHECK(capacidade_maxima>0),
 situacao_dependencia TEXT NOT NULL CHECK(situacao_dependencia IN ('DISPONIVEL','MANUTENCAO','DESATIVADA')),
@@ -286,7 +287,7 @@ situacao_mandato TEXT NOT NULL CHECK(situacao_mandato IN ('EM_ANDAMENTO','CONCLU
 observacao TEXT,
 FOREIGN KEY(id_socio) REFERENCES socio(id_socio),
 FOREIGN KEY(id_funcao_diretoria) REFERENCES funcao_diretoria(id_funcao_diretoria),
-UNIQUE(id_socio,id_funcao_diretoria,data_inicio_mandato));
+UNIQUE(id_funcao_diretoria,data_inicio_mandato));
 
 CREATE TABLE convite_visitante (
 id_convite INTEGER PRIMARY KEY,
@@ -362,12 +363,12 @@ FOREIGN KEY(id_funcionario) REFERENCES funcionario(id_funcionario));
 
 
 CREATE TABLE item_venda (
-id_item_venda INTEGER PRIMARY KEY,
 id_venda INTEGER NOT NULL,
 id_produto INTEGER NOT NULL,
 quantidade INTEGER NOT NULL CHECK(quantidade>0),
 valor_unitario DECIMAL(10,2) NOT NULL CHECK(valor_unitario>=0),
 observacao TEXT,
+PRIMARY KEY(id_venda, id_produto),
 FOREIGN KEY(id_venda) REFERENCES venda(id_venda),
 FOREIGN KEY(id_produto) REFERENCES produto(id_produto),
 UNIQUE(id_venda,id_produto));
@@ -405,8 +406,8 @@ UNIQUE(id_socio,mes_referencia));
 CREATE TABLE contraparte_financeira (
 id_contraparte INTEGER PRIMARY KEY,
 tipo_pessoa char(2) NOT NULL CHECK(tipo_pessoa IN ('PF','PJ')),
-cpf char(11) UNIQUE,
-cnpj char(14) UNIQUE,
+cpf char(11),
+cnpj char(14),
 razao_social TEXT,
 FOREIGN KEY(cpf) REFERENCES pessoa(cpf));
 
