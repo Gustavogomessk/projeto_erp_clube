@@ -132,13 +132,13 @@ exige_exame_medico INTEGER NOT NULL CHECK(exige_exame_medico IN (0,1)),
 situacao_modalidade TEXT NOT NULL CHECK(situacao_modalidade IN ('ATIVA','INATIVA')));
 
 CREATE TABLE atleta_modalidade (
-id_atleta_modalidade INTEGER PRIMARY KEY,
 id_atleta INTEGER NOT NULL,
 id_modalidade INTEGER NOT NULL,
 data_inicio timestamp NOT NULL,
 data_fim timestamp,
 situacao_vinculo TEXT NOT NULL CHECK(situacao_vinculo IN ('ATIVO','INATIVO','SUSPENSO')),
 observacao TEXT,
+PRIMARY KEY(id_atleta,id_modalidade),
 FOREIGN KEY(id_atleta) REFERENCES atleta(id_atleta),
 FOREIGN KEY(id_modalidade) REFERENCES modalidade(id_modalidade),
 UNIQUE(id_atleta,id_modalidade,data_inicio));

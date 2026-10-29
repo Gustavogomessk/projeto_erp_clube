@@ -64,11 +64,11 @@ INSERT INTO atleta (id_atleta, cpf, id_socio, nivel_atleta, registro_federacao, 
 (2,'22222222222',2,'INTERMEDIARIO','FPT-2024-0456','2024-03-01 00:00:00','ATIVO',NULL),
 (3,'12121212121',NULL,'AVANCADO','FPF-2023-0789','2025-04-10 00:00:00','ATIVO','Atleta convidado');
 
-INSERT INTO atleta_modalidade (id_atleta_modalidade, id_atleta, id_modalidade, data_inicio, data_fim, situacao_vinculo, observacao) VALUES
-(1,1,2,'2024-02-01 00:00:00',NULL,'ATIVO',NULL),
-(2,2,1,'2024-03-01 00:00:00',NULL,'ATIVO',NULL),
-(3,2,3,'2024-06-01 00:00:00',NULL,'ATIVO',NULL),
-(4,3,3,'2025-04-10 00:00:00',NULL,'ATIVO',NULL);
+INSERT INTO atleta_modalidade (id_atleta, id_modalidade, data_inicio, data_fim, situacao_vinculo, observacao) VALUES
+(1,2,'2024-02-01 00:00:00',NULL,'ATIVO',NULL),
+(2,1,'2024-03-01 00:00:00',NULL,'ATIVO',NULL),
+(2,3,'2024-06-01 00:00:00',NULL,'ATIVO',NULL),
+(3,3,'2025-04-10 00:00:00',NULL,'ATIVO',NULL);
 
 INSERT INTO turma (id_turma, id_modalidade, nome_turma, idade_minima, idade_maxima, capacidade_maxima, situacao_turma, observacao) VALUES
 (1,2,'Futsal Infantil',8,12,20,'ATIVA',NULL),
