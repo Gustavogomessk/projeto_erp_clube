@@ -742,7 +742,10 @@ Quando ocorre uma alteração:
 | 32 | BAIXA_FINANCEIRA|Relaciona operações financeiras aos títulos e registra os valores liquidados ou estornados|RF09, RN50, RN52 |
 | 33 | CONTA_FINANCEIRA|Representa contas bancárias e caixas utilizados pelo clube|RF23|
 | 34 | ITEM_EXTRATO |Registra lançamentos bancários utilizados na conciliação |RF24|
-| 35 | CONCILIACAO|Relaciona lançamentos do extrato às operações financeiras para conferir os valores|RF24, RN53|
+| 35 | CONCILIACAO         |Relaciona lançamentos do extrato às operações financeiras para conferir os valores|RF24, RN53|
+| 39 | CEP                 | Centraliza logradouro, bairro, cidade e estado, evitando repetição nos endereços | RN25     |
+| 40 | MEDICO              | Identifica o médico responsável pelos exames médicos                             | RF18     |
+| 41 | TURMA_HORARIO       | Registra os dias e horários de funcionamento de cada turma                       | RF07             |
 
 ### Nota sobre "Político"
 
@@ -939,9 +942,6 @@ A alteração foi feita porque:
 | numero_recibo      | Texto(20)     | Sim         | Sim   | Número do comprovante ou recibo |
 | situacao_pagamento | Texto(15)     | Sim         | Não   | Confirmado ou Estornado         |
 | observacao         | Texto(500)    | Não         | Não   | Observações                     |
-
-
-
 
 
 ### 10.15 TURMA
@@ -1210,6 +1210,34 @@ A alteração foi feita porque:
 | valor_conciliado    | Decimal(10,2) | Sim         | Não   | Valor positivo associado entre o lançamento e a operação financeira  |
 | data_conciliacao    | Data/Hora     | Sim         | Não   | Data e horário da conferência                                        |
 
+### 10.36 CEP
+
+| Atributo   | Tipo       | Obrigatório | Único | Descrição               |
+|------------|------------|-------------|-------|-------------------------|
+| cep        | Texto(8)   | Sim         | Sim   | PK, CEP sem hífen       |
+| logradouro | Texto(100) | Sim         | Não   | Rua, avenida ou similar |
+| bairro     | Texto(60)  | Sim         | Não   | Bairro                  |
+| cidade     | Texto(60)  | Sim         | Não   | Cidade                  |
+| estado     | Texto(2)   | Sim         | Não   | UF                      |
+
+### 10.37 MEDICO
+
+| Atributo    | Tipo          | Obrigatório | Único | Descrição     |
+|-------------|---------------|-------------|-------|---------------|
+| id_medico   | Identificador | Sim         | Sim   | Identificador |
+| crm_medico  | Texto(20)     | Sim         | Sim   | CRM do médico |
+| nome_medico | Texto(100)    | Sim         | Não   | Nome completo |
+
+### 10.38 TURMA_HORARIO
+
+| Atributo         | Tipo          | Obrigatório | Único | Descrição                                     |
+|------------------|---------------|-------------|-------|-----------------------------------------------|
+| id_turma_horario | Identificador | Sim         | Sim   | Identificador                                 |
+| id_turma         | Referência    | Sim         | Não   | FK para TURMA; único em conjunto com dia_semana |
+| dia_semana       | Texto(15)     | Sim         | Não   | Dia da semana; único em conjunto com id_turma |
+| hora_inicio      | Hora          | Sim         | Não   | Início                                        |
+| hora_fim         | Hora          | Sim         | Não   | Término                                       |
+
 ## 11. Relacionamentos
 
 | #  | Entidade A              | Cardinalidade | Verbo                 | Cardinalidade | Entidade B                | Tipo           |
@@ -1256,9 +1284,18 @@ A alteração foi feita porque:
 | 30 | PAGAMENTO               | (0,N)         | POSSUI                | (1,1)         | BAIXA_FINANCEIRA          | 1:N            |
 | 31 | CONTA_FINANCEIRA        | (0,N)         | POSSUI                | (1,1)         | ITEM_EXTRATO              | 1:N            |
 | 32 | ITEM_EXTRATO            | (0,N)         | PARTICIPA DE          | (1,1)         | CONCILIACAO               | 1:N            |
-| 33 | PAGAMENTO               | (0,N)         | PARTICIPA DE          | (1,1)         | CONCILIACAO               | 1:N            |
-| 34 | FUNCIONÁRIO             | (0,N)         | REALIZA               | (1,1)         | CONCILIACAO               | 1:N            |
-| 35 | BAIXA_FINANCEIRA        | (0,N)         | É ESTORNADA POR       | (0,1)         | BAIXA_FINANCEIRA          | 1:N            |
+| 35 | BAIXA_FINANCEIRA        | (0,1)         | É ESTORNADA POR       | (0,1)         | BAIXA_FINANCEIRA          | 1:1            |
+| 36 | FUNCIONÁRIO             | (0,N)         | REALIZA               | (1,1)         | CONCILIACAO               | 1:N            |
+| 37 | CEP                     | (0,N)         | É USADO EM            | (1,1)         | ENDEREÇO                  | 1:N            |
+| 38 | MEDICO                  | (0,N)         | RESPONDE POR          | (1,1)         | EXAME_MEDICO              | 1:N            |
+| 39 | TURMA                   | (0,N)         | POSSUI                | (1,1)         | TURMA_HORARIO             | 1:N            |
+| 40 | CONVITE_VISITANTE       | (0,N)         | AUTORIZA              | (0,1)         | REGISTRO_ACESSO           | 1:N            |
+| 41 | OCORRENCIA              | (0,N)         | AGRUPA                | (0,1)         | OCORRENCIA                | 1:N            |
+| 42 | SÓCIO                   | (0,N)         | É RESPONSÁVEL POR     | (0,1)         | ATLETA                    | 1:N            |
+| 43 | PAGAMENTO               | (0,1)         | É ESTORNADO POR       | (0,1)         | PAGAMENTO                 | 1:1            |
+| 44 | CONTRAPARTE_FINANCEIRA  | (0,N)         | PARTICIPA DE          | (1,1)         | PAGAMENTO                 | 1:N            |
+| 45 | FUNCIONÁRIO             | (0,N)         | REGISTRA              | (1,1)         | PAGAMENTO                 | 1:N            |
+
 
 ### Entidades Associativas
 
@@ -1331,6 +1368,15 @@ A alteração foi feita porque:
 | PAGAMENTO - PARTICIPA DE - CONCILIACAO       | PAGAMENTO (0,N) - PARTICIPA DE - CONCILIACAO (1,1) | RN51 |
 | FUNCIONÁRIO - REALIZA - CONCILIACAO           | FUNCIONÁRIO (0,N) - REALIZA - CONCILIACAO (1,1) | RN51 |
 | BAIXA_FINANCEIRA - É ESTORNADA POR - BAIXA_FINANCEIRA | BAIXA_FINANCEIRA (0,N) - É ESTORNADA POR - BAIXA_FINANCEIRA (0,1) | RN52 |
+| CEP - É USADO EM - ENDEREÇO                       | CEP (0,N) - É USADO EM - ENDEREÇO (1,1)                               | RN25  |
+| MEDICO - RESPONDE POR - EXAME_MEDICO              | MEDICO (0,N) - RESPONDE POR - EXAME_MEDICO (1,1)                      | RN29  |
+| TURMA - POSSUI - TURMA_HORARIO                    | TURMA (0,N) - POSSUI - TURMA_HORARIO (1,1)                            | RN06  |
+| CONVITE_VISITANTE - AUTORIZA - REGISTRO_ACESSOS   | CONVITE_VISITANTE (0,N) - AUTORIZA - REGISTRO_ACESSO (0,1)            | RN37  |
+| OCORRENCIA - AGRUPA - OCORRENCIA                  | OCORRENCIA (0,N) - AGRUPA - OCORRENCIA (0,1)                          | RN39  |
+| SÓCIO - É RESPONSÁVEL POR - ATLETA                | SÓCIO (0,N) - É RESPONSÁVEL POR - ATLETA (0,1)                        | RN14  |
+| PAGAMENTO - É ESTORNADO POR - PAGAMENTO           | PAGAMENTO (0,1) - É ESTORNADO POR - PAGAMENTO (0,1)                   | RN46  |
+| CONTRAPARTE_FINANCEIRA - PARTICIPA DE - PAGAMENTO | CONTRAPARTE_FINANCEIRA (0,N) - PARTICIPA DE - PAGAMENTO (1,1)         | RN44  |
+| FUNCIONÁRIO - REGISTRA - PAGAMENTO                | FUNCIONÁRIO (0,N) - REGISTRA - PAGAMENTO (1,1)                        | RN44  |
 
 ## 13. Dicionário de Dados Conceitual
 
