@@ -282,6 +282,7 @@ Quando ocorre uma alteração:
 - CPF deve ser único e validado.
 - Nome é obrigatório.
 - Telefone pode ser informado posteriormente.
+- E-mail é obrigatório e único.
 
 ### RF02 - Cadastro de Sócios
 
@@ -301,14 +302,14 @@ Quando ocorre uma alteração:
 
 **Regras:**
 
-- Cada período de dependência deve estar vinculado a um único sócio titular.
+- Cada período de dependência é identificado pela combinação id_socio_titular + id_dependente e está vinculado a um único sócio titular.
 - Tipos de dependência: Cônjuge, Filho(a), Enteado(a) e Pais.
 - Dependente menor de idade deve possuir responsável legal.
 - O dependente pode se tornar sócio futuramente.
-- Vínculos encerrados devem ser preservados no histórico.
-- Cada novo período de dependência deve receber um novo identificador.
+- Vínculos encerrados devem ser preservados no histórico, com situação INATIVO.
+- Cada novo período de dependência deve receber um novo id_dependente dentro do mesmo titular.
 - Um dependente não pode ser seu próprio titular.
-- Não pode existir mais de um vínculo de dependência vigente para o mesmo dependente.
+- Não pode existir mais de um vínculo ATIVO para a mesma pessoa dependente.
 
 ### RF04 - Cadastro de Funcionários
 
@@ -322,6 +323,8 @@ Quando ocorre uma alteração:
 - Data de demissão pode ser nula enquanto o funcionário estiver ativo.
 - CTPS é obrigatória para funcionários CLT.
 
+**Observação:** a obrigatoriedade da CTPS para funcionários CLT não é garantida apenas pelo SQL. Depende de trigger ou da aplicação.
+
 ### RF05 - Cadastro de Atletas
 
 **Descrição:** O sistema deve permitir identificar pessoas como atletas e controlar seus vínculos com as modalidades esportivas.
@@ -329,6 +332,7 @@ Quando ocorre uma alteração:
 **Regras:**
 
 - O atleta pode ser sócio, dependente ou pessoa externa.
+- O atleta pode ser vinculado a um sócio por meio do campo opcional id_socio.
 - O atleta deve estar vinculado a pelo menos uma modalidade ativa.
 - O nível do atleta deve ser informado.
 - Registro em federação é opcional.
@@ -356,6 +360,8 @@ Quando ocorre uma alteração:
 - Uma turma ativa deve possuir ao menos um professor com vínculo vigente.
 - O número de matrículas ativas não pode ultrapassar a capacidade máxima da turma.
 
+**Observação:** a exigência de ao menos um professor com vínculo vigente em turma ativa e o limite de matrículas ativas pela capacidade máxima não são garantidos apenas pelo SQL. Dependem de triggers ou da aplicação.
+
 ### RF08 - Controle de Mensalidades
 
 **Descrição:** O sistema deve controlar as mensalidades dos sócios, registrando os valores e as respectivas obrigações financeiras.
@@ -368,6 +374,8 @@ Quando ocorre uma alteração:
 - A mensalidade pode possuir desconto.
 - Situações: Pendente, Pago, Atrasado e Cancelado.
 - A obrigação financeira correspondente deve ser registrada por meio de um título a receber.
+
+**Observação:** a verificação de conflito de horário na mesma dependência e o bloqueio de reservas para sócio inadimplente não são garantidos apenas pelo SQL. Dependem de triggers ou da aplicação.
 
 ### RF09 - Gestão de Pagamentos
 
@@ -426,7 +434,7 @@ Quando ocorre uma alteração:
 **Regras:**
 
 - Departamento possui nome único.
-- Pode possuir um funcionário responsável.
+- Pode possuir um funcionário responsável, informado em id_responsavel (coluna única, sem chave estrangeira). A existência do funcionário é validada pela aplicação.
 - Subdivisões não serão controladas nesta versão.
 
 ### RF14 - Gestão de Diretoria
@@ -541,7 +549,23 @@ Quando ocorre uma alteração:
 - A inscrição no evento deve registrar o preço contratado e eventuais descontos aplicados.
 - Inscrições gratuitas não devem gerar títulos a receber.
 - Inscrições pagas devem gerar automaticamente um título a receber.
-- Recebimentos e estornos devem ser registrados por meio de operações e baixas financeiras, com controle de valores e comprovantes.
+- Recebimentos devem ser registrados por meio de operações e baixas financeiras, e estornos por um novo pagamento de estorno (RF25), com controle de valores e comprovantes.
+
+### RF25 - Estorno Financeiro
+
+**Descrição:** O sistema deve permitir corrigir operações financeiras confirmadas por meio de estorno, sem excluir o registro original.
+
+**Regras:**
+
+- O estorno deve ser registrado como um novo PAGAMENTO com situação ESTORNO.
+- O estorno deve referenciar o pagamento original em id_pagamento_estornado.
+- O pagamento original deve passar para a situação ESTORNADO e permanecer no histórico.
+- O estorno deve ser integral e único, com o mesmo valor, a mesma conta financeira e a mesma contraparte do original, e com sentido oposto.
+- Um estorno não pode ser estornado.
+- O saldo dos títulos baixados pelo pagamento original deve ser recomposto.
+- O estorno deve respeitar a política de reembolso.
+
+**Observação:** a unicidade do estorno é garantida por id_pagamento_estornado único. A igualdade de valor, conta e contraparte, o sentido oposto e a proibição de estornar um estorno dependem de triggers ou da aplicação.
 
 ## 6. Requisitos Não Funcionais
 
@@ -612,48 +636,46 @@ Quando ocorre uma alteração:
 
 ## 7. Regras de Negócio
 
-## 7. Regras de Negócio
-
-| # | Regra | Impacto no Modelo |
+| #    | Regra                                                                                                   | Impacto no Modelo                      |
 | ---- | ------------------------------------------------------------------------------------------------------- | -------------------------------------- |
 | RN01 | Toda pessoa cadastrada deve possuir CPF único e válido. | CPF único em PESSOA |
-| RN02 | Todo período de dependência deve estar vinculado a um único sócio titular. | FK id_socio_titular em DEPENDENTE |
+| RN02 | Todo período de dependência deve estar vinculado a um único sócio titular. | FK id_socio_titular em DEPENDENTE (compõe a PK) |
 | RN03 | A categoria do sócio define o valor da mensalidade e os benefícios disponíveis. | Relacionamento SÓCIO e CATEGORIA_SOCIO |
 | RN04 | O sócio pode estar Ativo, Inadimplente, Suspenso ou Inativo. | situacao_socio em SÓCIO |
 | RN05 | Todo atleta deve estar vinculado a pelo menos uma modalidade ativa. | ATLETA_MODALIDADE |
 | RN06 | Cada turma possui capacidade máxima de participantes. | capacidade_maxima em TURMA |
-| RN07 | Somente sócios titulares ativos e regulares podem realizar reservas. | Validação em RESERVA |
+| RN07 | Somente sócios titulares ativos e regulares podem realizar reservas. | Validação em RESERVA (por trigger ou aplicação) |
 | RN08 | Cargos de diretoria são ocupados por sócios durante determinado mandato. | DIRETORIA |
 | RN09 | Um dependente pode se tornar sócio titular, desde que seu vínculo de dependência seja encerrado. | Histórico em DEPENDENTE e vínculo em SÓCIO |
 | RN10 | O valor da mensalidade é definido de acordo com a categoria do sócio. | CATEGORIA_SOCIO |
 | RN11 | Pagamentos e recebimentos podem ser realizados parcialmente, respeitando o saldo do título financeiro. | TITULO_FINANCEIRO e BAIXA_FINANCEIRA |
 | RN12 | Eventos podem ser abertos ao público ou restritos a determinados participantes. | tipo_evento em EVENTO |
 | RN13 | Um funcionário também pode possuir vínculo como sócio. | PESSOA pode possuir ambos os vínculos |
-| RN14 | Um atleta pode ser sócio, dependente ou pessoa externa, sendo seus papéis identificados pela mesma PESSOA. | PESSOA, ATLETA e ausência de referência direta ATLETA–SÓCIO |
-| RN15 | A reserva deve ser solicitada com antecedência mínima de 24 horas e máxima de 30 dias. | Validação em RESERVA |
+| RN14 | Um atleta pode ser sócio, dependente ou pessoa externa, sendo seus papéis identificados pela mesma PESSOA, com vínculo opcional com um sócio. | PESSOA, ATLETA e id_socio opcional em ATLETA |
+| RN15 | A reserva deve ser solicitada com antecedência mínima de 24 horas e máxima de 30 dias. | Validação em RESERVA (por trigger ou aplicação) |
 | RN16 | Um sócio titular pode possuir vários vínculos de dependência ao longo do tempo. | Relacionamento 1:N em DEPENDENTE |
-| RN17 | Cada período de dependência deve possuir apenas um sócio titular responsável. | FK id_socio_titular em DEPENDENTE |
+| RN17 | Cada período de dependência deve possuir apenas um sócio titular responsável. | FK id_socio_titular em DEPENDENTE (compõe a PK) |
 | RN18 | O dependente pode perder o vínculo quando atingir a idade limite definida para sua categoria. | Encerramento do período em DEPENDENTE |
 | RN19 | Um atleta pode participar de várias modalidades, e uma modalidade pode possuir vários atletas. | ATLETA_MODALIDADE |
 | RN20 | Um funcionário pode ministrar várias turmas, e uma turma pode possuir vários professores. | TURMA_PROFESSOR |
 | RN21 | Uma mensalidade pode possuir vários recebimentos parciais, desde que o total das baixas não ultrapasse o valor do título. | TITULO_FINANCEIRO e BAIXA_FINANCEIRA |
-| RN22 | Não é permitida reserva conflitante para a mesma dependência física. | Validação de data e horário em RESERVA |
+| RN22 | Não é permitida reserva conflitante para a mesma dependência física. | Validação de data e horário em RESERVA (por trigger ou aplicação) |
 | RN23 | Toda reserva deve possuir um sócio titular responsável. | FK id_socio em RESERVA |
 | RN24 | Uma reserva pode ser cancelada caso o sócio responsável fique inadimplente, conforme as regras do clube. | situacao_reserva |
 | RN25 | Uma pessoa pode possuir vários endereços. | ENDERECO |
-| RN26 | Uma pessoa pode possuir vários registros de acesso. |REGISTRO_ACESSO |
+| RN26 | Uma pessoa pode possuir vários registros de acesso. | REGISTRO_ACESSO |
 | RN27 | Um sócio pode emitir vários convites para visitantes. | CONVITE_VISITANTE |
-| RN28 | Uma pessoa pode estar vinculada a vários convites como visitante. | id_pessoa_visitante em CONVITE_VISITANTE |
+| RN28 | Uma pessoa pode estar vinculada a vários convites como visitante. | cpf_visitante em CONVITE_VISITANTE |
 | RN29 | Uma pessoa pode possuir vários exames médicos registrados ao longo do tempo. | EXAME_MEDICO |
-| RN30 | Uma pessoa pode realizar várias compras |VENDA |
-| RN31 | Um funcionário pode registrar várias vendas. | VENDA|
-| RN32 | Uma venda pode possuir vários itens | ITEM_VENDA|
-| RN33 | Um produto pode aparecer em várias vendas. | ITEM_VENDA|
-| RN34 | Uma pessoa pode estar envolvida em várias ocorrências |OCORRENCIA |
+| RN30 | Uma pessoa pode realizar várias compras | VENDA |
+| RN31 | Um funcionário pode registrar várias vendas. | VENDA |
+| RN32 | Uma venda pode possuir vários itens | ITEM_VENDA |
+| RN33 | Um produto pode aparecer em várias vendas. | ITEM_VENDA |
+| RN34 | Uma pessoa pode estar envolvida em várias ocorrências | OCORRENCIA |
 | RN35 | Um funcionário pode registrar várias ocorrências. | OCORRENCIA |
 | RN36 | Todo registro de acesso deve possuir data, horário e tipo de movimentação. | REGISTRO_ACESSO |
 | RN37 | Convites somente podem ser utilizados dentro do período de validade e uma única vez | CONVITE_VISITANTE |
-| RN38 | Algumas modalidades podem exigir exame médico válido para matrícula ou participação | EXAME_MEDICO e MODALIDADE |
+| RN38 | Algumas modalidades podem exigir exame médico válido para matrícula ou participação | EXAME_MEDICO e exige_exame_medico em MODALIDADE |
 | RN39 | Toda ocorrência deve possuir data, descrição e pessoa envolvida principal | OCORRENCIA |
 | RN40 | Uma pessoa pode possuir simultaneamente os vínculos de sócio, funcionário e atleta, enquanto a condição de dependente representa um vínculo com um sócio titular. | PESSOA, SÓCIO, FUNCIONÁRIO, ATLETA e DEPENDENTE |
 | RN41 | Uma pessoa pode possuir vários períodos históricos de dependência, mas apenas um vínculo vigente por vez, sem possibilidade de ser dependente de si mesma. | Períodos e titularidade em DEPENDENTE |
@@ -661,14 +683,15 @@ Quando ocorre uma alteração:
 | RN43 | Toda mensalidade, inscrição paga ou venda concluída deve gerar um título a receber, enquanto inscrições gratuitas não geram cobrança. | MENSALIDADE, INSCRICAO, VENDA e TITULO_FINANCEIRO |
 | RN44 | Uma operação financeira pode liquidar vários títulos da mesma contraparte e natureza, sem ultrapassar seus saldos, e o total das baixas deve corresponder ao valor confirmado. | PAGAMENTO e BAIXA_FINANCEIRA |
 | RN45 | O fluxo de caixa realizado deve considerar somente operações confirmadas, enquanto o projetado considera os saldos dos títulos em aberto. | CONTA_FINANCEIRA, PAGAMENTO e TITULO_FINANCEIRO |
-| RN46 | Toda correção de operação financeira confirmada deve ocorrer por estorno integral e único, preservando o registro original e respeitando a política de reembolso. | PAGAMENTO e BAIXA_FINANCEIRA |
+| RN46 | Todo estorno de operação financeira confirmada deve ser registrado como um novo PAGAMENTO com situação ESTORNO, ligado ao original por id_pagamento_estornado. O estorno é integral e único, com o mesmo valor, conta e contraparte do original e sentido oposto. O pagamento original passa a ESTORNADO, sem ser excluído, e um estorno não pode ser estornado, respeitando a política de reembolso. | PAGAMENTO (id_pagamento_estornado único); demais validações por trigger ou aplicação |
 | RN47 | A conciliação deve relacionar operações e lançamentos de extrato da mesma conta e sentido, sem ultrapassar seus valores e mantendo divergências pendentes. | CONCILIACAO, PAGAMENTO e ITEM_EXTRATO |
-| RN48 | Não são permitidas reservas confirmadas com horários sobrepostos na mesma dependência física, sendo permitidos horários consecutivos. | Validação de data e horário em RESERVA |
-| RN49 | Toda matrícula ativa deve atender às condições da turma, idade, modalidade, exame médico e vínculo do participante, sem duplicidade ou excesso de capacidade. | Validação em MATRICULA e TURMA |
-| RN50 | Solicitações simultâneas não podem gerar reservas conflitantes nem matrículas acima da capacidade máxima da turma. | Controle de concorrência em RESERVA e MATRICULA |
-| RN51 | Não são permitidos registros duplicados de permissões, lançamentos de extrato ou mensalidades, nem períodos sobrepostos nos vínculos esportivos equivalentes. | Unicidade composta e validação de períodos |
+| RN48 | Não são permitidas reservas confirmadas com horários sobrepostos na mesma dependência física, sendo permitidos horários consecutivos. | Validação de data e horário em RESERVA (por trigger ou aplicação) |
+| RN49 | Toda matrícula ativa deve atender às condições da turma, idade, modalidade, exame médico e vínculo do participante, sem duplicidade ou excesso de capacidade. | Validação em MATRICULA e TURMA (por trigger ou aplicação) |
+| RN50 | Solicitações simultâneas não podem gerar reservas conflitantes nem matrículas acima da capacidade máxima da turma. | Controle de concorrência em RESERVA e MATRICULA (por trigger ou aplicação) |
+| RN51 | Não são permitidos registros duplicados de permissões, lançamentos de extrato ou mensalidades, nem períodos sobrepostos nos vínculos esportivos equivalentes. | Unicidade composta e validação de períodos (períodos sobrepostos por trigger ou aplicação) |
 | RN52 | Valores e quantidades devem respeitar os limites permitidos, descontos não podem gerar saldo negativo e datas finais devem ser posteriores às iniciais. | Validação de valores, quantidades e datas |
 | RN53 | Um dependente deve encerrar seu vínculo antes de se tornar sócio ativo, preservando seu histórico, enquanto funcionários e atletas podem também possuir vínculo de sócio. | DEPENDENTE, SÓCIO, FUNCIONÁRIO e ATLETA |
+
 
 ### Tabela de Categorias de Sócio
 
@@ -721,7 +744,7 @@ Quando ocorre uma alteração:
 | 11 | EVENTO             | Registra eventos do clube                                   | RF11             |
 | 12 | INSCRIÇÃO          | Registra a participação de pessoas em eventos               | RF12             |
 | 13 | MENSALIDADE        | Registra cobranças dos sócios                               | RF08             |
-| 14 | PAGAMENTO          | Registra operações financeiras de recebimento e pagamento.  | RF09             |
+| 14 | PAGAMENTO          | Registra operações financeiras de recebimento, pagamento e estorno.| RF09, RF25|
 | 15 | TURMA              | Representa turmas de modalidades                            | RF07             |
 | 16 | MATRÍCULA          | Registra a matrícula de atletas em turmas                   | RF07             |
 | 17 | DIRETORIA          | Registra os mandatos dos sócios em cargos diretivos         | RF14             |
@@ -739,10 +762,13 @@ Quando ocorre uma alteração:
 | 29 | OCORRENCIA         | Registra ocorrências e seus responsáveis                    | RN36, RN37, RN43 |
 | 30 | CONTRAPARTE_FINANCEIRA|Identifica clientes, fornecedores e favorecidos, incluindo pessoas jurídicas|RF21, RF22|
 | 31 | TITULO_FINANCEIRO|Registra obrigações a receber ou a pagar, seus valores, vencimentos e origens|RF21, RF22, RF25|
-| 32 | BAIXA_FINANCEIRA|Relaciona operações financeiras aos títulos e registra os valores liquidados ou estornados|RF09, RN50, RN52 |
+| 32 | BAIXA_FINANCEIRA | Relaciona operações financeiras aos títulos e registra os valores liquidados| RF09, RN11, RN44 |
 | 33 | CONTA_FINANCEIRA|Representa contas bancárias e caixas utilizados pelo clube|RF23|
 | 34 | ITEM_EXTRATO |Registra lançamentos bancários utilizados na conciliação |RF24|
 | 35 | CONCILIACAO         |Relaciona lançamentos do extrato às operações financeiras para conferir os valores|RF24, RN53|
+| 36 | CEP                    | Centraliza logradouro, bairro, cidade e estado dos endereços                               | RN25             |
+| 37 | MEDICO                 | Identifica o médico responsável pelos exames médicos                                       | RF18             |
+| 38 | TURMA_HORARIO          | Registra os dias e horários de cada turma                                                  | RF07             |
 | 39 | CEP                 | Centraliza logradouro, bairro, cidade e estado, evitando repetição nos endereços | RN25     |
 | 40 | MEDICO              | Identifica o médico responsável pelos exames médicos                             | RF18     |
 | 41 | TURMA_HORARIO       | Registra os dias e horários de funcionamento de cada turma                       | RF07             |
@@ -765,12 +791,12 @@ A alteração foi feita porque:
 ### 10.1 PESSOA
 
 | Atributo        | Tipo          | Obrigatório | Único | Descrição                   |
-| --------------- | ------------- | ----------- | ----- | --------------------------- |
-| CPF       | Identificador | Sim         | Sim   | Identificador da pessoa     |
+|-----------------|---------------|-------------|-------|-----------------------------|
+| CPF             | Identificador | Sim         | Sim   | Identificador da pessoa     |
 | nome_completo   | Texto(100)    | Sim         | Não   | Nome completo               |
 | data_nascimento | Data          | Sim         | Não   | Data de nascimento          |
 | telefone        | Texto(15)     | Não         | Não   | Telefone de contato         |
-| email           | Texto(100)    | Não         | Não   | E-mail                      |
+| email           | Texto(100)    | Sim         | Sim   | E-mail                      |
 | status_pessoa   | Texto(10)     | Sim         | Não   | Ativa, Inativa ou Bloqueada |
 | data_cadastro   | Data/Hora     | Sim         | Não   | Data de cadastro            |
 
@@ -789,16 +815,18 @@ A alteração foi feita porque:
 
 ### 10.3 DEPENDENTE
 
-| Atributo                | Tipo          | Obrigatório | Único | Descrição                             |
-| ----------------------- | ------------- | ----------- | ----- | ------------------------------------- |
-| id_dependente           | Identificador | Sim         | Sim   | PK única                              |
-| id_socio_titular        | Referência    | Sim         | Não   | FK para SÓCIO                         |
-| CPF                     | Referência    | Sim         | Não   | FK para PESSOA dependente             |
-| tipo_dependencia        | Texto(20)     | Sim         | Não   | Cônjuge, Filho(a), Enteado(a) ou Pais |
-| data_inicio_dependencia | Data          | Sim         | Não   | Início do vínculo                     |
-| data_fim_dependencia    | Data          | Não         | Não   | Fim do vínculo                        |
-| situacao_dependente     | Texto(10)     | Sim         | Não   | Ativo ou Encerrado                    |
-| observacao              | Texto(500)    | Não         | Não   | Observações                           |
+| Atributo                | Tipo          | Obrigatório | Único       | Descrição                                                         |
+|-------------------------|---------------|-------------|-------------|-------------------------------------------------------------------|
+| id_socio_titular        | Referência    | Sim         | Em conjunto | FK para SÓCIO; compõe a PK                                        |
+| id_dependente           | Identificador | Sim         | Em conjunto | Sequencial do vínculo dentro do titular; compõe a PK              |
+| CPF                     | Referência    | Sim         | Não         | FK para PESSOA dependente                                         |
+| tipo_dependencia        | Texto(20)     | Sim         | Não         | Cônjuge, Filho(a), Enteado(a) ou Pais                             |
+| data_inicio_dependencia | Data          | Sim         | Não         | Início do vínculo                                                 |
+| data_fim_dependencia    | Data          | Não         | Não         | Fim do vínculo                                                    |
+| situacao_dependente     | Texto(10)     | Sim         | Não         | ATIVO ou INATIVO                                                  |
+| observacao              | Texto(500)    | Não         | Não         | Observações                                                       |
+
+PK composta: (id_socio_titular, id_dependente).
 
 ### 10.4 FUNCIONÁRIO
 
@@ -820,9 +848,10 @@ A alteração foi feita porque:
 ### 10.5 ATLETA
 
 | Atributo              | Tipo          | Obrigatório | Único | Descrição                                          |
-| --------------------- | ------------- | ----------- | ----- | -------------------------------------------------- |
+|-----------------------|---------------|-------------|-------|----------------------------------------------------|
 | id_atleta             | Identificador | Sim         | Sim   | Identificador                                      |
-| CPF                   | Referência    | Sim         | Sim   | FK para PESSOA                                     |
+| CPF                   | Referência    | Sim         | Não   | FK para PESSOA                                     |
+| id_socio              | Referência    | Não         | Não   | FK para SÓCIO, opcional                            |
 | nivel_atleta          | Texto(15)     | Sim         | Não   | Iniciante, Intermediário, Avançado ou Profissional |
 | registro_federacao    | Texto(30)     | Não         | Não   | Registro esportivo                                 |
 | data_inicio_atividade | Data          | Sim         | Não   | Início da atividade                                |
@@ -853,20 +882,20 @@ A alteração foi feita porque:
 
 ### 10.8 DEPARTAMENTO
 
-| Atributo              | Tipo          | Obrigatório | Único | Descrição            |
-| --------------------- | ------------- | ----------- | ----- | -------------------- |
-| id_departamento       | Identificador | Sim         | Sim   | Identificador        |
-| nome_departamento     | Texto(50)     | Sim         | Sim   | Nome do departamento |
-| descricao             | Texto(500)    | Não         | Não   | Descrição            |
-| id_responsavel        | Referência    | Não         | Não   | FK para FUNCIONÁRIO  |
-| situacao_departamento | Texto(10)     | Sim         | Não   | Ativo ou Inativo     |
+| Atributo              | Tipo          | Obrigatório | Único | Descrição                                                              |
+|-----------------------|---------------|-------------|-------|------------------------------------------------------------------------|
+| id_departamento       | Identificador | Sim         | Sim   | Identificador                                                          |
+| nome_departamento     | Texto(50)     | Sim         | Sim   | Nome do departamento                                                   |
+| descricao             | Texto(500)    | Não         | Não   | Descrição                                                              |
+| id_responsavel        | Identificador | Não         | Sim   | Identificador do funcionário responsável; sem FK, validado pela aplicação |
+| situacao_departamento | Texto(10)     | Sim         | Não   | Ativo ou Inativo                                                       |
 
 ### 10.9 DEPENDENCIA_FISICA
 
 | Atributo             | Tipo          | Obrigatório | Único | Descrição                            |
-| -------------------- | ------------- | ----------- | ----- | ------------------------------------ |
+|----------------------|---------------|-------------|-------|--------------------------------------|
 | id_dependencia       | Identificador | Sim         | Sim   | Identificador                        |
-| nome_dependencia     | Texto(50)     | Sim         | Sim   | Nome da dependência                  |
+| nome_dependencia     | Texto(50)     | Sim         | Não   | Nome da dependência                  |
 | tipo_dependencia     | Texto(20)     | Sim         | Não   | Quadra, Piscina, Salão ou Campo      |
 | capacidade_maxima    | Inteiro       | Não         | Não   | Capacidade                           |
 | situacao_dependencia | Texto(15)     | Sim         | Não   | Disponível, Manutenção ou Desativada |
@@ -932,17 +961,20 @@ A alteração foi feita porque:
 
 ### 10.14 PAGAMENTO
 
-| Atributo           | Tipo          | Obrigatório | Único | Descrição                       |
-| ------------------ | ------------- | ----------- | ----- | ------------------------------- |
-| id_pagamento       | Identificador | Sim         | Sim   | Identificador                   |
-| id_conta_financeira| Referência    | Sim         | Não   | FK para CONTA_FINANCEIRA        |
-| data_pagamento     | Data          | Sim         | Não   | Data                            |
-| valor_pago         | Decimal(10,2) | Sim         | Não   | Valor pago                      |
-| forma_pagamento    | Texto(20)     | Sim         | Não   | Boleto, Cartão, PIX ou Dinheiro |
-| numero_recibo      | Texto(20)     | Sim         | Sim   | Número do comprovante ou recibo |
-| situacao_pagamento | Texto(15)     | Sim         | Não   | Confirmado ou Estornado         |
-| observacao         | Texto(500)    | Não         | Não   | Observações                     |
-
+| Atributo               | Tipo          | Obrigatório | Único | Descrição                                                        |
+|------------------------|---------------|-------------|-------|------------------------------------------------------------------|
+| id_pagamento           | Identificador | Sim         | Sim   | Identificador                                                    |
+| id_conta_financeira    | Referência    | Sim         | Não   | FK para CONTA_FINANCEIRA                                         |
+| id_contraparte         | Referência    | Sim         | Não   | FK para CONTRAPARTE_FINANCEIRA                                   |
+| id_funcionario         | Referência    | Sim         | Não   | FK para FUNCIONÁRIO responsável                                  |
+| id_pagamento_estornado | Referência    | Não         | Sim   | FK para PAGAMENTO original; preenchida só nos registros de estorno |
+| data_pagamento         | Data          | Sim         | Não   | Data                                                             |
+| valor_pago             | Decimal(10,2) | Sim         | Não   | Valor positivo                                                   |
+| sentido                | Texto(10)     | Sim         | Não   | ENTRADA ou SAIDA                                                 |
+| forma_pagamento        | Texto(20)     | Sim         | Não   | BOLETO, CARTAO, PIX, DINHEIRO ou TRANSFERENCIA                   |
+| numero_recibo          | Texto(20)     | Sim         | Sim   | Número do comprovante ou recibo                                  |
+| situacao_pagamento     | Texto(15)     | Sim         | Não   | PENDENTE, CONFIRMADO, ESTORNADO ou ESTORNO                       |
+| observacao             | Texto(500)    | Não         | Não   | Observações                                                      |
 
 ### 10.15 TURMA
 
@@ -989,16 +1021,15 @@ A alteração foi feita porque:
 | situacao_funcao     | Texto(10)     | Sim         | Não   | Ativa ou Inativa  |
 
 ### 10.19 ATLETA_MODALIDADE
+| Atributo         | Tipo          | Obrigatório | Único       | Descrição                  |
+|------------------|---------------|-------------|-------------|----------------------------|
+| id_atleta        | Referência    | Sim         | Em conjunto | FK para ATLETA; compõe a PK |
+| id_modalidade    | Referência    | Sim         | Em conjunto | FK para MODALIDADE; compõe a PK |
+| data_inicio      | Data          | Sim         | Em conjunto | Início da prática; compõe a PK |
+| data_fim         | Data          | Não         | Não         | Encerramento               |
+| situacao_vinculo | Texto(15)     | Sim         | Não         | Ativo, Inativo ou Suspenso |
+| observacao       | Texto(500)    | Não         | Não         | Observações                |
 
-| Atributo             | Tipo          | Obrigatório | Único | Descrição                  |
-| -------------------- | ------------- | ----------- | ----- | -------------------------- |
-| id_atleta_modalidade | Identificador | Sim         | Sim   | PK composta                |
-| id_atleta            | Referência    | Sim         | Não   | FK para ATLETA             |
-| id_modalidade        | Referência    | Sim         | Não   | FK para MODALIDADE         |
-| data_inicio          | Data          | Sim         | Não   | Início da prática          |
-| data_fim             | Data          | Não         | Não   | Encerramento               |
-| situacao_vinculo     | Texto(15)     | Sim         | Não   | Ativo, Inativo ou Suspenso |
-| observacao           | Texto(500)    | Não         | Não   | Observações                |
 
 ### 10.20 TURMA_PROFESSOR
 
@@ -1012,17 +1043,17 @@ A alteração foi feita porque:
 | situacao_vinculo   | Texto(15)     | Sim         | Não   | Ativo ou Inativo         |
 | observacao         | Texto(500)    | Não         | Não   | Observações              |
 
-### 10.21 ENDEREÇO
+### 10.20 TURMA_PROFESSOR
 
-| Atributo           | Tipo          | Obrigatório | Único | Descrição                       |
-| ------------------ | ------------- | ----------- | ----- | ------------------------------- |
-| id_endereco        | Identificador | Sim         | Sim   | Identificador                   |
-| CPF                | Referência    | Sim         | Não   | FK para PESSOA                  |
-| numero             | Texto(10)     | Sim         | Não   | Número                          |
-| complemento        | Texto(50)     | Não         | Não   | Complemento                     |
-| cep                | Texto(8)      | Sim         | Não   | CEP                             |
-| tipo_endereco      | Texto(15)     | Sim         | Não   | Residencial, Comercial ou Outro |
-| endereco_principal | Booleano      | Sim         | Não   | Indica o endereço principal     |
+| Atributo         | Tipo          | Obrigatório | Único       | Descrição                   |
+|------------------|---------------|-------------|-------------|-----------------------------|
+| id_turma         | Referência    | Sim         | Em conjunto | FK para TURMA; compõe a PK  |
+| id_funcionario   | Referência    | Sim         | Em conjunto | FK para FUNCIONÁRIO; compõe a PK |
+| data_inicio      | Data          | Sim         | Em conjunto | Início; compõe a PK         |
+| data_fim         | Data          | Não         | Não         | Encerramento                |
+| situacao_vinculo | Texto(15)     | Sim         | Não         | Ativo ou Inativo            |
+| observacao       | Texto(500)    | Não         | Não         | Observações                 |
+
 
 ### 10.22 REGISTRO_ACESSO
 
@@ -1039,13 +1070,13 @@ A alteração foi feita porque:
 ### 10.23 VENDA
 
 | Atributo        | Tipo          | Obrigatório | Único | Descrição                       |
-| --------------- | ------------- | ----------- | ----- | ------------------------------- |
+|-----------------|---------------|-------------|-------|---------------------------------|
 | id_venda        | Identificador | Sim         | Sim   | Identificador                   |
 | CPF             | Referência    | Sim         | Não   | FK para PESSOA compradora       |
 | id_funcionario  | Referência    | Sim         | Não   | FK para FUNCIONÁRIO responsável |
 | data_venda      | Data/Hora     | Sim         | Não   | Data e horário                  |
 | valor_total     | Decimal(10,2) | Sim         | Não   | Valor total                     |
-| forma_pagamento | Texto(15)     | Sim         | Não   | PIX, Dinheiro ou Cartão         |
+| forma_pagamento | Texto(15)     | Sim         | Não   | PIX, DINHEIRO, CARTAO ou A_PRAZO|
 | situacao_venda  | Texto(15)     | Sim         | Não   | Concluída ou Cancelada          |
 | observacao      | Texto(500)    | Não         | Não   | Observações                     |
 
@@ -1063,17 +1094,16 @@ A alteração foi feita porque:
 | observacao        | Texto(500)    | Não         | Não   | Observações      |
 
 ### 10.25 ITEM_VENDA
+| Atributo       | Tipo          | Obrigatório | Único       | Descrição                          |
+|----------------|---------------|-------------|-------------|------------------------------------|
+| id_venda       | Referência    | Sim         | Em conjunto | FK para VENDA; compõe a PK         |
+| id_produto     | Referência    | Sim         | Em conjunto | FK para PRODUTO; compõe a PK       |
+| quantidade     | Inteiro       | Sim         | Não         | Quantidade                         |
+| valor_unitario | Decimal(10,2) | Sim         | Não         | Valor no momento da venda          |
+| subtotal       | Decimal(10,2) | Sim         | Não         | Quantidade multiplicada pelo valor |
+| observacao     | Texto(500)    | Não         | Não         | Observações                        |
 
-| Atributo       | Tipo          | Obrigatório | Único | Descrição                          |
-| -------------- | ------------- | ----------- | ----- | ---------------------------------- |
-| id_item_venda  | Identificador | Sim         | Sim   | Identificador                      |
-| id_venda       | Referência    | Sim         | Não   | FK para VENDA                      |
-| id_produto     | Referência    | Sim         | Não   | FK para PRODUTO                    |
-| quantidade     | Inteiro       | Sim         | Não   | Quantidade                         |
-| valor_unitario | Decimal(10,2) | Sim         | Não   | Valor no momento da venda          |
-| subtotal       | Decimal(10,2) | Sim         | Não   | Quantidade multiplicada pelo valor |
-| observacao     | Texto(500)    | Não         | Não   | Observações                        |
-
+PK composta: (id_venda, id_produto).
 ### 10.26 ESTOQUE
 
 | Atributo              | Tipo          | Obrigatório | Único | Descrição                     |
@@ -1098,16 +1128,16 @@ A alteração foi feita porque:
 
 ### 10.28 CONVITE_VISITANTE
 
-| Atributo            | Tipo          | Obrigatório | Único | Descrição                               |
-| ------------------- | ------------- | ----------- | ----- | --------------------------------------- |
-| id_convite          | Identificador | Sim         | Sim   | Identificador                           |
-| id_socio            | Referência    | Sim         | Não   | FK para SÓCIO responsável               |
-| id_pessoa_visitante | Referência    | Sim         | Não   | FK para PESSOA visitante                |
-| codigo_convite      | Texto(20)     | Sim         | Sim   | Código                                  |
-| data_emissao        | Data/Hora     | Sim         | Não   | Emissão                                 |
-| data_validade       | Data          | Sim         | Não   | Validade                                |
-| situacao_convite    | Texto(15)     | Sim         | Não   | Ativo, Utilizado, Expirado ou Cancelado |
-| observacao          | Texto(500)    | Não         | Não   | Observações                             |
+| Atributo         | Tipo          | Obrigatório | Único | Descrição                               |
+|------------------|---------------|-------------|-------|-----------------------------------------|
+| id_convite       | Identificador | Sim         | Sim   | Identificador                           |
+| id_socio         | Referência    | Sim         | Não   | FK para SÓCIO responsável               |
+| cpf_visitante    | Referência    | Sim         | Não   | FK para PESSOA visitante                |
+| codigo_convite   | Texto(20)     | Sim         | Sim   | Código                                  |
+| data_emissao     | Data/Hora     | Sim         | Não   | Emissão                                 |
+| data_validade    | Data          | Sim         | Não   | Validade                                |
+| situacao_convite | Texto(15)     | Sim         | Não   | Ativo, Utilizado, Expirado ou Cancelado |
+| observacao       | Texto(500)    | Não         | Não   | Observações                             |
 
 ### 10.29 OCORRENCIA
 
@@ -1124,91 +1154,88 @@ A alteração foi feita porque:
 | situacao_ocorrencia | Texto(20)     | Sim         | Não   | Aberta, Em análise ou Resolvida      |
 | providencia_tomada  | Texto(500)    | Não         | Não   | Medidas tomadas                      |
 
+### 10.30 CONTRAPARTE_FINANCEIRA
 
-
-
-
-### 10.30CONTRAPARTE_FINANCEIRA
-
-| Atributo            | Tipo          | Obrigatório | Único | Descrição                                         |
-| ------------------- | ------------- | ----------- | ----- | ------------------------------------------------- |
-| id_contraparte      | Identificador | Sim         | Sim   | Identificador do cliente, fornecedor ou favorecido|
-| CPF                 | Referência    | Não         | Sim   | FK para PESSOA, quando houver cadastro vinculado  |
-| tipo_pessoa         | Texto(10)     | Sim         | Não   | Física ou Jurídica                                |
+| Atributo       | Tipo          | Obrigatório | Único | Descrição                                          |
+|----------------|---------------|-------------|-------|----------------------------------------------------|
+| id_contraparte | Identificador | Sim         | Sim   | Identificador do cliente, fornecedor ou favorecido |
+| CPF            | Referência    | Não         | Não   | FK para PESSOA, quando pessoa física               |
+| cnpj           | Texto(14)     | Não         | Sim   | CNPJ, quando pessoa jurídica                       |
+| razao_social   | Texto(150)    | Não         | Não   | Razão social, quando pessoa jurídica               |
+| tipo_pessoa    | Texto(2)      | Sim         | Não   | PF ou PJ                                           |
 
 
 
 ### 10.31 TITULO_FINANCEIRO
 
-| Atributo            | Tipo          | Obrigatório | Único | Descrição                                                      |
-| ------------------- | ------------- | ----------- | ----- | -------------------------------------------------------------- |
-| id_titulo           | Identificador | Sim         | Sim   | Identificador da conta a receber ou a pagar                    |
-| id_contraparte      | Referência    | Sim         | Não   | FK para CONTRAPARTE_FINANCEIRA                                 |
-| id_mensalidade      | Referência    | Não         | Sim   | FK para MENSALIDADE, quando for a origem da cobrança           |
-| id_inscricao        | Referência    | Não         | Sim   | FK para INSCRIÇÃO, quando for a origem da cobrança             |
-| id_venda            | Referência    | Não         | Sim   | FK para VENDA, quando for a origem da cobrança                 |
-| natureza            | Texto(10)     | Sim         | Não   | Receber ou Pagar                                               |
-| origem              | Texto(20)     | Sim         | Não   | Mensalidade, Evento, Venda ou Manual                           |
-| descricao           | Texto(200)    | Sim         | Não   | Descrição da cobrança ou despesa                               |
-| data_emissao        | Data          | Sim         | Não   | Data de criação do título financeiro                           |
-| data_vencimento     | Data          | Sim         | Não   |Data prevista para pagamento ou recebimento                     |
-| valor_original      | Decimal(10,2) | Sim         | Não   | Valor inicial da obrigação financeira                          |
-| valor_acrescimos    | Decimal(10,2) | Sim         | Não   | Juros e acréscimos, com padrão zero                            |
-| valor_descontos     | Decimal(10,2) | Sim         | Não   | Descontos concedidos, com padrão zero                          |
-| situacao            | Texto(15)     | Sim         | Não   | Aberto, Parcial, Liquidado ou Cancelado                        |
-| saldo_aberto        | Derivado      | Sim         | Não   | Valor devido menos as baixas efetivas, considerando os estornos|
+| Atributo         | Tipo          | Obrigatório | Único | Descrição                                                                 |
+|------------------|---------------|-------------|-------|---------------------------------------------------------------------------|
+| id_titulo        | Identificador | Sim         | Sim   | Identificador da conta a receber ou a pagar                               |
+| id_contraparte   | Referência    | Sim         | Não   | FK para CONTRAPARTE_FINANCEIRA                                            |
+| id_mensalidade   | Referência    | Não         | Sim   | FK para MENSALIDADE, quando for a origem da cobrança                      |
+| id_inscricao     | Referência    | Não         | Sim   | FK para INSCRIÇÃO, quando for a origem da cobrança                        |
+| id_venda         | Referência    | Não         | Sim   | FK para VENDA, quando for a origem da cobrança                            |
+| natureza         | Texto(10)     | Sim         | Não   | Receber ou Pagar                                                          |
+| origem           | Texto(20)     | Sim         | Não   | MENSALIDADE, INSCRICAO, VENDA, RECEITA_MANUAL ou DESPESA                  |
+| descricao        | Texto(200)    | Não         | Não   | Descrição da cobrança ou despesa                                          |
+| data_emissao     | Data          | Sim         | Não   | Data de criação do título financeiro                                      |
+| data_vencimento  | Data          | Sim         | Não   | Data prevista para pagamento ou recebimento                               |
+| valor_original   | Decimal(10,2) | Sim         | Não   | Valor inicial da obrigação financeira                                     |
+| valor_acrescimos | Decimal(10,2) | Sim         | Não   | Juros e acréscimos, com padrão zero                                       |
+| valor_descontos  | Decimal(10,2) | Sim         | Não   | Descontos concedidos, com padrão zero                                     |
+| situacao         | Texto(15)     | Sim         | Não   | Aberto, Parcial, Liquidado ou Cancelado                                   |
+| saldo_aberto     | Decimal(10,2) | Sim         | Não   | Valor devido menos as baixas de pagamentos confirmados; coluna física mantida por trigger ou aplicação |
+
 
 ### 10.32 BAIXA_FINANCEIRA
 
-| Atributo            | Tipo          | Obrigatório | Único | Descrição                                        |
-| ------------------- | ------------- | ----------- | ----- | ------------------------------------------------ |
-| id_titulo           | Referência    | Sim         | Não   | FK para TITULO_FINANCEIRO                        |
-| id_pagamento        | Referência    | Sim         | Não   | FK para PAGAMENTO                                |
-| valor_baixado       | Decimal(10,2) | Sim         | Não   | Valor positivo aplicado ao título                |
-| data_baixa          | Data/Hora     | Sim         | Não   | Data e horário do registro da baixa              |
-| id_baixa_origem     | Referência    | Não         | Não   | FK para BAIXA_FINANCEIRA que está sendo estornada|
+| Atributo      | Tipo          | Obrigatório | Único | Descrição                           |
+|---------------|---------------|-------------|-------|-------------------------------------|
+| id_titulo     | Referência    | Sim         | Não   | FK para TITULO_FINANCEIRO           |
+| id_pagamento  | Referência    | Sim         | Não   | FK para PAGAMENTO                   |
+| valor_baixa   | Decimal(10,2) | Sim         | Não   | Valor positivo aplicado ao título   |
+| data_baixa    | Data/Hora     | Sim         | Não   | Data e horário do registro da baixa |
 
 
 ### 10.33 CONTA_FINANCEIRA
 
 | Atributo            | Tipo          | Obrigatório | Único | Descrição                                       |
-| ------------------- | ------------- | ----------- | ----- | ----------------------------------------------- |
+|---------------------|---------------|-------------|-------|-------------------------------------------------|
 | id_conta_financeira | Identificador | Sim         | Sim   | Identificador                                   |
-| nome_conta          | Texto(80)     | Sim         | Sim   |Nome utilizado para identificar a conta          |
+| nome_conta          | Texto(80)     | Sim         | Sim   | Nome utilizado para identificar a conta         |
 | tipo_conta          | Texto(15)     | Sim         | Não   | Caixa ou Bancária                               |
-| banco               | Texto(80)     | Sim         | Não   | Nome da instituição financeira                  |
-| agencia             | Texto(20)     | Sim         | Não   | Número da agência bancária                      |
-| numero_conta        | Texto(30)     | Sim         | Não   | Número da conta com dígito                      |
+| banco               | Texto(80)     | Não         | Não   | Nome da instituição financeira                  |
+| agencia             | Texto(20)     | Não         | Não   | Número da agência bancária                      |
+| numero_conta        | Texto(30)     | Não         | Não   | Número da conta com dígito                      |
 | saldo_inicial       | Decimal(12,2) | Sim         | Não   | Saldo existente antes das operações controladas |
 | situacao            | Texto(10)     | Sim         | Não   | Ativa ou Inativa                                |
 
-
 ### 10.34 ITEM_EXTRATO
 
-| Atributo             | Tipo          | Obrigatório | Único | Descrição                                 |
-| -------------------- | ------------- | ----------- | ----- | ----------------------------------------- |
-| id_item_extrato      | Identificador | Sim         | Sim   | Identificador                             |
-| id_conta_financeira  | Referência    | Sim         | Não   | FK para CONTA_FINANCEIRA                  | 
-| identificador_externo| Texto(100)    | Sim         | Não   | Código do lançamento informado pelo banco |
-| data_lancamento      | Data/Hora     | Sim         | Não   | Data e horário do lançamento bancário     |
-| sentido              | Texto(10)     | Sim         | Não   | Crédito ou Débito                         |
-| valor                | Decimal(10,2) | Sim         | Não   |Valor positivo do lançamento               |
-| descricao            | Texto(200)    | Não         | Não   | Descrição apresentada no extrato bancário |
-| situacao_conciliacao | Derivado      | Sim         | Não   | Não conciliado, Parcial ou Conciliado     |
-
+| Atributo              | Tipo          | Obrigatório | Único | Descrição                                                           |
+|-----------------------|---------------|-------------|-------|---------------------------------------------------------------------|
+| id_item_extrato       | Identificador | Sim         | Sim   | Identificador                                                       |
+| id_conta_financeira   | Referência    | Sim         | Não   | FK para CONTA_FINANCEIRA                                            |
+| identificador_externo | Texto(100)    | Sim         | Não   | Código do lançamento informado pelo banco                           |
+| data_lancamento       | Data/Hora     | Sim         | Não   | Data e horário do lançamento bancário                               |
+| sentido               | Texto(10)     | Sim         | Não   | ENTRADA ou SAIDA                                                    |
+| valor                 | Decimal(12,2) | Sim         | Não   | Valor positivo do lançamento                                        |
+| descricao             | Texto(200)    | Não         | Não   | Descrição apresentada no extrato bancário                           |
+| situacao_conciliacao  | Texto(15)     | Sim         | Não   | PENDENTE, PARCIAL, CONCILIADO ou DIVERGENTE; coluna física atualizada a cada conciliação |
 
 
 
 ### 10.35 CONCILIACAO
 
-| Atributo            | Tipo          | Obrigatório | Único | Descrição                                                            |
-| ------------------- | ------------- | ----------- | ----- | -------------------------------------------------------------------- |
-| id_conciliacao      | Identificador | Sim         | Sim   | Identificador                                                        |
-| id_item_extrato     | Referência    | Sim         | Não   | FK para ITEM_EXTRATO                                                 |
-| id_pagamento        | Referência    | Não         | Não   | FK para PAGAMENTO                                                    |
-| id_funcionario      | Referência    | Sim         | Não   | FK para FUNCIONÁRIO responsável pela conferência                     |
-| valor_conciliado    | Decimal(10,2) | Sim         | Não   | Valor positivo associado entre o lançamento e a operação financeira  |
-| data_conciliacao    | Data/Hora     | Sim         | Não   | Data e horário da conferência                                        |
+| Atributo         | Tipo          | Obrigatório | Único | Descrição                                                           |
+|------------------|---------------|-------------|-------|---------------------------------------------------------------------|
+| id_conciliacao   | Identificador | Sim         | Sim   | Identificador                                                       |
+| id_item_extrato  | Referência    | Sim         | Não   | FK para ITEM_EXTRATO                                                |
+| id_pagamento     | Referência    | Sim         | Não   | FK para PAGAMENTO                                                   |
+| id_funcionario   | Referência    | Sim         | Não   | FK para FUNCIONÁRIO responsável pela conferência                    |
+| valor_conciliado | Decimal(10,2) | Sim         | Não   | Valor positivo associado entre o lançamento e a operação financeira |
+| data_conciliacao | Data/Hora     | Sim         | Não   | Data e horário da conferência                                       |
+| observacao       | Texto(500)    | Não         | Não   | Observações                                                         |
 
 ### 10.36 CEP
 
@@ -1244,139 +1271,127 @@ A alteração foi feita porque:
 | -- | ----------------------- | ------------- | --------------------- | ------------- | ------------------------- | -------------- |
 | 1  | PESSOA                  | (0,1)         | É                     | (1,1)         | SÓCIO                     | Especialização |
 | 2  | PESSOA                  | (0,1)         | É                     | (1,1)         | FUNCIONÁRIO               | Especialização |
-| 3  | PESSOA                  | (0,1)         | É                     | (1,1)         | ATLETA                    | Especialização |
+| 3  | PESSOA                  | (0,N)         | POSSUI                | (1,1)         | ATLETA                    | 1:N            |
 | 4  | SÓCIO                   | (0,N)         | POSSUI                | (1,1)         | DEPENDENTE                | 1:N            |
 | 5  | SÓCIO                   | (1,1)         | PERTENCE A            | (0,N)         | CATEGORIA_SOCIO           | N:1            |
 | 6  | FUNCIONÁRIO             | (1,1)         | TRABALHA EM           | (0,N)         | DEPARTAMENTO              | N:1            |
-| 7  | DEPARTAMENTO            | (0,1)         | É GERENCIADO POR      | (0,1)         | FUNCIONÁRIO               | 1:1 opcional   |
-| 8  | ATLETA                  | (0,N)         | PRATICA               | (0,N)         | MODALIDADE                | N:N            |
-| 9  | MODALIDADE              | (0,N)         | POSSUI                | (1,1)         | TURMA                     | 1:N            |
-| 10 | ATLETA                  | (0,N)         | MATRICULA-SE EM       | (0,N)         | TURMA                     | N:N            |
-| 11 | FUNCIONÁRIO             | (0,N)         | MINISTRA              | (0,N)         | TURMA                     | N:N            |
-| 12 | SÓCIO                   | (0,N)         | GERA                  | (1,1)         | MENSALIDADE               | 1:N            |
-| 13 | SÓCIO                   | (0,N)         | REALIZA               | (1,1)         | RESERVA                   | 1:N            |
-| 14 | DEPENDENCIA_FISICA      | (0,N)         | RECEBE                | (1,1)         | RESERVA                   | 1:N            |
-| 15 | EVENTO                  | (0,N)         | RECEBE                | (1,1)         | INSCRIÇÃO                 | 1:N            |
-| 16 | PESSOA                  | (0,N)         | REALIZA               | (1,1)         | INSCRIÇÃO                 | 1:N            |
-| 17 | SÓCIO                   | (0,N)         | OCUPA                 | (1,1)         | DIRETORIA                 | 1:N            |
-| 18 | DIRETORIA               | (1,1)         | UTILIZA               | (0,N)         | FUNCAO_DIRETORIA          | N:1            |
-| 19 | PESSOA                  | (1,1)         | POSSUI                | (0,N)         | ENDEREÇO                  | 1:N            |
-| 20 | PESSOA                  | (1,1)         | POSSUI                | (0,N)         | REGISTRO_ACESSO           | 1:N            |
-| 21 | SÓCIO                   | (1,1)         | EMITE                 | (0,N)         | CONVITE_VISITANTE         | 1:N            |
-| 22 | PESSOA                  | (1,1)         | É VISITANTE EM        | (0,N)         | CONVITE_VISITANTE         | 1:N            |
-| 23 | PESSOA                  | (1,1)         | REALIZA               | (0,N)         | EXAME_MEDICO              | 1:N            |
-| 24 | PESSOA                  | (1,1)         | REALIZA               | (0,N)         | VENDA                     | 1:N            |
-| 25 | FUNCIONÁRIO             | (1,1)         | REGISTRA              | (0,N)         | VENDA                     | 1:N            |
-| 26 | VENDA                   | (1,1)         | CONTÉM                | (1,N)         | ITEM_VENDA                | 1:N            |
-| 27 | ITEM_VENDA              | (1,1)         | REFERE-SE A           | (0,N)         | PRODUTO                   | N:1            |
-| 28 | PESSOA                  | (1,1)         | ESTÁ ENVOLVIDA EM     | (0,N)         | OCORRENCIA                | 1:N            |
-| 29 | FUNCIONÁRIO             | (1,1)         | REGISTRA              | (0,N)         | OCORRENCIA                | 1:N            |
-| 30 | DEPENDENCIA_FISICA      | (0,N)         | SEDIA                 | (0,1)         | EVENTO                    | 1:N            |
-| 31 | PESSOA                  | (0,N)         | POSSUI HISTÓRICO DE   | (1,1)         | DEPENDENTE                | 1:N            |
-| 32 | PRODUTO                 | (1,1)         | POSSUI                | (1,1)         | ESTOQUE                   | 1:1            |
-| 23 | PESSOA                  | (0,1)         | POSSUI CADASTRO COMO  | (0,1)         | CONTRAPARTE_FINANCEIRA    | 1:1            |
-| 24 | CONTRAPARTE_FINANCEIRA  | (0,N)         | POSSUI                | (1,1)         | TITULO_FINANCEIRO         | 1:N            |
-| 25 | MENSALIDADE             | (0,1)         | ORIGINA               | (0,1)         | TITULO_FINANCEIRO         | 1:1            |
-| 26 | INSCRIÇÃO               | (0,1)         | ORIGINA               | (0,1)         | TITULO_FINANCEIRO         | 1:1            |
-| 27 | VENDA                   | (0,1)         | ORIGINA               | (0,1)         | TITULO_FINANCEIRO         | 1:1            |
-| 28 | CONTA_FINANCEIRA        | (0,N)         | REGISTRA              | (1,1)         | PAGAMENTO                 | 1:N            |
-| 29 | TITULO_FINANCEIRO       | (0,N)         | RECEBE                | (1,1)         | BAIXA_FINANCEIRA          | 1:N            |
-| 30 | PAGAMENTO               | (0,N)         | POSSUI                | (1,1)         | BAIXA_FINANCEIRA          | 1:N            |
-| 31 | CONTA_FINANCEIRA        | (0,N)         | POSSUI                | (1,1)         | ITEM_EXTRATO              | 1:N            |
-| 32 | ITEM_EXTRATO            | (0,N)         | PARTICIPA DE          | (1,1)         | CONCILIACAO               | 1:N            |
-| 35 | BAIXA_FINANCEIRA        | (0,1)         | É ESTORNADA POR       | (0,1)         | BAIXA_FINANCEIRA          | 1:1            |
-| 36 | FUNCIONÁRIO             | (0,N)         | REALIZA               | (1,1)         | CONCILIACAO               | 1:N            |
-| 37 | CEP                     | (0,N)         | É USADO EM            | (1,1)         | ENDEREÇO                  | 1:N            |
-| 38 | MEDICO                  | (0,N)         | RESPONDE POR          | (1,1)         | EXAME_MEDICO              | 1:N            |
-| 39 | TURMA                   | (0,N)         | POSSUI                | (1,1)         | TURMA_HORARIO             | 1:N            |
-| 40 | CONVITE_VISITANTE       | (0,N)         | AUTORIZA              | (0,1)         | REGISTRO_ACESSO           | 1:N            |
-| 41 | OCORRENCIA              | (0,N)         | AGRUPA                | (0,1)         | OCORRENCIA                | 1:N            |
-| 42 | SÓCIO                   | (0,N)         | É RESPONSÁVEL POR     | (0,1)         | ATLETA                    | 1:N            |
-| 43 | PAGAMENTO               | (0,1)         | É ESTORNADO POR       | (0,1)         | PAGAMENTO                 | 1:1            |
-| 44 | CONTRAPARTE_FINANCEIRA  | (0,N)         | PARTICIPA DE          | (1,1)         | PAGAMENTO                 | 1:N            |
-| 45 | FUNCIONÁRIO             | (0,N)         | REGISTRA              | (1,1)         | PAGAMENTO                 | 1:N            |
+| 7  | ATLETA                  | (0,N)         | PRATICA               | (0,N)         | MODALIDADE                | N:N            |
+| 8  | MODALIDADE              | (0,N)         | POSSUI                | (1,1)         | TURMA                     | 1:N            |
+| 9  | ATLETA                  | (0,N)         | MATRICULA-SE EM       | (0,N)         | TURMA                     | N:N            |
+| 10 | FUNCIONÁRIO             | (0,N)         | MINISTRA              | (0,N)         | TURMA                     | N:N            |
+| 11 | SÓCIO                   | (0,N)         | GERA                  | (1,1)         | MENSALIDADE               | 1:N            |
+| 12 | SÓCIO                   | (0,N)         | REALIZA               | (1,1)         | RESERVA                   | 1:N            |
+| 13 | DEPENDENCIA_FISICA      | (0,N)         | RECEBE                | (1,1)         | RESERVA                   | 1:N            |
+| 14 | EVENTO                  | (0,N)         | RECEBE                | (1,1)         | INSCRIÇÃO                 | 1:N            |
+| 15 | PESSOA                  | (0,N)         | REALIZA               | (1,1)         | INSCRIÇÃO                 | 1:N            |
+| 16 | SÓCIO                   | (0,N)         | OCUPA                 | (1,1)         | DIRETORIA                 | 1:N            |
+| 17 | DIRETORIA               | (1,1)         | UTILIZA               | (0,N)         | FUNCAO_DIRETORIA          | N:1            |
+| 18 | PESSOA                  | (1,1)         | POSSUI                | (0,N)         | ENDEREÇO                  | 1:N            |
+| 19 | PESSOA                  | (1,1)         | POSSUI                | (0,N)         | REGISTRO_ACESSO           | 1:N            |
+| 20 | SÓCIO                   | (1,1)         | EMITE                 | (0,N)         | CONVITE_VISITANTE         | 1:N            |
+| 21 | PESSOA                  | (1,1)         | É VISITANTE EM        | (0,N)         | CONVITE_VISITANTE         | 1:N            |
+| 22 | PESSOA                  | (1,1)         | REALIZA               | (0,N)         | EXAME_MEDICO              | 1:N            |
+| 23 | PESSOA                  | (1,1)         | REALIZA               | (0,N)         | VENDA                     | 1:N            |
+| 24 | FUNCIONÁRIO             | (1,1)         | REGISTRA              | (0,N)         | VENDA                     | 1:N            |
+| 25 | VENDA                   | (1,1)         | CONTÉM                | (1,N)         | ITEM_VENDA                | 1:N            |
+| 26 | ITEM_VENDA              | (1,1)         | REFERE-SE A           | (0,N)         | PRODUTO                   | N:1            |
+| 27 | PESSOA                  | (1,1)         | ESTÁ ENVOLVIDA EM     | (0,N)         | OCORRENCIA                | 1:N            |
+| 28 | FUNCIONÁRIO             | (1,1)         | REGISTRA              | (0,N)         | OCORRENCIA                | 1:N            |
+| 29 | DEPENDENCIA_FISICA      | (0,N)         | SEDIA                 | (0,1)         | EVENTO                    | 1:N            |
+| 30 | PESSOA                  | (0,N)         | POSSUI HISTÓRICO DE   | (1,1)         | DEPENDENTE                | 1:N            |
+| 31 | PRODUTO                 | (1,1)         | POSSUI                | (1,1)         | ESTOQUE                   | 1:1            |
+| 32 | PESSOA                  | (0,N)         | POSSUI CADASTRO COMO  | (0,1)         | CONTRAPARTE_FINANCEIRA    | 1:N            |
+| 33 | CONTRAPARTE_FINANCEIRA  | (0,N)         | POSSUI                | (1,1)         | TITULO_FINANCEIRO         | 1:N            |
+| 34 | MENSALIDADE             | (0,1)         | ORIGINA               | (0,1)         | TITULO_FINANCEIRO         | 1:1            |
+| 35 | INSCRIÇÃO               | (0,1)         | ORIGINA               | (0,1)         | TITULO_FINANCEIRO         | 1:1            |
+| 36 | VENDA                   | (0,1)         | ORIGINA               | (0,1)         | TITULO_FINANCEIRO         | 1:1            |
+| 37 | CONTA_FINANCEIRA        | (0,N)         | REGISTRA              | (1,1)         | PAGAMENTO                 | 1:N            |
+| 38 | TITULO_FINANCEIRO       | (0,N)         | RECEBE                | (1,1)         | BAIXA_FINANCEIRA          | 1:N            |
+| 39 | PAGAMENTO               | (0,N)         | POSSUI                | (1,1)         | BAIXA_FINANCEIRA          | 1:N            |
+| 40 | CONTA_FINANCEIRA        | (0,N)         | POSSUI                | (1,1)         | ITEM_EXTRATO              | 1:N            |
+| 41 | ITEM_EXTRATO            | (0,N)         | PARTICIPA DE          | (1,1)         | CONCILIACAO               | 1:N            |
+| 42 | PAGAMENTO               | (0,N)         | PARTICIPA DE          | (1,1)         | CONCILIACAO               | 1:N            |
+| 43 | FUNCIONÁRIO             | (0,N)         | REALIZA               | (1,1)         | CONCILIACAO               | 1:N            |
+| 44 | CEP                     | (0,N)         | É USADO EM            | (1,1)         | ENDEREÇO                  | 1:N            |
+| 45 | MEDICO                  | (0,N)         | RESPONDE POR          | (1,1)         | EXAME_MEDICO              | 1:N            |
+| 46 | TURMA                   | (0,N)         | POSSUI                | (1,1)         | TURMA_HORARIO             | 1:N            |
+| 47 | CONVITE_VISITANTE       | (0,N)         | AUTORIZA              | (0,1)         | REGISTRO_ACESSO           | 1:N            |
+| 48 | OCORRENCIA              | (0,N)         | AGRUPA                | (0,1)         | OCORRENCIA                | 1:N            |
+| 49 | SÓCIO                   | (0,N)         | É RESPONSÁVEL POR     | (0,1)         | ATLETA                    | 1:N            |
+| 50 | PAGAMENTO               | (0,1)         | É ESTORNADO POR       | (0,1)         | PAGAMENTO                 | 1:1            |
+| 51 | CONTRAPARTE_FINANCEIRA  | (0,N)         | PARTICIPA DE          | (1,1)         | PAGAMENTO                 | 1:N            |
+| 52 | FUNCIONÁRIO             | (0,N)         | REGISTRA              | (1,1)         | PAGAMENTO                 | 1:N            |
 
 
 ### Entidades Associativas
 
-| Entidade Associativa | Relacionamento           | Atributos Próprios                                       |
-| -------------------- | ------------------------ | -------------------------------------------------------- |
-| ATLETA_MODALIDADE    | ATLETA e MODALIDADE      | data_inicio, data_fim, situacao_vinculo                  |
-| MATRÍCULA            | ATLETA e TURMA           | data_matricula, situacao_matricula                       |
-| TURMA_PROFESSOR      | FUNCIONÁRIO e TURMA      | data_inicio, data_fim, situacao_vinculo                  |
-| INSCRIÇÃO            | PESSOA e EVENTO          | data_inscricao, situacao_inscricao, pagamento_confirmado |
-| DIRETORIA            | SÓCIO e FUNCAO_DIRETORIA | data_inicio_mandato, data_fim_mandato, situacao_mandato  |
-| ITEM_VENDA           | VENDA e PRODUTO          | quantidade, valor_unitario, subtotal                     |
+| Entidade Associativa | Relacionamento           | Atributos Próprios                                                                            |
+|----------------------|--------------------------|-----------------------------------------------------------------------------------------------|
+| ATLETA_MODALIDADE    | ATLETA e MODALIDADE      | data_inicio, data_fim, situacao_vinculo                                                       |
+| MATRÍCULA            | ATLETA e TURMA           | data_matricula, situacao_matricula                                                            | 
+| TURMA_PROFESSOR      | FUNCIONÁRIO e TURMA      | data_inicio, data_fim, situacao_vinculo                                                       |
+| INSCRIÇÃO            | PESSOA e EVENTO          | data_inscricao, situacao_inscricao, pagamento_confirmado, preco_contratado, desconto_aplicado |
+| DIRETORIA            | SÓCIO e FUNCAO_DIRETORIA | data_inicio_mandato, data_fim_mandato, situacao_mandato                                       |
+| ITEM_VENDA           | VENDA e PRODUTO          | quantidade, valor_unitario, subtotal                                                          |  
 
 
 ## 12. Cardinalidades
 
-| Relacionamento                                | Representação                                           | Regra |
-| --------------------------------------------- | ------------------------------------------------------- | ----- |
-| PESSOA - É - SÓCIO                            | PESSOA (0,1) - É - SÓCIO (1,1)                          | RN01  |
-| PESSOA - É - FUNCIONÁRIO                      | PESSOA (0,1) - É - FUNCIONÁRIO (1,1)                    | RN13  |
-| PESSOA - É - ATLETA                           | PESSOA (0,1) - É - ATLETA (1,1)                         | RN14  |
-| SÓCIO - POSSUI - DEPENDENTE                   | SÓCIO (0,N) - POSSUI - DEPENDENTE (1,1)                 | RN02  |
-| PESSOA - POSSUI HISTÓRICO DE - DEPENDENTE     | PESSOA (0,N) - POSSUI HISTÓRICO DE - DEPENDENTE (1,1)   | RN45  |
-| SÓCIO - PERTENCE A - CATEGORIA                | SÓCIO (1,1) - PERTENCE A - CATEGORIA (0,N)              | RN03  |
-| FUNCIONÁRIO - TRABALHA EM - DEPARTAMENTO      | FUNCIONÁRIO (1,1) - TRABALHA EM - DEPARTAMENTO (0,N)    | RN13  |
-| DEPARTAMENTO - É GERENCIADO POR - FUNCIONÁRIO | DEPARTAMENTO (0,1) - GERENCIADO POR - FUNCIONÁRIO (0,1) | RN13  |
-| ATLETA - PRATICA - MODALIDADE                 | ATLETA (0,N) - PRATICA - MODALIDADE (0,N)               | RN05  |
-| MODALIDADE - POSSUI - TURMA                   | MODALIDADE (0,N) - POSSUI - TURMA (1,1)                 | RN06  |
-| ATLETA - MATRICULA-SE EM - TURMA              | ATLETA (0,N) - MATRICULA-SE EM - TURMA (0,N)            | RN05  |
-| FUNCIONÁRIO - MINISTRA - TURMA                | FUNCIONÁRIO (0,N) - MINISTRA - TURMA (0,N)              | RN20  |
-| SÓCIO - GERA - MENSALIDADE                    | SÓCIO (0,N) - GERA - MENSALIDADE (1,1)                  | RN10  |
-| SÓCIO - REALIZA - RESERVA                     | SÓCIO (0,N) - REALIZA - RESERVA (1,1)                   | RN07  |
-| DEPENDENCIA_FISICA - RECEBE - RESERVA         | DEPENDENCIA_FISICA (0,N) - RECEBE - RESERVA (1,1)       | RN15  |
-| EVENTO - RECEBE - INSCRIÇÃO                   | EVENTO (0,N) - RECEBE - INSCRIÇÃO (1,1)                 | RN12  |
-| PESSOA - REALIZA - INSCRIÇÃO                  | PESSOA (0,N) - REALIZA - INSCRIÇÃO (1,1)                | RN12  |
-| SÓCIO - OCUPA - DIRETORIA                     | SÓCIO (0,N) - OCUPA - DIRETORIA (1,1)                   | RN08  |
-| DIRETORIA - UTILIZA - FUNCAO_DIRETORIA        | DIRETORIA (1,1) - UTILIZA - FUNCAO_DIRETORIA (0,N)      | RN08  |
-| PESSOA - POSSUI - ENDEREÇO                    | PESSOA (1,1) - POSSUI - ENDEREÇO (0,N)                  | RN26  |
-| PESSOA - POSSUI - REGISTRO_ACESSO             | PESSOA (1,1) - POSSUI - REGISTRO_ACESSO (0,N)           | RN27  |
-| SÓCIO - EMITE - CONVITE_VISITANTE             | SÓCIO (1,1) - EMITE - CONVITE_VISITANTE (0,N)           | RN28  |
-| PESSOA - É VISITANTE EM - CONVITE_VISITANTE   | PESSOA (1,1) - É VISITANTE EM - CONVITE_VISITANTE (0,N) | RN29  |
-| PESSOA - REALIZA - EXAME_MEDICO               | PESSOA (1,1) - REALIZA - EXAME_MEDICO (0,N)             | RN30  |
-| PESSOA - REALIZA - VENDA                      | PESSOA (1,1) - REALIZA - VENDA (0,N)                    | RN31  |
-| FUNCIONÁRIO - REGISTRA - VENDA                | FUNCIONÁRIO (1,1) - REGISTRA - VENDA (0,N)              | RN32  |
-| VENDA - CONTÉM - ITEM_VENDA                   | VENDA (1,1) - CONTÉM - ITEM_VENDA (1,N)                 | RN33  |
-| ITEM_VENDA - REFERE-SE A - PRODUTO            | ITEM_VENDA (1,1) - REFERE-SE A - PRODUTO (0,N)          | RN34  |
-| PRODUTO - POSSUI - ESTOQUE                    | PRODUTO (0,1) - POSSUI - ESTOQUE (1,1)                  | RN35  |
-| PESSOA - ESTÁ ENVOLVIDA EM - OCORRENCIA       | PESSOA (1,1) - ESTÁ ENVOLVIDA EM - OCORRENCIA (0,N)     | RN36  |
-| FUNCIONÁRIO - REGISTRA - OCORRENCIA           | FUNCIONÁRIO (1,1) - REGISTRA - OCORRENCIA (0,N)         | RN37  |
-| DEPENDENCIA_FISICA - SEDIA - EVENTO           | DEPENDENCIA_FISICA (0,N) - SEDIA - EVENTO (0,1)         | RF11  |
-| ESTOQUE - REGISTRA - MOVIMENTACAO_ESTOQUE     | ESTOQUE (0,N) - REGISTRA - MOVIMENTACAO_ESTOQUE (1,1)   | RN46  |
-| FUNCIONÁRIO - REGISTRA - MOVIMENTACAO_ESTOQUE | FUNCIONÁRIO (0,N) - REGISTRA - MOVIMENTACAO_ESTOQUE (1,1) | RN46 |
-| ITEM_VENDA - ORIGINA - MOVIMENTACAO_ESTOQUE   | ITEM_VENDA (0,1) - ORIGINA - MOVIMENTACAO_ESTOQUE (0,1) | RN47  |
-| MOVIMENTACAO_ESTOQUE - É REFERÊNCIA DE - MOVIMENTACAO_ESTOQUE | MOVIMENTACAO_ESTOQUE (0,N) - É REFERÊNCIA DE - MOVIMENTACAO_ESTOQUE (0,1) | RN46 |
-| ITEM_VENDA - POSSUI - DEVOLUCAO_VENDA         | ITEM_VENDA (0,N) - POSSUI - DEVOLUCAO_VENDA (1,1)      | RN47  |
-| MOVIMENTACAO_ESTOQUE - É SAÍDA ORIGINAL DE - DEVOLUCAO_VENDA | MOVIMENTACAO_ESTOQUE (0,N) - É SAÍDA ORIGINAL DE - DEVOLUCAO_VENDA (1,1) | RN47 |
-| MOVIMENTACAO_ESTOQUE - REGISTRA RETORNO DE - DEVOLUCAO_VENDA | MOVIMENTACAO_ESTOQUE (0,1) - REGISTRA RETORNO DE - DEVOLUCAO_VENDA (0,1) | RN47 |
-| FUNCIONÁRIO - ATENDE - DEVOLUCAO_VENDA        | FUNCIONÁRIO (0,N) - ATENDE - DEVOLUCAO_VENDA (1,1)     | RN47  |
-| CATEGORIA_SOCIO - POSSUI PERMISSÃO EM - CATEGORIA_DEPENDENCIA | CATEGORIA_SOCIO (0,N) - POSSUI PERMISSÃO EM - CATEGORIA_DEPENDENCIA (1,1) | RN60 |
-| DEPENDENCIA_FISICA - É PERMITIDA EM - CATEGORIA_DEPENDENCIA | DEPENDENCIA_FISICA (0,N) - É PERMITIDA EM - CATEGORIA_DEPENDENCIA (1,1) | RN60 |
-| PESSOA - POSSUI CADASTRO COMO - CONTRAPARTE_FINANCEIRA | PESSOA (0,1) - POSSUI CADASTRO COMO - CONTRAPARTE_FINANCEIRA (0,1) | RN48 |
-| CONTRAPARTE_FINANCEIRA - POSSUI - TITULO_FINANCEIRO | CONTRAPARTE_FINANCEIRA (0,N) - POSSUI - TITULO_FINANCEIRO (1,1) | RN48 |
-| MENSALIDADE - ORIGINA - TITULO_FINANCEIRO     | MENSALIDADE (0,1) - ORIGINA - TITULO_FINANCEIRO (0,1) | RN48 |
-| INSCRIÇÃO - ORIGINA - TITULO_FINANCEIRO       | INSCRIÇÃO (0,1) - ORIGINA - TITULO_FINANCEIRO (0,1) | RN48 |
-| VENDA - ORIGINA - TITULO_FINANCEIRO           | VENDA (0,1) - ORIGINA - TITULO_FINANCEIRO (0,1) | RN48 |
-| CONTA_FINANCEIRA - REGISTRA - PAGAMENTO       | CONTA_FINANCEIRA (0,N) - REGISTRA - PAGAMENTO (1,1) | RN49 |
-| TITULO_FINANCEIRO - RECEBE - BAIXA_FINANCEIRA | TITULO_FINANCEIRO (0,N) - RECEBE - BAIXA_FINANCEIRA (1,1) | RN49 |
-| PAGAMENTO - POSSUI - BAIXA_FINANCEIRA         | PAGAMENTO (0,N) - POSSUI - BAIXA_FINANCEIRA (1,1) | RN49 |
-| CONTA_FINANCEIRA - POSSUI - ITEM_EXTRATO      | CONTA_FINANCEIRA (0,N) - POSSUI - ITEM_EXTRATO (1,1) | RN50 |
-| ITEM_EXTRATO - PARTICIPA DE - CONCILIACAO     | ITEM_EXTRATO (0,N) - PARTICIPA DE - CONCILIACAO (1,1) | RN51 |
-| PAGAMENTO - PARTICIPA DE - CONCILIACAO       | PAGAMENTO (0,N) - PARTICIPA DE - CONCILIACAO (1,1) | RN51 |
-| FUNCIONÁRIO - REALIZA - CONCILIACAO           | FUNCIONÁRIO (0,N) - REALIZA - CONCILIACAO (1,1) | RN51 |
-| BAIXA_FINANCEIRA - É ESTORNADA POR - BAIXA_FINANCEIRA | BAIXA_FINANCEIRA (0,N) - É ESTORNADA POR - BAIXA_FINANCEIRA (0,1) | RN52 |
-| CEP - É USADO EM - ENDEREÇO                       | CEP (0,N) - É USADO EM - ENDEREÇO (1,1)                               | RN25  |
-| MEDICO - RESPONDE POR - EXAME_MEDICO              | MEDICO (0,N) - RESPONDE POR - EXAME_MEDICO (1,1)                      | RN29  |
-| TURMA - POSSUI - TURMA_HORARIO                    | TURMA (0,N) - POSSUI - TURMA_HORARIO (1,1)                            | RN06  |
-| CONVITE_VISITANTE - AUTORIZA - REGISTRO_ACESSOS   | CONVITE_VISITANTE (0,N) - AUTORIZA - REGISTRO_ACESSO (0,1)            | RN37  |
-| OCORRENCIA - AGRUPA - OCORRENCIA                  | OCORRENCIA (0,N) - AGRUPA - OCORRENCIA (0,1)                          | RN39  |
-| SÓCIO - É RESPONSÁVEL POR - ATLETA                | SÓCIO (0,N) - É RESPONSÁVEL POR - ATLETA (0,1)                        | RN14  |
-| PAGAMENTO - É ESTORNADO POR - PAGAMENTO           | PAGAMENTO (0,1) - É ESTORNADO POR - PAGAMENTO (0,1)                   | RN46  |
-| CONTRAPARTE_FINANCEIRA - PARTICIPA DE - PAGAMENTO | CONTRAPARTE_FINANCEIRA (0,N) - PARTICIPA DE - PAGAMENTO (1,1)         | RN44  |
-| FUNCIONÁRIO - REGISTRA - PAGAMENTO                | FUNCIONÁRIO (0,N) - REGISTRA - PAGAMENTO (1,1)                        | RN44  |
+| Relacionamento                                        | Representação                                                     | Regra |
+| ----------------------------------------------------- | ----------------------------------------------------------------- | ----- |
+| PESSOA - É - SÓCIO                                    | PESSOA (0,1) - É - SÓCIO (1,1)                                    | RN01  |
+| PESSOA - É - FUNCIONÁRIO                              | PESSOA (0,1) - É - FUNCIONÁRIO (1,1)                              | RN13  |
+| PESSOA - POSSUI - ATLETA                              | PESSOA (0,N) - POSSUI - ATLETA (1,1)                              | RN14  |
+| SÓCIO - POSSUI - DEPENDENTE                           | SÓCIO (0,N) - POSSUI - DEPENDENTE (1,1)                           | RN02  |
+| PESSOA - POSSUI HISTÓRICO DE - DEPENDENTE             | PESSOA (0,N) - POSSUI HISTÓRICO DE - DEPENDENTE (1,1)             | RN45  |
+| SÓCIO - PERTENCE A - CATEGORIA                        | SÓCIO (1,1) - PERTENCE A - CATEGORIA (0,N)                        | RN03  |
+| FUNCIONÁRIO - TRABALHA EM - DEPARTAMENTO              | FUNCIONÁRIO (1,1) - TRABALHA EM - DEPARTAMENTO (0,N)              | RN13  |
+| ATLETA - PRATICA - MODALIDADE                         | ATLETA (0,N) - PRATICA - MODALIDADE (0,N)                         | RN05  |
+| MODALIDADE - POSSUI - TURMA                           | MODALIDADE (0,N) - POSSUI - TURMA (1,1)                           | RN06  |
+| ATLETA - MATRICULA-SE EM - TURMA                      | ATLETA (0,N) - MATRICULA-SE EM - TURMA (0,N)                      | RN05  |
+| FUNCIONÁRIO - MINISTRA - TURMA                        | FUNCIONÁRIO (0,N) - MINISTRA - TURMA (0,N)                        | RN20  |
+| SÓCIO - GERA - MENSALIDADE                            | SÓCIO (0,N) - GERA - MENSALIDADE (1,1)                            | RN10  |
+| SÓCIO - REALIZA - RESERVA                             | SÓCIO (0,N) - REALIZA - RESERVA (1,1)                             | RN07  |
+| DEPENDENCIA_FISICA - RECEBE - RESERVA                 | DEPENDENCIA_FISICA (0,N) - RECEBE - RESERVA (1,1)                 | RN15  |
+| EVENTO - RECEBE - INSCRIÇÃO                           | EVENTO (0,N) - RECEBE - INSCRIÇÃO (1,1)                           | RN12  |
+| PESSOA - REALIZA - INSCRIÇÃO                          | PESSOA (0,N) - REALIZA - INSCRIÇÃO (1,1)                          | RN12  |
+| SÓCIO - OCUPA - DIRETORIA                             | SÓCIO (0,N) - OCUPA - DIRETORIA (1,1)                             | RN08  |
+| DIRETORIA - UTILIZA - FUNCAO_DIRETORIA                | DIRETORIA (1,1) - UTILIZA - FUNCAO_DIRETORIA (0,N)                | RN08  |
+| PESSOA - POSSUI - ENDEREÇO                            | PESSOA (1,1) - POSSUI - ENDEREÇO (0,N)                            | RN26  |
+| PESSOA - POSSUI - REGISTRO_ACESSO                     | PESSOA (1,1) - POSSUI - REGISTRO_ACESSO (0,N)                     | RN27  |
+| SÓCIO - EMITE - CONVITE_VISITANTE                     | SÓCIO (1,1) - EMITE - CONVITE_VISITANTE (0,N)                     | RN28  |
+| PESSOA - É VISITANTE EM - CONVITE_VISITANTE           | PESSOA (1,1) - É VISITANTE EM - CONVITE_VISITANTE (0,N)           | RN29  |
+| PESSOA - REALIZA - EXAME_MEDICO                       | PESSOA (1,1) - REALIZA - EXAME_MEDICO (0,N)                       | RN30  |
+| PESSOA - REALIZA - VENDA                              | PESSOA (1,1) - REALIZA - VENDA (0,N)                              | RN31  |
+| FUNCIONÁRIO - REGISTRA - VENDA                        | FUNCIONÁRIO (1,1) - REGISTRA - VENDA (0,N)                        | RN32  |
+| VENDA - CONTÉM - ITEM_VENDA                           | VENDA (1,1) - CONTÉM - ITEM_VENDA (1,N)                           | RN33  |
+| ITEM_VENDA - REFERE-SE A - PRODUTO                    | ITEM_VENDA (1,1) - REFERE-SE A - PRODUTO (0,N)                    | RN34  |
+| PRODUTO - POSSUI - ESTOQUE                            | PRODUTO (0,1) - POSSUI - ESTOQUE (1,1)                            | RN35  |
+| PESSOA - ESTÁ ENVOLVIDA EM - OCORRENCIA               | PESSOA (1,1) - ESTÁ ENVOLVIDA EM - OCORRENCIA (0,N)               | RN36  |
+| FUNCIONÁRIO - REGISTRA - OCORRENCIA                   | FUNCIONÁRIO (1,1) - REGISTRA - OCORRENCIA (0,N)                   | RN37  |
+| DEPENDENCIA_FISICA - SEDIA - EVENTO                   | DEPENDENCIA_FISICA (0,N) - SEDIA - EVENTO (0,1)                   | RF11  |
+| PESSOA - POSSUI CADASTRO COMO - CONTRAPARTE_FINANCEIRA| PESSOA (0,N) - POSSUI CADASTRO COMO - CONTRAPARTE_FINANCEIRA (0,1)| RN48  |
+| CONTRAPARTE_FINANCEIRA - POSSUI - TITULO_FINANCEIRO   | CONTRAPARTE_FINANCEIRA (0,N) - POSSUI - TITULO_FINANCEIRO (1,1)   | RN48  |
+| MENSALIDADE - ORIGINA - TITULO_FINANCEIRO             | MENSALIDADE (0,1) - ORIGINA - TITULO_FINANCEIRO (0,1)             | RN48  |
+| INSCRIÇÃO - ORIGINA - TITULO_FINANCEIRO               | INSCRIÇÃO (0,1) - ORIGINA - TITULO_FINANCEIRO (0,1)               | RN48  |
+| VENDA - ORIGINA - TITULO_FINANCEIRO                   | VENDA (0,1) - ORIGINA - TITULO_FINANCEIRO (0,1)                   | RN48  |
+| CONTA_FINANCEIRA - REGISTRA - PAGAMENTO               | CONTA_FINANCEIRA (0,N) - REGISTRA - PAGAMENTO (1,1)               | RN49  |
+| TITULO_FINANCEIRO - RECEBE - BAIXA_FINANCEIRA         | TITULO_FINANCEIRO (0,N) - RECEBE - BAIXA_FINANCEIRA (1,1)         | RN49  |
+| PAGAMENTO - POSSUI - BAIXA_FINANCEIRA                 | PAGAMENTO (0,N) - POSSUI - BAIXA_FINANCEIRA (1,1)                 | RN49  |
+| CONTA_FINANCEIRA - POSSUI - ITEM_EXTRATO              | CONTA_FINANCEIRA (0,N) - POSSUI - ITEM_EXTRATO (1,1)              | RN50  |
+| ITEM_EXTRATO - PARTICIPA DE - CONCILIACAO             | ITEM_EXTRATO (0,N) - PARTICIPA DE - CONCILIACAO (1,1)             | RN51  |
+| PAGAMENTO - PARTICIPA DE - CONCILIACAO                | PAGAMENTO (0,N) - PARTICIPA DE - CONCILIACAO (1,1)                | RN51  |
+| FUNCIONÁRIO - REALIZA - CONCILIACAO                   | FUNCIONÁRIO (0,N) - REALIZA - CONCILIACAO (1,1)                   | RN51  |
+| CEP - É USADO EM - ENDEREÇO                           | CEP (0,N) - É USADO EM - ENDEREÇO (1,1)                           | RN25  |
+| MEDICO - RESPONDE POR - EXAME_MEDICO                  | MEDICO (0,N) - RESPONDE POR - EXAME_MEDICO (1,1)                  | RN29  |
+| TURMA - POSSUI - TURMA_HORARIO                        | TURMA (0,N) - POSSUI - TURMA_HORARIO (1,1)                        | RN06  |
+| CONVITE_VISITANTE - AUTORIZA - REGISTRO_ACESSO        | CONVITE_VISITANTE (0,N) - AUTORIZA - REGISTRO_ACESSO (0,1)        | RN37  |
+| OCORRENCIA - AGRUPA - OCORRENCIA                      | OCORRENCIA (0,N) - AGRUPA - OCORRENCIA (0,1)                      | RN39  |
+| SÓCIO - É RESPONSÁVEL POR - ATLETA                    | SÓCIO (0,N) - É RESPONSÁVEL POR - ATLETA (0,1)                    | RN14  |
+| PAGAMENTO - É ESTORNADO POR - PAGAMENTO               | PAGAMENTO (0,1) - É ESTORNADO POR - PAGAMENTO (0,1)               | RN46  |
+| CONTRAPARTE_FINANCEIRA - PARTICIPA DE - PAGAMENTO     | CONTRAPARTE_FINANCEIRA (0,N) - PARTICIPA DE - PAGAMENTO (1,1)     | RN44  |
+| FUNCIONÁRIO - REGISTRA - PAGAMENTO                    | FUNCIONÁRIO (0,N) - REGISTRA - PAGAMENTO (1,1)                    | RN44  |
+
 
 ## 13. Dicionário de Dados Conceitual
 
@@ -1386,7 +1401,7 @@ O dicionário de dados está representado na seção 10 deste documento. Para ca
 
 O Diagrama Entidade-Relacionamento será apresentado no arquivo:
 
-`Conceptual model - BRMW.pdf](https://miro.com/app/board/uXjVHgJPWnY=/)
+[`Conceptual model - BRMW.pdf](https://miro.com/app/board/uXjVHgJPWnY=/)](https://miro.com/app/board/uXjVHgJPWnY=/?share_link_id=187271043677)
 
 O diagrama deve representar as entidades, atributos principais, relacionamentos e cardinalidades descritos neste documento.
 
@@ -1406,11 +1421,11 @@ Com essa estrutura, uma mesma pessoa pode possuir mais de um vínculo dentro do 
 
 ### Justificativa 3: ATLETA identificado por PESSOA
 
-A entidade ATLETA foi vinculada diretamente a PESSOA porque nem todo atleta possui vínculo como sócio do clube.
+A entidade ATLETA foi vinculada a PESSOA porque nem todo atleta possui vínculo como sócio do clube.
 
-Uma pessoa pode participar das atividades esportivas como sócia, dependente ou pessoa externa. Dessa forma, não é necessário criar uma relação direta entre ATLETA e SÓCIO.
+Uma pessoa pode participar das atividades esportivas como sócia, dependente ou pessoa externa. Quando o atleta tem um sócio responsável, esse vínculo é registrado pela chave estrangeira opcional id_socio em ATLETA. Atletas externos ficam sem esse vínculo.
 
-Essa estrutura também permite que uma mesma pessoa possua diferentes vínculos dentro do clube sem duplicar seus dados pessoais.
+O CPF não é mais único em ATLETA, de modo que a mesma pessoa pode ter mais de um registro de atleta, por exemplo em vínculos com sócios diferentes.
 
 ### Justificativa 4: Relacionamento N:N entre ATLETA e MODALIDADE
 
@@ -1424,7 +1439,7 @@ MENSALIDADE e PAGAMENTO representam informações diferentes. A mensalidade regi
 
 TITULO_FINANCEIRO foi utilizado para centralizar as obrigações a receber e a pagar, permitindo que mensalidades, inscrições, vendas e despesas sejam controladas em uma estrutura única.
 
-BAIXA_FINANCEIRA relaciona os pagamentos aos títulos correspondentes, permitindo pagamentos parciais, liquidações e estornos sem perder o histórico das operações.
+BAIXA_FINANCEIRA relaciona os pagamentos aos títulos correspondentes, permitindo pagamentos parciais e liquidações. Os estornos são registrados como novos registros em PAGAMENTO, e não em BAIXA_FINANCEIRA (ver Justificativa 22).
 
 ### Justificativa 6: DEPENDENTE como entidade separada
 
@@ -1533,13 +1548,14 @@ Essa entidade permite comparar os valores apresentados pelas instituições fina
 
 Também auxilia na identificação de lançamentos duplicados e divergências.
 
-### Justificativa 22: CONCILIACAO para conferência financeira
+### Justificativa 22: Estorno registrado em PAGAMENTO
 
-CONCILIACAO foi criada para relacionar os lançamentos bancários às operações financeiras registradas no sistema.
+O estorno passou a ser um registro em PAGAMENTO, e não em BAIXA_FINANCEIRA. Um estorno corrige uma operação financeira inteira, isto é, o dinheiro que entrou ou saiu de uma conta, e não apenas a parte aplicada a um título. Registrá-lo em PAGAMENTO faz com que ele apareça no fluxo de caixa e na conciliação com o extrato bancário, como qualquer outra movimentação.
 
-A entidade permite conferir valores, identificar diferenças e registrar conciliações parciais ou agrupadas.
+O registro de estorno tem situação ESTORNO, sentido oposto ao do original e se liga ao pagamento original por id_pagamento_estornado. Esse campo é único para impedir mais de um estorno do mesmo pagamento. O original passa a ESTORNADO, mas não é excluído, o que preserva o histórico.
 
-Dessa forma, o clube consegue manter um histórico das conferências realizadas e dos funcionários responsáveis.
+Como saldo_aberto considera apenas as baixas de pagamentos confirmados, o saldo do título é recomposto quando o pagamento é estornado, sem precisar de uma baixa de estorno. Com isso, BAIXA_FINANCEIRA deixa de ter auto-relacionamento e perde o campo id_baixa_origem.
+
 
 ## 16. Conclusão
 
@@ -1558,10 +1574,11 @@ Dessa forma, o resultado é uma estrutura de dados organizada e alinhada às nec
 
 | Elemento | Quantidade |
 |---|---|
-| Entidades principais | 31 |
-| Entidades associativas | 7 |
-| Relacionamentos | 55 |
-| Atributos documentados | ~300 |
+| Tabelas (entidades) | 38|
+| Entidades principais| 32|
+| Entidades associativas|6|
+| Relacionamentos |52|
+| Atributos | 286 |
 | Requisitos funcionais | 25 |
 | Requisitos não funcionais | 7 |
 | Regras de negócio | 60 |
