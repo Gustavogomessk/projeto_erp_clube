@@ -766,12 +766,9 @@ Quando ocorre uma alteração:
 | 33 | CONTA_FINANCEIRA|Representa contas bancárias e caixas utilizados pelo clube|RF23|
 | 34 | ITEM_EXTRATO |Registra lançamentos bancários utilizados na conciliação |RF24|
 | 35 | CONCILIACAO         |Relaciona lançamentos do extrato às operações financeiras para conferir os valores|RF24, RN53|
-| 36 | CEP                    | Centraliza logradouro, bairro, cidade e estado dos endereços                               | RN25             |
-| 37 | MEDICO                 | Identifica o médico responsável pelos exames médicos                                       | RF18             |
-| 38 | TURMA_HORARIO          | Registra os dias e horários de cada turma                                                  | RF07             |
-| 39 | CEP                 | Centraliza logradouro, bairro, cidade e estado, evitando repetição nos endereços | RN25     |
-| 40 | MEDICO              | Identifica o médico responsável pelos exames médicos                             | RF18     |
-| 41 | TURMA_HORARIO       | Registra os dias e horários de funcionamento de cada turma                       | RF07             |
+| 36 | CEP                    | Centraliza logradouro, bairro, cidade e estado dos endereços          | RN25             |
+| 37 | MEDICO                 | Identifica o médico responsável pelos exames médicos                  | RF18             |
+| 38 | TURMA_HORARIO          | Registra os dias e horários de cada turma                             | RF07             |
 
 ### Nota sobre "Político"
 
