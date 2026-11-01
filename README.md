@@ -1394,13 +1394,15 @@ PK composta: (id_venda, id_produto).
 
 O dicionário de dados está representado na seção 10 deste documento. Para cada entidade foram definidos os atributos, tipos de dados, obrigatoriedade, unicidade e descrição.
 
-## 14. DER - Diagrama Entidade-Relacionamento
+## 14. DER & Modelo Lógico - Diagrama Entidade-Relacionamento e Tabela-Atributos
 
 O Diagrama Entidade-Relacionamento será apresentado no arquivo:
 
 [`Conceptual model - BRMW.pdf](https://miro.com/app/board/uXjVHgJPWnY=/)](https://miro.com/app/board/uXjVHgJPWnY=/?share_link_id=187271043677)
 
 O diagrama deve representar as entidades, atributos principais, relacionamentos e cardinalidades descritos neste documento.
+
+https://miro.com/app/board/uXjVETlOL1E=/?share_link_id=770854691554
 
 ## 15. Justificativas Técnicas
 
